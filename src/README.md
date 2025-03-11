@@ -1,3 +1,3 @@
 # SOURCE
 
-Nessa pasta vão ficar todos os arquivos e entidades de progração do jogo como classes, algoritmos e funções.
+Nessa pasta vão ficar todos os arquivos e entidades de programação do jogo como classes, algoritmos e funções.

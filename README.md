@@ -1,4 +1,4 @@
-# Don't Get Caught ✏️🎮
+# 🎮 Don't Get Caught
 
 **Don't Get Caught** é um jogo de **stealth** onde você é um aluno do ensino médio tentando colar em uma prova sem ser pego pelo professor. Use estratégia, distrações e movimentos furtivos para garantir sua aprovação. Só não deixe o professor perceber! 😎
 

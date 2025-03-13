@@ -1,13 +1,10 @@
 class ClassroomMapPoint:
-    def __init__(self, row: int, column: int, x: int, y: int):
+    def __init__(self, row: int, column: int, x: int, y: int, is_student_desk: bool):
         self.column = column
         self.row = row
-        self.is_student_desk = self.is_student_desk_condition()
+        self.is_student_desk = is_student_desk
         self.x = x
         self.y = y
-
-    def is_student_desk_condition(self) -> bool:
-        return self.column % 2 == 0 and self.row % 2 != 0
     
     def __str__(self):
         return f"ClassroomMapPoint({self.row}, {self.column}, {self.is_student_desk}, {self.x}, {self.y})"
@@ -30,7 +27,13 @@ class Classroom:
     def map_point(self, row: int, column: int):
         x = self.column_width * column + self.x
         y = self.row_width * row + self.y
-        return ClassroomMapPoint(row, column, x, y)
+        is_student_desk = self.is_student_desk(row, column)
+        return ClassroomMapPoint(row, column, x, y, is_student_desk)
+
+    # Função que verifica se ponto do mapa de sala é carteira de aluno ou não
+    #
+    def is_student_desk(self, row: int, column: int) -> bool:
+        return column % 2 == 0 and row % 2 != 0
     
     # Função para gerar os pontos de posição da sala de aula
     #   Classroom 3 x 4 / Mapa de pontos 6 x 7

@@ -1,4 +1,3 @@
-from .models import Coordinate
 from .classroom import Classroom, ClassroomMapPoint
 import random
 from enum import Enum

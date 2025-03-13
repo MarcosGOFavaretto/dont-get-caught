@@ -1,5 +1,3 @@
-from .models import Coordinate
-
 class ClassroomMapPoint:
     def __init__(self, row: int, column: int, x: int, y: int):
         self.column = column

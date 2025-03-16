@@ -10,12 +10,10 @@ class ClassroomGridPoint:
         return f"ClassroomGridPoint({self.row}, {self.column}, {self.is_student_desk}, {self.x}, {self.y})"
 
 class Classroom:
-    def __init__(self, dimension: tuple[int, int], x: int, y: int, desk_rows: int, desk_columns: int):
+    def __init__(self, dimension: tuple[int, int], x: int, y: int, rows: int, columns: int):
         self.width, self.height = dimension
-        self.desk_rows = desk_rows
-        self.desk_columns = desk_columns
-        self.grid_rows = self.desk_rows * 2
-        self.grid_columns = (self.desk_columns * 2) - 1
+        self.grid_rows = rows
+        self.grid_columns = columns
         self.column_width = self.width / self.grid_columns
         self.row_width = self.height / self.grid_rows
         self.x = x

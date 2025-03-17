@@ -27,10 +27,3 @@ class MovementActionStand(MovementAction):
     def __init__(self, point: ClassroomGridPoint, direction: MovementDirection, wait: float):
         super().__init__(MovementActionType.STAND, point, direction)
         self.wait = wait
-
-class TeacherAction:
-    def __init__(self, action: MovementAction):
-        self.action: MovementAction = action
-
-    def __str__(self):
-        return f"TeacherMovement({self.point}, {self.direction})"

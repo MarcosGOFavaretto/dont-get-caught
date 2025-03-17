@@ -1,22 +1,7 @@
-from .classroom import Classroom, ClassroomGridPoint
+from ..classrooom.classroom import Classroom, ClassroomGridPoint
 import random
-from enum import Enum
-import pygame
-
-class MovementDirection(Enum):
-    LEFT = 'LEFT'
-    RIGHT = 'RIGHT'
-    UP = 'UP'
-    DOWN = 'DOWN'
-
-class TeacherMovement:
-    def __init__(self, point: ClassroomGridPoint, direction: MovementDirection):
-        self.point = point
-        self.direction = direction
-        self.speed = 10
-
-    def __str__(self):
-        return f"TeacherMovement({self.point}, {self.direction})"
+from .render import TeacherRender
+from .movement import TeacherMovement, MovementDirection
 
 class Teacher:
     def __init__(self, name: str, classroom: Classroom, initial_position: ClassroomGridPoint):
@@ -26,33 +11,8 @@ class Teacher:
             else classroom.create_grid_point(0, 0)
         self.next_mv: TeacherMovement = None
 
-    def render(self, surface: pygame.Surface):
-        if self.next_mv is None:
-            self.next_mv = self.next_movement()
-
-        is_end_point = False
-        if self.next_mv.direction == MovementDirection.LEFT:
-            is_end_point = self.current_grid_point_position.x <= self.next_mv.point.x and self.current_grid_point_position.y == self.next_mv.point.y
-        if self.next_mv.direction == MovementDirection.RIGHT:
-            is_end_point = self.current_grid_point_position.x >= self.next_mv.point.x and self.current_grid_point_position.y == self.next_mv.point.y
-        if self.next_mv.direction == MovementDirection.UP:
-            is_end_point = self.current_grid_point_position.x == self.next_mv.point.x and self.current_grid_point_position.y <= self.next_mv.point.y
-        if self.next_mv.direction == MovementDirection.DOWN:
-            is_end_point = self.current_grid_point_position.x == self.next_mv.point.x and self.current_grid_point_position.y >= self.next_mv.point.y
-
-        if not is_end_point:
-            if self.next_mv.direction == MovementDirection.LEFT:
-                self.current_grid_point_position.x -= self.next_mv.speed
-            if self.next_mv.direction == MovementDirection.RIGHT:
-                self.current_grid_point_position.x += self.next_mv.speed
-            if self.next_mv.direction == MovementDirection.UP:
-                self.current_grid_point_position.y -= self.next_mv.speed
-            if self.next_mv.direction == MovementDirection.DOWN:
-                self.current_grid_point_position.y += self.next_mv.speed
-        else:
-            self.current_grid_point_position = self.classroom.create_grid_point(self.next_mv.point.row, self.next_mv.point.column)
-            self.next_mv = self.next_movement()
-        pygame.draw.circle(surface, 'green', (self.current_grid_point_position.x, self.current_grid_point_position.y), 20)
+    def get_render(self):
+        return TeacherRender(teacher=self)
 
     # Dentre as possibilidades de movimento possíveis, é escolhida uma aleatoriamente.
     #     

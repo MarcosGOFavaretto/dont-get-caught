@@ -10,8 +10,11 @@ class Teacher:
         self.current_grid_point_position: ClassroomGridPoint = initial_position if initial_position is not None \
             else classroom.create_grid_point(0, 0)
         self.next_action: MovementAction = None
+        self.sleep_time_threshold = 2000
+        self.time_to_wake_up = 2000
         self.is_walking = False
         self.is_waiting = False
+        self.is_sleeping = False
 
     def get_render(self):
         return TeacherRender(teacher=self)
@@ -28,7 +31,7 @@ class Teacher:
         
         if random_action == MovementActionType.WAIT:
             random_direction = random.choice(list(MovementDirection))
-            return MovementActionWait(point=self.current_grid_point_position, direction=random_direction, wait=1000)
+            return MovementActionWait(point=self.current_grid_point_position, direction=random_direction, wait_time=random.randint(1000, 4000))
     
     # Retorna a direção da ação a partir do ponto inicial e ponto final
     #

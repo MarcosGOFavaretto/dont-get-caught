@@ -36,12 +36,21 @@ class TeacherRender:
         #head
         pygame.draw.circle(surface, 'black', (self.teacher.current_grid_point_position.x, self.teacher.current_grid_point_position.y), 20)
 
+        # se estiver dormindo
+        if self.teacher.is_sleeping:
+            pygame.draw.circle(surface, 'blue', (self.teacher.current_grid_point_position.x, self.teacher.current_grid_point_position.y), 5)
+
 
     def animate_wait(self):
         if self.wait_time_start == 0:
-            self.wait_time_start = pygame.time.get_ticks()            
-        if (pygame.time.get_ticks() - self.wait_time_start) >= self.teacher.next_action.wait:
+            self.wait_time_start = pygame.time.get_ticks()    
+        time_passed = pygame.time.get_ticks() - self.wait_time_start
+        if time_passed >= self.teacher.sleep_time_threshold and not self.teacher.is_sleeping:
+            self.teacher.is_sleeping = True
+            self.teacher.next_action.wait_time += self.teacher.time_to_wake_up
+        if time_passed >= self.teacher.next_action.wait_time:
             self.wait_time_start = 0
+            self.teacher.is_sleeping = False
             return True
         return False
 

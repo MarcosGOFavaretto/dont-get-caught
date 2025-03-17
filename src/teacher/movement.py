@@ -24,6 +24,6 @@ class MovementActionWalk(MovementAction):
         self.speed = speed
 
 class MovementActionWait(MovementAction):
-    def __init__(self, point: ClassroomGridPoint, direction: MovementDirection, wait: float):
+    def __init__(self, point: ClassroomGridPoint, direction: MovementDirection, wait_time: float):
         super().__init__(MovementActionType.WAIT, point, direction)
-        self.wait = wait
+        self.wait_time = wait_time

@@ -9,7 +9,7 @@ class MovementDirection(Enum):
 
 class MovementActionType(Enum):
     WALK = 'WALK'
-    STAND = 'STAND'
+    WAIT = 'WAIT'
 
 
 class MovementAction:
@@ -23,7 +23,7 @@ class MovementActionWalk(MovementAction):
         super().__init__(MovementActionType.WALK, point, direction)
         self.speed = speed
 
-class MovementActionStand(MovementAction):
+class MovementActionWait(MovementAction):
     def __init__(self, point: ClassroomGridPoint, direction: MovementDirection, wait: float):
-        super().__init__(MovementActionType.STAND, point, direction)
+        super().__init__(MovementActionType.WAIT, point, direction)
         self.wait = wait

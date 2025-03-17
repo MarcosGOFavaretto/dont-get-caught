@@ -1,7 +1,7 @@
 from ..classrooom.classroom import Classroom, ClassroomGridPoint
 import random
 from .render import TeacherRender
-from .movement import TeacherMovement, MovementDirection
+from .movement import MovementAction, MovementDirection, MovementActionType, MovementActionWalk, MovementActionStand
 
 class Teacher:
     def __init__(self, name: str, classroom: Classroom, initial_position: ClassroomGridPoint):
@@ -9,22 +9,25 @@ class Teacher:
         self.classroom = classroom
         self.current_grid_point_position: ClassroomGridPoint = initial_position if initial_position is not None \
             else classroom.create_grid_point(0, 0)
-        self.next_mv: TeacherMovement = None
+        self.next_action: MovementAction = None
 
     def get_render(self):
         return TeacherRender(teacher=self)
 
     # Dentre as possibilidades de movimento possíveis, é escolhida uma aleatoriamente.
     #     
-    def next_movement(self) -> TeacherMovement:
-        movement_possibilities = self.get_movement_possibilities()
-        next_movement_point = random.choice(movement_possibilities)
-        movement_direction = self.get_movement_direction(self.current_grid_point_position, next_movement_point)
-        # self.current_grid_point_position = next_movement_point
-        return TeacherMovement(
-            point=next_movement_point,
-            direction=movement_direction,
-        )
+    def get_next_action(self) -> MovementAction:
+        random_action = random.choice(list(MovementActionType))
+
+        if random_action == MovementActionType.WALK:
+            movement_possibilities = self.get_movement_possibilities()
+            next_action_point = random.choice(movement_possibilities)
+            movement_direction = self.get_movement_direction(self.current_grid_point_position, next_action_point)
+            return MovementActionWalk(point=next_action_point, direction=movement_direction, speed=6)
+        
+        if random_action == MovementActionType.STAND:
+            random_direction = random.choice(list(MovementDirection))
+            return MovementActionStand(point=self.current_grid_point_position, direction=random_direction, wait=1000)
     
     # Retorna a direção do movimento a partir do ponto inicial e ponto final
     #

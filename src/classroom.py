@@ -1,3 +1,5 @@
+import pygame
+
 class ClassroomGridPoint:
     def __init__(self, row: int, column: int, x: int, y: int, is_student_desk: bool):
         self.column = column
@@ -20,11 +22,19 @@ class Classroom:
         self.y = y
         self.grid_points = self.get_grid_points()
 
+    def render(self, surface: pygame.Surface):
+        pygame.draw.rect(surface, 'black', (self.x, self.y, self.width, self.height), 2)
+        for point in self.grid_points:
+            if point.is_student_desk:
+                pygame.draw.circle(surface, 'brown', (point.x , point.y), 16)
+                continue
+            pygame.draw.circle(surface, 'red', (point.x, point.y), 10)
+
     # Função para criar um grid point a partir de uma posição do grid
     #
     def create_grid_point(self, row: int, column: int):
-        x = self.column_width * column + self.x
-        y = self.row_width * row + self.y
+        x = int(self.column_width * column + self.x + self.column_width / 2)
+        y = int(self.row_width * row + self.y + self.row_width / 2)
         is_student_desk = self.is_student_desk(row, column)
         return ClassroomGridPoint(row, column, x, y, is_student_desk)
 

@@ -28,8 +28,8 @@ class Classroom:
     def is_student_desk(self, row: int, column: int) -> bool:
         return column % 2 == 0 and row % 2 != 0
     
-    # Função para gerar os pontos de posição da sala de aula
-    #   Classroom 3 x 4 / Mapa de pontos 6 x 7
+    # Função para gerar uma matriz de pontos de posição da sala de aula
+    #   Mapa de pontos 6 x 7
     #   . . . . . . .       
     #   @ . @ . @ . @       
     #   . . . . . . .       @ - Carteira de aluno 
@@ -38,8 +38,10 @@ class Classroom:
     #   @ . @ . @ . @ 
     #
     def get_grid_points(self):
-        movement_points = list[ClassroomGridPoint]()
+        movement_points = list[list[ClassroomGridPoint]]()
         for r in range(self.grid_rows):
+            grid_row = list[ClassroomGridPoint]()
             for c in range(self.grid_columns):
-                movement_points.append(self.create_grid_point(r, c))
+                grid_row.append(self.create_grid_point(r, c))
+            movement_points.append(grid_row)
         return movement_points

@@ -4,7 +4,6 @@ class TeacherRender:
     def __init__(self, teacher):
         self.teacher = teacher
         self.wait_time_start = 0
-        self.teacher_is_walking = False
 
     def render(self, surface: pygame.Surface):
         if self.teacher.next_action is None:
@@ -66,19 +65,20 @@ class TeacherRender:
         if self.teacher.next_action.direction == MovementDirection.DOWN:
             is_end_point = self.teacher.current_grid_point_position.x == self.teacher.next_action.point.x and self.teacher.current_grid_point_position.y >= self.teacher.next_action.point.y
 
-        # Muda os pontos de coordenada para movimentar o professor.
-        if not is_end_point:
-            if self.teacher.next_action.direction == MovementDirection.LEFT:
-                self.teacher.current_grid_point_position.x -= self.teacher.next_action.speed
-            if self.teacher.next_action.direction == MovementDirection.RIGHT:
-                self.teacher.current_grid_point_position.x += self.teacher.next_action.speed
-            if self.teacher.next_action.direction == MovementDirection.UP:
-                self.teacher.current_grid_point_position.y -= self.teacher.next_action.speed
-            if self.teacher.next_action.direction == MovementDirection.DOWN:
-                self.teacher.current_grid_point_position.y += self.teacher.next_action.speed
-            return False
-        
-        self.teacher.current_grid_point_position = self.teacher.classroom.create_grid_point(self.teacher.next_action.point.row, self.teacher.next_action.point.column)
+        if is_end_point:
+            self.teacher.current_grid_point_position = self.teacher.classroom.create_grid_point(self.teacher.next_action.point.row, self.teacher.next_action.point.column)
+            return True
 
-        return True
+        # Muda os pontos de coordenada para movimentar o professor.
+        if self.teacher.next_action.direction == MovementDirection.LEFT:
+            self.teacher.current_grid_point_position.x -= self.teacher.walk_speed
+        if self.teacher.next_action.direction == MovementDirection.RIGHT:
+            self.teacher.current_grid_point_position.x += self.teacher.walk_speed
+        if self.teacher.next_action.direction == MovementDirection.UP:
+            self.teacher.current_grid_point_position.y -= self.teacher.walk_speed
+        if self.teacher.next_action.direction == MovementDirection.DOWN:
+            self.teacher.current_grid_point_position.y += self.teacher.walk_speed
+
+        return False
+    
         

@@ -19,10 +19,10 @@ class MovementAction:
         self.point = point
 
 class MovementActionWalk(MovementAction):
-    def __init__(self, point: ClassroomGridPoint, direction: MovementDirection, speed: float):
+    def __init__(self, point: ClassroomGridPoint, direction: MovementDirection, walk_speed: float):
         super().__init__(MovementActionType.WALK, point, direction)
-        self.speed = speed
-
+        self.walk_speed = walk_speed
+    
 class MovementActionWait(MovementAction):
     def __init__(self, point: ClassroomGridPoint, direction: MovementDirection, wait_time: float):
         super().__init__(MovementActionType.WAIT, point, direction)

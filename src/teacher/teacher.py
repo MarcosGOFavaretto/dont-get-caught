@@ -2,7 +2,6 @@ from ..classrooom.classroom import Classroom, ClassroomGridPoint
 import random
 from .render import TeacherRender
 from .movement import MovementAction, MovementDirection, MovementActionType, MovementActionWalk, MovementActionWait
-
 class Teacher:
     def __init__(self, name: str, classroom: Classroom, initial_position: ClassroomGridPoint):
         self.name = name
@@ -10,8 +9,10 @@ class Teacher:
         self.current_grid_point_position: ClassroomGridPoint = initial_position if initial_position is not None \
             else classroom.create_grid_point(0, 0)
         self.next_action: MovementAction = None
-        self.sleep_time_threshold = 2000
-        self.time_to_wake_up = 2000
+        self.sleep_time_threshold = 2800
+        self.time_to_wake_up = 3000
+        self.wait_time_range = (1000, 3000)
+        self.walk_speed = 4
         self.is_walking = False
         self.is_waiting = False
         self.is_sleeping = False
@@ -27,11 +28,11 @@ class Teacher:
             movement_possibilities = self.get_movement_possibilities()
             next_action_point = random.choice(movement_possibilities)
             movement_direction = self.get_movement_direction(self.current_grid_point_position, next_action_point)
-            return MovementActionWalk(point=next_action_point, direction=movement_direction, speed=6)
+            return MovementActionWalk(point=next_action_point, direction=movement_direction, walk_speed=self.walk_speed)
         
         if random_action == MovementActionType.WAIT:
             random_direction = random.choice(list(MovementDirection))
-            return MovementActionWait(point=self.current_grid_point_position, direction=random_direction, wait_time=random.randint(1000, 4000))
+            return MovementActionWait(point=self.current_grid_point_position, direction=random_direction, wait_time=random.randint(self.wait_time_range[0], self.wait_time_range[1]))
     
     # Retorna a direção da ação a partir do ponto inicial e ponto final
     #
@@ -52,8 +53,8 @@ class Teacher:
     #   - O professor não pode pular por cima de uma carteira;
     #
     def get_movement_possibilities(self) -> list[ClassroomGridPoint]:
-        column_grid_points = [mp for mp in self.classroom.grid_points if mp.column == self.current_grid_point_position.column]
-        row_grid_points = [mp for mp in self.classroom.grid_points if mp.row == self.current_grid_point_position.row]
+        column_grid_points = [mp[self.current_grid_point_position.column] for mp in self.classroom.grid_points]
+        row_grid_points = self.classroom.grid_points[self.current_grid_point_position.row]
         possible_movements = list[ClassroomGridPoint]()
 
         # up

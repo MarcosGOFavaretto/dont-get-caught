@@ -7,15 +7,16 @@ class Teacher:
         self.name = name
         self.classroom = classroom
         self.current_grid_point_position: ClassroomGridPoint = initial_position if initial_position is not None \
-            else classroom.create_grid_point(0, 0)
-        self.next_action: MovementAction = None
+            else self.classroom[0][0]
+        self.current_action: MovementAction = None
         self.sleep_time_threshold = 2800
-        self.time_to_wake_up = 3000
+        self.time_to_wake_up = 4000
         self.wait_time_range = (1000, 3000)
-        self.walk_speed = 4
+        self.walk_speed = 3
         self.is_walking = False
         self.is_waiting = False
         self.is_sleeping = False
+        self.direction = None
 
     def get_render(self):
         return TeacherRender(teacher=self)
@@ -26,63 +27,23 @@ class Teacher:
         random_action = random.choice(list(MovementActionType))
         if random_action == MovementActionType.WALK:
             movement_possibilities = self.get_movement_possibilities()
-            next_action_point = random.choice(movement_possibilities)
-            movement_direction = self.get_movement_direction(self.current_grid_point_position, next_action_point)
-            return MovementActionWalk(point=next_action_point, direction=movement_direction, walk_speed=self.walk_speed)
+            next_action_final_point = random.choice(movement_possibilities)
+            return MovementActionWalk(
+                current_point=self.current_grid_point_position, 
+                final_point=next_action_final_point, 
+                walk_speed=self.walk_speed,
+                walk_path=self.classroom.find_path(self.current_grid_point_position, next_action_final_point))
         
         if random_action == MovementActionType.WAIT:
             random_direction = random.choice(list(MovementDirection))
             return MovementActionWait(point=self.current_grid_point_position, direction=random_direction, wait_time=random.randint(self.wait_time_range[0], self.wait_time_range[1]))
-    
-    # Retorna a direção da ação a partir do ponto inicial e ponto final
-    #
-    def get_movement_direction(self, start_point: ClassroomGridPoint, finish_point: ClassroomGridPoint) -> MovementDirection:
-        if start_point.row < finish_point.row:
-            return MovementDirection.DOWN
-        elif start_point.row > finish_point.row:
-            return MovementDirection.UP
-        elif start_point.column < finish_point.column:
-            return MovementDirection.RIGHT
-        elif start_point.column > finish_point.column:
-            return MovementDirection.LEFT
 
-    # Função para calcular o próximo movimento possível do professor:
-    #   Regras de movimento:
-    #   - O professor pode se mover por todo o corredor da sala (mesmo movimento da torre no xadrez);
-    #   - Uma carteira não pode ser um ponto de movimento;
-    #   - O professor não pode pular por cima de uma carteira;
+    # Função para retornar os possíveis pontos de movimento do professor:
     #
     def get_movement_possibilities(self) -> list[ClassroomGridPoint]:
-        column_grid_points = [mp[self.current_grid_point_position.column] for mp in self.classroom.grid_points]
-        row_grid_points = self.classroom.grid_points[self.current_grid_point_position.row]
-        possible_movements = list[ClassroomGridPoint]()
-
-        # up
-        for row_index in range(self.current_grid_point_position.row, 0, -1):
-            point = column_grid_points[row_index - 1]
-            if point.is_student_desk:
-                break
-            possible_movements.append(point)
-
-        # down
-        for row_index in range(self.current_grid_point_position.row + 1, self.classroom.grid_rows, 1):
-            point = column_grid_points[row_index]
-            if point.is_student_desk:
-                break
-            possible_movements.append(point)
-
-        # left
-        for column_index in range(self.current_grid_point_position.column, 0, -1):
-            point = row_grid_points[column_index - 1]
-            if point.is_student_desk:
-                break
-            possible_movements.append(point)
-
-        # right
-        for column_index in range(self.current_grid_point_position.column + 1, self.classroom.grid_columns, 1):
-            point = row_grid_points[column_index]
-            if point.is_student_desk:
-                break
-            possible_movements.append(point)
-
-        return possible_movements
+        movement_possibilities = []
+        for row in self.classroom.grid_points:
+            for point in row:
+                if not point.is_student_desk and point != self.current_grid_point_position:
+                    movement_possibilities.append(point)
+        return movement_possibilities

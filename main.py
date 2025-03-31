@@ -3,7 +3,7 @@ from src.classrooom.classroom import Classroom
 from src.teacher.teacher import Teacher
 
 classroom = Classroom(dimension=(1000, 600), x=0, y=0, rows=8, columns=11)
-teacher = Teacher(name='Oliver Taz', classroom=classroom, initial_position=classroom.create_grid_point(0, 0))
+teacher = Teacher(name='Oliver Taz', classroom=classroom, initial_position=classroom.grid_points[0][0])
 
 classroom = classroom.get_render()
 teacher = teacher.get_render()

@@ -1,0 +1,5 @@
+# arquivos de test python
+*.test.py
+
+# ignore pycache files
+**/__pycache__

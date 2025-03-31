@@ -10,6 +10,7 @@ teacher = teacher.get_render()
 
 pygame.init()
 screen = pygame.display.set_mode((1000, 600))
+pygame.display.set_caption("Don't get caught")
 clock = pygame.time.Clock()
 running = True
 

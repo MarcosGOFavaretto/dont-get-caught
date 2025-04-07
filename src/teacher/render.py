@@ -1,6 +1,8 @@
 from .movement import MovementDirection, MovementActionType
 import pygame
-from ..classrooom.grid import ClassroomGridPoint
+import math
+from ..config import SCREEN_WIDTH, SCREEN_HEIGHT
+
 class TeacherRender:
     def __init__(self, teacher):
         self.teacher = teacher
@@ -26,6 +28,7 @@ class TeacherRender:
     def animate_walk(self):
         walk_direction = self.teacher.current_action.direction
         self.teacher.direction = walk_direction
+        self.teacher.vision_direction = walk_direction
 
         # Verifica se o professor terminou o passo
         is_next_point = False
@@ -58,6 +61,7 @@ class TeacherRender:
 
     def animate_wait(self):
         self.teacher.direction = self.teacher.current_action.direction
+        self.teacher.vision_direction = self.teacher.current_action.direction
         if self.teacher.current_action.wait_time_start == 0:
             self.teacher.current_action.start_timer()
         time_passed = self.teacher.current_action.get_time_passed()
@@ -69,7 +73,11 @@ class TeacherRender:
             self.teacher.is_sleeping = False
             self.teacher.current_action = None
 
+
     def render_sprite(self, surface: pygame.Surface):
+        if not self.teacher.is_sleeping:
+            self.render_vision(surface)
+
         # corpo
         size_w = 60
         size_h = size_w / 2
@@ -84,5 +92,34 @@ class TeacherRender:
         # se estiver dormindo
         if self.teacher.is_sleeping:
             pygame.draw.circle(surface, 'blue', (self.teacher.current_grid_point_position.x, self.teacher.current_grid_point_position.y), 5)
+        
+    def render_vision(self, surface: pygame.Surface):
+        vision_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+        start_angle = None
+        end_angle = None
+        # renderizar visão
+        if self.teacher.vision_direction == MovementDirection.LEFT:
+            start_angle = (-self.teacher.vision_angle / 2) + math.pi
+            end_angle = (self.teacher.vision_angle / 2) + math.pi
+        elif self.teacher.vision_direction == MovementDirection.RIGHT:
+            start_angle = - self.teacher.vision_angle / 2
+            end_angle = self.teacher.vision_angle / 2
+        elif self.teacher.vision_direction == MovementDirection.UP:
+            start_angle = (-self.teacher.vision_angle / 2) - (math.pi / 2)
+            end_angle = (self.teacher.vision_angle / 2) - (math.pi / 2)
+        elif self.teacher.vision_direction == MovementDirection.DOWN:
+            start_angle = (-self.teacher.vision_angle / 2) + (math.pi / 2)
+            end_angle = (self.teacher.vision_angle / 2) + (math.pi / 2)
+        self.draw_filled_semi_circle(vision_surface, (0, 0, 255, 128), (self.teacher.current_grid_point_position.x, self.teacher.current_grid_point_position.y), self.teacher.vision_radius, start_angle, end_angle)
+        surface.blit(vision_surface, (0, 0))
+    
+    def draw_filled_semi_circle(self, surface, color, center, radius, start_angle, end_angle, point_count=50):
+        points = [center]
+        for i in range(point_count + 1):
+            angle = start_angle + (end_angle - start_angle) * i / point_count
+            x = center[0] + radius * math.cos(angle)
+            y = center[1] + radius * math.sin(angle)
+            points.append((x, y))
+        pygame.draw.polygon(surface, color, points)
 
         

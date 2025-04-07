@@ -2,6 +2,7 @@ from ..classrooom.classroom import Classroom, ClassroomGridPoint
 import random
 from .render import TeacherRender
 from .movement import MovementAction, MovementDirection, MovementActionType, MovementActionWalk, MovementActionWait
+import math
 class Teacher:
     def __init__(self, name: str, classroom: Classroom, initial_position: ClassroomGridPoint):
         self.name = name
@@ -12,11 +13,14 @@ class Teacher:
         self.sleep_time_threshold = 2800
         self.time_to_wake_up = 4000
         self.wait_time_range = (1000, 3000)
-        self.walk_speed = 3
+        self.walk_speed = 2
         self.is_walking = False
         self.is_waiting = False
         self.is_sleeping = False
         self.direction = None
+        self.vision_radius = 220
+        self.vision_angle = math.pi * 0.4
+        self.vision_direction = None
 
     def get_render(self):
         return TeacherRender(teacher=self)

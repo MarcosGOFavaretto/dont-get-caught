@@ -78,6 +78,10 @@ class TeacherRender:
         if not self.teacher.is_sleeping:
             self.render_vision(surface)
 
+        vision_points = self.teacher.get_vision_points()
+        for point in vision_points:
+            pygame.draw.circle(surface, 'yellow', (point.x, point.y), 5)
+
         # corpo
         size_w = 60
         size_h = size_w / 2
@@ -95,22 +99,8 @@ class TeacherRender:
         
     def render_vision(self, surface: pygame.Surface):
         vision_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
-        start_angle = None
-        end_angle = None
-        # renderizar visão
-        if self.teacher.vision_direction == MovementDirection.LEFT:
-            start_angle = (-self.teacher.vision_angle / 2) + math.pi
-            end_angle = (self.teacher.vision_angle / 2) + math.pi
-        elif self.teacher.vision_direction == MovementDirection.RIGHT:
-            start_angle = - self.teacher.vision_angle / 2
-            end_angle = self.teacher.vision_angle / 2
-        elif self.teacher.vision_direction == MovementDirection.UP:
-            start_angle = (-self.teacher.vision_angle / 2) - (math.pi / 2)
-            end_angle = (self.teacher.vision_angle / 2) - (math.pi / 2)
-        elif self.teacher.vision_direction == MovementDirection.DOWN:
-            start_angle = (-self.teacher.vision_angle / 2) + (math.pi / 2)
-            end_angle = (self.teacher.vision_angle / 2) + (math.pi / 2)
-        self.draw_filled_semi_circle(vision_surface, (0, 0, 255, 128), (self.teacher.current_grid_point_position.x, self.teacher.current_grid_point_position.y), self.teacher.vision_radius, start_angle, end_angle)
+        vision_angle_range = self.teacher.get_vision_angle_range()
+        self.draw_filled_semi_circle(vision_surface, (0, 0, 255, 40), (self.teacher.current_grid_point_position.x, self.teacher.current_grid_point_position.y), self.teacher.vision_radius, vision_angle_range[0], vision_angle_range[1])
         surface.blit(vision_surface, (0, 0))
     
     def draw_filled_semi_circle(self, surface, color, center, radius, start_angle, end_angle, point_count=50):
@@ -121,5 +111,3 @@ class TeacherRender:
             y = center[1] + radius * math.sin(angle)
             points.append((x, y))
         pygame.draw.polygon(surface, color, points)
-
-        

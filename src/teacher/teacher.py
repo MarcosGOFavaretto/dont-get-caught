@@ -82,4 +82,6 @@ class Teacher:
         if center_distance > self.vision_radius:
             return False
         angle = math.atan2(py - cy, px - cx)
+        if angle < 0 and angle_range[0] > 0:
+            angle += 2 * math.pi
         return angle_range[0] <= angle <= angle_range[1]

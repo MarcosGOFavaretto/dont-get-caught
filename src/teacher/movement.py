@@ -1,4 +1,4 @@
-from ..classrooom.classroom import ClassroomGridPoint, Classroom
+from ..classroom.classroom import ClassroomGridPoint, Classroom
 from enum import Enum
 import pygame
 import copy

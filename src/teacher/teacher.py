@@ -2,6 +2,7 @@ from ..classrooom.classroom import Classroom, ClassroomGridPoint
 import random
 from .render import TeacherRender
 from .movement import MovementAction, MovementDirection, MovementActionType, MovementActionWalk, MovementActionWait
+import math
 class Teacher:
     def __init__(self, name: str, classroom: Classroom, initial_position: ClassroomGridPoint):
         self.name = name
@@ -12,11 +13,14 @@ class Teacher:
         self.sleep_time_threshold = 2800
         self.time_to_wake_up = 4000
         self.wait_time_range = (1000, 3000)
-        self.walk_speed = 3
+        self.walk_speed = 2
         self.is_walking = False
         self.is_waiting = False
         self.is_sleeping = False
         self.direction = None
+        self.vision_radius = 200
+        self.vision_angle = math.pi * 0.5
+        self.vision_direction = None
 
     def get_render(self):
         return TeacherRender(teacher=self)
@@ -47,3 +51,37 @@ class Teacher:
                 if not point.is_student_desk and point != self.current_grid_point_position:
                     movement_possibilities.append(point)
         return movement_possibilities
+    
+    def get_vision_angle_range(self )-> tuple[float, float]:
+        if self.vision_direction == MovementDirection.LEFT:
+            return (-self.vision_angle / 2 + math.pi, self.vision_angle / 2 + math.pi)
+        elif self.vision_direction == MovementDirection.RIGHT:
+            return (-self.vision_angle / 2, self.vision_angle / 2)
+        elif self.vision_direction == MovementDirection.UP:
+            return (-self.vision_angle / 2 - math.pi / 2, self.vision_angle / 2 - math.pi / 2)
+        elif self.vision_direction == MovementDirection.DOWN:
+            return (-self.vision_angle / 2 + math.pi / 2, self.vision_angle / 2 + math.pi / 2)
+        
+    def get_vision_points(self):
+        if self.is_sleeping:
+            return []
+        points_in_vision = []
+        for column in self.classroom.grid_points:
+            for point in column:
+                # if point.is_student_desk and self.point_is_in_vision(point):
+                if self.point_is_in_vision(point):
+                    points_in_vision.append(point)
+        return points_in_vision
+    
+    # Verifica se o ponto está dentro do raio de visão e dentro do ângulo de visão.
+    def point_is_in_vision(self, point: ClassroomGridPoint) -> bool:
+        angle_range = self.get_vision_angle_range()
+        px, py = point.x, point.y
+        cx, cy = self.current_grid_point_position.x, self.current_grid_point_position.y
+        center_distance = math.sqrt(math.pow(px - cx, 2) + math.pow(py - cy, 2))
+        if center_distance > self.vision_radius:
+            return False
+        angle = math.atan2(py - cy, px - cx)
+        if angle < 0 and angle_range[0] > 0:
+            angle += 2 * math.pi
+        return angle_range[0] <= angle <= angle_range[1]

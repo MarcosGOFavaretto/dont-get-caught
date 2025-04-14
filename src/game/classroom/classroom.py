@@ -1,6 +1,8 @@
 from .render import ClassroomRender
 from .grid import ClassroomGridPoint
 from .path_find_algorithm import a_star
+from pygame import Surface
+
 class Classroom:
     def __init__(self, dimension: tuple[int, int], x: int, y: int, rows: int, columns: int):
         self.width, self.height = dimension
@@ -12,8 +14,8 @@ class Classroom:
         self.y = y
         self.grid_points = self.get_grid_points()
 
-    def get_render(self):
-        return ClassroomRender(self)
+    def get_render(self, surface: Surface):
+        return ClassroomRender(classroom=self, surface=surface)
 
     # Função para criar um grid point a partir de uma posição do grid
     #

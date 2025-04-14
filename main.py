@@ -1,23 +1,23 @@
 import pygame
-from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, GAME_NAME
-from src.game import Game
+from src.config import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GAME_NAME
+from src.app import App
 
 pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+main_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption(GAME_NAME)
 clock = pygame.time.Clock()
 running = True
 
-game = Game()
+app = App(main_surface)
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill((255, 255, 255))
+    main_surface.fill((255, 255, 255))
 
-    game.render(screen)
+    app.render()
 
     pygame.display.flip()
     clock.tick(FPS)

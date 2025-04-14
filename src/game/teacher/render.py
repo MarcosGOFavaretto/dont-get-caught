@@ -1,13 +1,14 @@
 from .movement import MovementDirection, MovementActionType
 import pygame
 import math
-from ..config import SCREEN_WIDTH, SCREEN_HEIGHT
+from ...config import WINDOW_WIDTH, WINDOW_HEIGHT
 
 class TeacherRender:
-    def __init__(self, teacher):
+    def __init__(self, teacher, surface: pygame.Surface):
+        self.surface = surface
         self.teacher = teacher
 
-    def render(self, surface: pygame.Surface):
+    def render(self):
         if self.teacher.current_action is None:
             self.next_action()
 
@@ -18,7 +19,7 @@ class TeacherRender:
             self.teacher.is_waiting = True
             self.animate_wait()
 
-        self.render_sprite(surface)
+        self.render_sprite()
 
     def next_action(self):
         self.teacher.is_waiting = False
@@ -74,34 +75,34 @@ class TeacherRender:
             self.teacher.current_action = None
 
 
-    def render_sprite(self, surface: pygame.Surface):
+    def render_sprite(self):
         if not self.teacher.is_sleeping:
-            self.render_vision(surface)
+            self.render_vision()
 
         vision_points = self.teacher.get_vision_points()
         for point in vision_points:
-            pygame.draw.circle(surface, 'yellow', (point.x, point.y), 5)
+            pygame.draw.circle(self.surface, 'yellow', (point.x, point.y), 5)
 
         # corpo
         size_w = 60
         size_h = size_w / 2
         if self.teacher.direction in (MovementDirection.UP, MovementDirection.DOWN):
-            pygame.draw.ellipse(surface, 'green', (self.teacher.current_grid_point_position.x - size_w / 2, self.teacher.current_grid_point_position.y - size_h / 2, size_w, size_h), 20)
+            pygame.draw.ellipse(self.surface, 'green', (self.teacher.current_grid_point_position.x - size_w / 2, self.teacher.current_grid_point_position.y - size_h / 2, size_w, size_h), 20)
         if self.teacher.direction in (MovementDirection.LEFT, MovementDirection.RIGHT):
-            pygame.draw.ellipse(surface, 'green', (self.teacher.current_grid_point_position.x - size_h / 2, self.teacher.current_grid_point_position.y - size_w / 2, size_h, size_w), 20)
+            pygame.draw.ellipse(self.surface, 'green', (self.teacher.current_grid_point_position.x - size_h / 2, self.teacher.current_grid_point_position.y - size_w / 2, size_h, size_w), 20)
 
         # cabeça
-        pygame.draw.circle(surface, 'black', (self.teacher.current_grid_point_position.x, self.teacher.current_grid_point_position.y), 20)
+        pygame.draw.circle(self.surface, 'black', (self.teacher.current_grid_point_position.x, self.teacher.current_grid_point_position.y), 20)
 
         # se estiver dormindo
         if self.teacher.is_sleeping:
-            pygame.draw.circle(surface, 'blue', (self.teacher.current_grid_point_position.x, self.teacher.current_grid_point_position.y), 5)
+            pygame.draw.circle(self.surface, 'blue', (self.teacher.current_grid_point_position.x, self.teacher.current_grid_point_position.y), 5)
         
-    def render_vision(self, surface: pygame.Surface):
-        vision_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+    def render_vision(self):
+        vision_surface = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)
         vision_angle_range = self.teacher.get_vision_angle_range()
         self.draw_filled_semi_circle(vision_surface, (0, 0, 255, 40), (self.teacher.current_grid_point_position.x, self.teacher.current_grid_point_position.y), self.teacher.vision_radius, vision_angle_range[0], vision_angle_range[1])
-        surface.blit(vision_surface, (0, 0))
+        self.surface.blit(vision_surface, (0, 0))
     
     def draw_filled_semi_circle(self, surface, color, center, radius, start_angle, end_angle, point_count=50):
         points = [center]

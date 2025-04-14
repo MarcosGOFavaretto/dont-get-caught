@@ -1,9 +1,10 @@
-import pygame
+from pygame import Surface
 from .classroom.classroom import Classroom
 from .teacher.teacher import Teacher
 
-class Game:
-    def __init__(self):
+class GameRender:
+    def __init__(self, app):
+        self.app = app
         self.classroom: Classroom = None
         self.teacher: Teacher = None
         self.define_classroom()
@@ -11,9 +12,15 @@ class Game:
 
     # Método para renderizar as entidades do jogo.
     #
-    def render(self, surface: pygame.Surface):
-        self.classroom.get_render().render(surface)
-        self.teacher.get_render().render(surface)
+    def render(self):
+        self.classroom.get_render(self.app.surface).render()
+        self.teacher.get_render(self.app.surface).render()
+
+
+    # Método para encerrar o jogo e voltar para o menu.
+    #
+    def game_over(self):
+        self.app.open_menu()
 
     # Define a sala de aula.
     #   - Cria uma sala de aula com as dimensões, número de linhas e colunas.

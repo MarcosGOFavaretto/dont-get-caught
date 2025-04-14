@@ -1,3 +1,8 @@
 # SOURCE
+Nessa pasta vão ficar todos os arquivos de programação.
 
-Nessa pasta vão ficar todos os arquivos e entidades de programação do jogo como classes, algoritmos e funções.
+## App.py
+Arquivo principal que vai gerenciar as trocas de telas e o fluxo da aplicação.
+
+## Game
+Pasta onde vão ficar os arquivos de programação e renderização do jogo.

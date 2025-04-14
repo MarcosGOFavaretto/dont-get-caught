@@ -3,6 +3,8 @@ import random
 from .render import TeacherRender
 from .movement import MovementAction, MovementDirection, MovementActionType, MovementActionWalk, MovementActionWait
 import math
+import pygame
+
 class Teacher:
     def __init__(self, game: any, name: str, initial_position: ClassroomGridPoint):
         self.name = name
@@ -21,8 +23,8 @@ class Teacher:
         self.vision_angle = math.pi * 0.5
         self.vision_direction = None
 
-    def get_render(self):
-        return TeacherRender(teacher=self)
+    def get_render(self, surface: pygame.Surface):
+        return TeacherRender(teacher=self, surface=surface)
 
     # Dentre as possibilidades de ações possíveis, é escolhida uma aleatoriamente (por enquanto).
     #     

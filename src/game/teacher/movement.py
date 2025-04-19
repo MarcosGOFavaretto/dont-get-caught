@@ -50,8 +50,8 @@ class MovementActionWalk(MovementAction):
             self.direction = MovementDirection.LEFT
     
 class MovementActionWait(MovementAction):
-    def __init__(self, point: ClassroomGridPoint, direction: MovementDirection, wait_time: float):
-        super().__init__(MovementActionType.WAIT, point, direction)
+    def __init__(self, point: ClassroomGridPoint, direction_to_look: MovementDirection, wait_time: float):
+        super().__init__(MovementActionType.WAIT, point, direction_to_look)
         self.wait_time = wait_time
         self.wait_time_start = 0
 

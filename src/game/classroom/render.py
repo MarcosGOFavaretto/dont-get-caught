@@ -8,6 +8,9 @@ class ClassroomRender:
     def render(self):
         # Desenha cada ponto do grid da sala
         # Se o ponto for uma carteira, desenha uma carteira
+
+        pygame.draw.circle(self.surface, 'red', self.classroom.get_center_coordenate(), 5)
+
         for row in self.classroom.grid_points:
             for point in row:
                 if point.is_student_desk:

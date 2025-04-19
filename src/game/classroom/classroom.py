@@ -16,6 +16,12 @@ class Classroom:
 
     def get_render(self, surface: Surface):
         return ClassroomRender(classroom=self, surface=surface)
+    
+
+    def get_center_coordenate(self):
+        center_x = int(self.x + self.width / 2)
+        center_y = int(self.y + self.height / 2)
+        return (center_x, center_y)
 
     # Função para criar um grid point a partir de uma posição do grid
     #

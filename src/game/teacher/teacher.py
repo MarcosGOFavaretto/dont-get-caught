@@ -5,9 +5,10 @@ from .movement import MovementAction, MovementDirection, MovementActionType, Mov
 import math
 import pygame
 import copy
-
+from ...config import ASSETS_FOLDER
 class Teacher:
-    def __init__(self, game: any, name: str, initial_position: tuple = (0, 0)):
+    def __init__(self, game: any, name: str = 'Default', initial_position: tuple = (0, 0)):
+        self.game = game
         self.name = name
         self.classroom: Classroom = game.classroom
         self.position: ClassroomGridPoint = copy.deepcopy(self.classroom.grid_points[initial_position[0]][initial_position[1]])
@@ -23,9 +24,10 @@ class Teacher:
         self.vision_radius = 200
         self.vision_angle = math.pi * 0.5
         self.vision_direction = None
+        self.footstep_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/footstep.mp3')
 
     def get_render(self, surface: pygame.Surface):
-        return TeacherRender(teacher=self, surface=surface)
+        return TeacherRender(game=self.game, teacher=self, surface=surface)
 
     # Dentre as possibilidades de ações possíveis, é escolhida uma aleatoriamente.
     #     

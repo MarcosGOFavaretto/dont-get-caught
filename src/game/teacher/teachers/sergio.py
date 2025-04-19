@@ -6,6 +6,7 @@ class TeacherSergio(Teacher):
     def __init__(self, game: any):
         super().__init__(game=game, name="Sérgio", initial_position=(int(game.classroom.grid_columns / 2), 0))
         self.last_action = None
+        self.walk_speed = 1.5
 
     def get_next_action(self) -> MovementAction:
         self.last_action = self.current_action

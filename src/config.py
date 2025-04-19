@@ -2,3 +2,4 @@ GAME_NAME = "Don't get caught"
 WINDOW_WIDTH = 1000
 WINDOW_HEIGHT = 600
 FPS = 60
+ASSETS_FOLDER = "./src/assets"

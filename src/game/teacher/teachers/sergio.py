@@ -4,14 +4,14 @@ from ....utils import get_angle_between_points
 
 class TeacherSergio(Teacher):
     def __init__(self, game: any):
-        super().__init__(game=game, name="Sérgio")
+        super().__init__(game=game, name="Sérgio", initial_position=(int(game.classroom.grid_columns / 2), 0))
         self.last_action = None
 
     def get_next_action(self) -> MovementAction:
         self.last_action = self.current_action
 
         if self.last_action is None:
-            self.current_action = self.get_walk_action()
+            self.current_action = self.get_wait_action(direction_to_look=MovementDirection.DOWN)
             return
 
         if self.last_action.action_type == MovementActionType.WALK:
@@ -33,12 +33,12 @@ class TeacherSergio(Teacher):
             walk_speed=self.walk_speed,
             walk_path=self.classroom.find_path(self.position, next_action_final_point))
     
-    def get_wait_action(self):  
-        directions_to_look = list(MovementDirection)
-        wall_direction = self.get_neighbor_wall_direction()
-        if wall_direction is not None:
-            directions_to_look = list(filter(lambda x: x.value != wall_direction.value, directions_to_look))
-        direction_to_look = random.choice(directions_to_look)
+    def get_wait_action(self, direction_to_look: MovementDirection = None) -> MovementAction:  
+        if direction_to_look is None:
+            directions_to_look = list(MovementDirection)
+            wall_directions = self.get_neighbor_wall_direction()
+            directions_to_look = list(filter(lambda x: x.value not in [d.value for d in wall_directions], directions_to_look))
+            direction_to_look = random.choice(directions_to_look)
         return MovementActionWait(point=self.position, direction_to_look=direction_to_look, wait_time=random.randint(self.wait_time_range[0], self.wait_time_range[1]))
 
 
@@ -50,8 +50,10 @@ class TeacherSergio(Teacher):
             dict(offset=(0, +1), direction=MovementDirection.DOWN) 
         ]
 
+        directions = []
         for neighbor in neighbors:
             nx = self.position.column + neighbor.get('offset')[0]
             ny = self.position.row + neighbor.get('offset')[1]
             if nx < 0 or nx >= len(self.classroom.grid_points) or ny < 0 or ny >= len(self.classroom.grid_points[0]):
-                return neighbor.get('direction')
+                directions.append(neighbor.get('direction'))
+        return directions

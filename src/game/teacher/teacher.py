@@ -4,12 +4,13 @@ from .render import TeacherRender
 from .movement import MovementAction, MovementDirection, MovementActionType, MovementActionWalk, MovementActionWait
 import math
 import pygame
+import copy
 
 class Teacher:
-    def __init__(self, game: any, name: str, initial_position: ClassroomGridPoint = None):
+    def __init__(self, game: any, name: str, initial_position: tuple = (0, 0)):
         self.name = name
         self.classroom: Classroom = game.classroom
-        self.position: ClassroomGridPoint = initial_position if initial_position is not None else self.classroom.grid_points[0][0]
+        self.position: ClassroomGridPoint = copy.deepcopy(self.classroom.grid_points[initial_position[0]][initial_position[1]])
         self.current_action: MovementAction = None
         self.sleep_time_threshold = 2800
         self.time_to_wake_up = 4000

@@ -52,5 +52,5 @@ class TeacherSergio(Teacher):
         for neighbor in neighbors:
             nx = self.position.column + neighbor.get('offset')[0]
             ny = self.position.row + neighbor.get('offset')[1]
-            if nx >= len(self.classroom.grid_points) or ny >= len(self.classroom.grid_points[0]):
+            if nx <= 0 or nx >= len(self.classroom.grid_points) or ny <= 0 or ny >= len(self.classroom.grid_points[0]):
                 return neighbor.get('direction')

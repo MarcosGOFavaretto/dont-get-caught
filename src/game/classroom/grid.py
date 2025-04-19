@@ -11,3 +11,9 @@ class ClassroomGridPoint:
     
     def __eq__(self, value):
         return value.column == self.column and value.row == self.row
+    
+    def to_grid_point(self): 
+        return (self.column, self.row)
+    
+    def to_coordenate(self): 
+        return (self.x, self.y)

@@ -1,5 +1,5 @@
 import heapq
-
+from ...utils import heuristic
 class Node:
     def __init__(self, position, parent=None, g=0, h=0):
         self.position = position  # (x, y)
@@ -10,9 +10,6 @@ class Node:
 
     def __lt__(self, other):
         return self.f < other.f  # For priority queue sorting
-
-def heuristic(a, b):
-    return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 def get_neighbors(position, grid):
     x, y = position

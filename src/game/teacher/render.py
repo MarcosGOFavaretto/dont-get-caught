@@ -2,12 +2,16 @@ from .movement import MovementDirection, MovementActionType
 import pygame
 import math
 from ...config import WINDOW_WIDTH, WINDOW_HEIGHT
+from ...timer import Timer
+from ...utils import heuristic, map_value
 
 class TeacherRender:
-    def __init__(self, teacher, surface: pygame.Surface):
+    def __init__(self, game: any, teacher, surface: pygame.Surface):
         self.surface = surface
         self.teacher = teacher
         self.teacher_ends_current_action = False
+        self.footstep_timer = Timer(wait_time=800/self.teacher.walk_speed)
+        self.game = game
 
     def render(self):
         if self.teacher.current_action is None or self.teacher_ends_current_action:
@@ -16,6 +20,7 @@ class TeacherRender:
         if self.teacher.current_action.action_type == MovementActionType.WALK:
             self.teacher_ends_current_action = False
             self.teacher.is_walking = True
+            self.play_footstep_sound()
             self.animate_walk()
         elif self.teacher.current_action.action_type == MovementActionType.WAIT:
             self.teacher_ends_current_action = False
@@ -76,7 +81,6 @@ class TeacherRender:
             self.wait_time_start = 0
             self.teacher.is_sleeping = False
             self.teacher_ends_current_action = True
-            # self.teacher.current_action = None
 
     def render_sprite(self):
         if not self.teacher.is_sleeping:
@@ -115,3 +119,20 @@ class TeacherRender:
             y = center[1] + radius * math.sin(angle)
             points.append((x, y))
         pygame.draw.polygon(surface, color, points)
+
+    def play_footstep_sound(self):
+        teacher_student_dist = heuristic(self.teacher.position.to_coordenate(), self.game.student.position.to_coordenate())
+
+        sound_volume = map_value(teacher_student_dist, 0, self.game.student.hearing_teacher_steps_range, 1, 0)
+
+        if sound_volume < 0:
+            sound_volume = 0
+
+        self.teacher.footstep_sound.set_volume(sound_volume)
+
+        if not self.footstep_timer.is_counting:
+            self.footstep_timer.start()
+            self.teacher.footstep_sound.play()
+        if self.footstep_timer.time_is_up():
+            self.teacher.footstep_sound.play()
+            self.footstep_timer.restart()

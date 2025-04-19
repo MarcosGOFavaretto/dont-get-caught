@@ -32,15 +32,7 @@ class TeacherSergio(Teacher):
             final_point=next_action_final_point, 
             walk_speed=self.walk_speed,
             walk_path=self.classroom.find_path(self.position, next_action_final_point))
-
-    def get_movement_possibilities(self) :
-        movement_possibilities = []
-        for row in self.classroom.grid_points:
-            for point in row:
-                if not point.is_student_desk and point != self.position and self.classroom.grid_point_is_close_to_wall(point):
-                    movement_possibilities.append(point)
-        return movement_possibilities
-
+    
     def get_wait_action(self):  
         directions_to_look = list(MovementDirection)
         wall_direction = self.get_neighbor_wall_direction()

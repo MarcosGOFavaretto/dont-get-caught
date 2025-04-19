@@ -17,7 +17,6 @@ class Classroom:
     def get_render(self, surface: Surface):
         return ClassroomRender(classroom=self, surface=surface)
     
-
     def get_center_coordenate(self):
         center_x = int(self.x + self.width / 2)
         center_y = int(self.y + self.height / 2)
@@ -62,6 +61,15 @@ class Classroom:
                 column_coordenates.append((point.column, point.row))
             coordenates.append(column_coordenates)
         return coordenates
+
+    def grid_point_is_close_to_wall(self, grid_point: ClassroomGridPoint) -> bool:
+        neighbors = [(-1, 0),(+1, 0),(0, +1),(0, -1)]
+        for neighbor in neighbors:
+            nx = grid_point.column + neighbor[0]
+            ny = grid_point.row + neighbor[1]
+            if nx < 0 or nx >= len(self.grid_points) or ny < 0 or ny >= len(self.grid_points[0]):
+                return True
+        return False
 
     def find_path(self, initial_point: ClassroomGridPoint, final_point: ClassroomGridPoint):
         initial_point = (initial_point.column, initial_point.row)

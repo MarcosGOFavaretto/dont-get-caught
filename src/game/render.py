@@ -45,4 +45,4 @@ class GameRender:
     # Define o aluno do jogo.
     #   
     def define_student(self):
-        self.student = Student(game=self, position=copy.deepcopy(self.classroom.grid_points[0][1]))
+        self.student = Student(game=self, position=copy.deepcopy(self.classroom.grid_points[4][3]))

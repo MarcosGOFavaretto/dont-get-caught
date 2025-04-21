@@ -13,6 +13,8 @@ class Classroom:
         self.x = x
         self.y = y
         self.grid_points = self.get_grid_points()
+        self.desk_width = 60
+        self.desk_height = self.desk_width - 20
 
     def get_render(self, surface: Surface):
         return ClassroomRender(classroom=self, surface=surface)

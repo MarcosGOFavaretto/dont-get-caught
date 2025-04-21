@@ -121,12 +121,20 @@ class TeacherRender:
         pygame.draw.polygon(surface, color, points)
 
     def play_footstep_sound(self):
-        teacher_student_dist = heuristic(self.teacher.position.to_coordenate(), self.game.student.position.to_coordenate())
-
+        point_offset = self.game.classroom.desk_width / 2 + 40
+        teacher_student_dist = heuristic(self.teacher.position.to_coordenate(), self.game.student.position.to_coordenate()) - point_offset
         sound_volume = map_value(teacher_student_dist, 0, self.game.student.hearing_teacher_steps_range, 1, 0)
+        listen_curve = 2
+        sound_volume = math.pow(sound_volume, listen_curve)
 
         if sound_volume < 0:
             sound_volume = 0
+        elif sound_volume > 1:
+            sound_volume = 1
+
+
+        print(sound_volume)
+
 
         self.teacher.footstep_sound.set_volume(sound_volume)
 

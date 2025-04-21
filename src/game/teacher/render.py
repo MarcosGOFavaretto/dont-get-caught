@@ -132,10 +132,6 @@ class TeacherRender:
         elif sound_volume > 1:
             sound_volume = 1
 
-
-        print(sound_volume)
-
-
         self.teacher.footstep_sound.set_volume(sound_volume)
 
         if not self.footstep_timer.is_counting:

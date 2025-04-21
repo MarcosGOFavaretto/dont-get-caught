@@ -3,3 +3,9 @@
 
 # ignore pycache files
 **/__pycache__
+
+# build
+venv/
+build/
+dist/
+*.spec

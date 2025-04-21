@@ -2,6 +2,14 @@
 
 **Don't Get Caught** é um jogo de **stealth** onde você é um aluno do ensino médio tentando colar em uma prova sem ser pego pelo professor. Use estratégia, distrações e movimentos furtivos para garantir sua aprovação. Só não deixe o professor perceber! 😎
 
+## Como rodar o jogo
+
+Para rodar o jogo execute o comando abaixo na raiz do projeto.
+
+```sh
+python main.py
+```
+
 ## Build
 
 Caso queira gerar um executável para o projeto rode o comando.

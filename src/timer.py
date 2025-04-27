@@ -9,20 +9,18 @@ class Timer:
 
     def start(self):
         self.is_counting = True
-        self.wait_time_start = pygame.time.get_ticks()    
+        self.wait_time_start = pygame.time.get_ticks() 
+        self.last_tick = self.wait_time_start
 
     def stop(self):
         self.is_counting = False
         self.wait_time_start = 0
 
     def tick(self):
-        if not self.is_counting:
-            return False
-
-        if pygame.time.get_ticks() - self.last_tick >= 1000:
-            self.last_tick = pygame.time.get_ticks()
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_tick >= 1000:
+            self.last_tick += 1000
             return True
-
         return False
 
     def get_time_passed(self):

@@ -6,6 +6,7 @@ import copy
 from ..timer import Timer, time_to_string
 import pygame
 from ..config import ASSETS_FOLDER, EXAM_TIME
+from ..fonts import merriweather
 
 class GameRender:
     def __init__(self, app):
@@ -20,23 +21,26 @@ class GameRender:
         self.clock_tick_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/clock-tick.mp3')
         self.clock_tick_sound.set_volume(0.3)
         self.exam_timer = Timer(wait_time=EXAM_TIME)
+        self.exam_timer.start()
 
         self.define_classroom()
         self.define_teacher()
         self.define_student()
 
-        self.exam_timer.start()
 
     # Método para renderizar as entidades do jogo.
     #
     def render(self):
         self.classroom_render.render()
         self.teacher_render.render()
-        self.clock_tick()
+        self.render_clock()
 
-    def clock_tick(self):
+    def render_clock(self):
         if self.exam_timer.tick():
             self.clock_tick_sound.play()
+        time_str = time_to_string(self.exam_timer.get_time_passed())
+        s = merriweather.render(time_str, True, 'black', 'white')
+        self.app.surface.blit(s, (10, 10))
 
     # Método para encerrar o jogo e voltar para o menu.
     #

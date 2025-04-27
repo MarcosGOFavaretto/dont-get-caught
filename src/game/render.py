@@ -5,7 +5,7 @@ from .student.student import Student
 import copy
 from ..timer import Timer, time_to_string
 import pygame
-from ..config import ASSETS_FOLDER
+from ..config import ASSETS_FOLDER, EXAM_TIME
 
 class GameRender:
     def __init__(self, app):
@@ -19,7 +19,7 @@ class GameRender:
 
         self.clock_tick_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/clock-tick.mp3')
         self.clock_tick_sound.set_volume(0.3)
-        self.exam_timer = Timer(wait_time=2 * 1000 * 60)
+        self.exam_timer = Timer(wait_time=EXAM_TIME)
 
         self.define_classroom()
         self.define_teacher()

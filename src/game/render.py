@@ -3,6 +3,9 @@ from .classroom.classroom import Classroom, ClassroomRender
 from .teacher.teacher import Teacher, TeacherRender
 from .student.student import Student
 import copy
+from ..timer import Timer, time_to_string
+import pygame
+from ..config import ASSETS_FOLDER, EXAM_TIME
 
 class GameRender:
     def __init__(self, app):
@@ -14,15 +17,26 @@ class GameRender:
         self.teacher_render: TeacherRender = None
         self.classroom_render: ClassroomRender = None
 
+        self.clock_tick_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/clock-tick.mp3')
+        self.clock_tick_sound.set_volume(0.3)
+        self.exam_timer = Timer(wait_time=EXAM_TIME)
+
         self.define_classroom()
         self.define_teacher()
         self.define_student()
+
+        self.exam_timer.start()
 
     # Método para renderizar as entidades do jogo.
     #
     def render(self):
         self.classroom_render.render()
         self.teacher_render.render()
+        self.clock_tick()
+
+    def clock_tick(self):
+        if self.exam_timer.tick():
+            self.clock_tick_sound.play()
 
     # Método para encerrar o jogo e voltar para o menu.
     #

@@ -19,8 +19,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    main_surface.fill((255, 255, 255))
-
     app.render()
 
     pygame.display.flip()

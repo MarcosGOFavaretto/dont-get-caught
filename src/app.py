@@ -1,6 +1,7 @@
 from pygame import Surface
 from enum import Enum
 from .game.render import GameRender
+from .menu.render import MenuRender
 
 class Screens(Enum):
     MENU = 'MENU'
@@ -11,7 +12,7 @@ class Screens(Enum):
 class App:
     def __init__(self, surface: Surface):
         self.surface = surface
-        self.current_render = GameRender(self)
+        self.current_render = MenuRender(self)
 
     def render(self):
         self.current_render.render()
@@ -30,7 +31,7 @@ class App:
 
     def set_render(self, screen: Screens):
         if screen == Screens.MENU:
-            pass
+            self.current_render = MenuRender(self)
         elif screen == Screens.GAME_RUNTIME:
             self.current_render = GameRender(self)
         elif screen == Screens.SETTINGS:

@@ -63,6 +63,7 @@ class MenuRender:
                         if button["rect"].collidepoint(event.pos):
                             self.button_click_fx.play()
                             self.app.start_game()
+                            self.background_sound.stop()
                             # print(f"Dificuldade selecionada: {button['text']}")
                     if self.back_button["rect"].collidepoint(event.pos):
                         self.button_back_fx.play()
@@ -85,7 +86,7 @@ class MenuRender:
         for button in button_list:
             is_hovered = button["rect"].collidepoint(mouse_pos)
             btnmouse = self.button_mouse if is_hovered else 100  #Se passar o mouse no botão, diminui a transparência dele
-            
+
             surfacebtn = pygame.Surface((button["rect"].width, button["rect"].height), pygame.SRCALPHA)
             surfacebtn.fill((255, 255, 255, btnmouse))
             self.app.surface.blit(surfacebtn, button["rect"].topleft)

@@ -7,6 +7,7 @@ from ..timer import Timer, time_to_string
 import pygame
 from ..config import ASSETS_FOLDER, EXAM_TIME
 from ..fonts import merriweather
+from ..constants import TIME_SECOND
 
 class GameRender:
     def __init__(self, app):
@@ -40,7 +41,7 @@ class GameRender:
         self.render_clock()
 
     def render_clock(self):
-        time_str = time_to_string(self.exam_timer.get_time_passed())
+        time_str = time_to_string(EXAM_TIME - self.exam_timer.get_time_passed() + TIME_SECOND)
         s = merriweather.render(time_str, True, 'black', 'white')
         self.app.surface.blit(s, (10, 10))
 

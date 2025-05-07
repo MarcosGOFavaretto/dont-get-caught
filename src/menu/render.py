@@ -1,5 +1,5 @@
 import pygame
-from ..fonts import menu as menu_font
+from ..fonts import merriweather_large as menu_font
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
 
 class MenuRender:
@@ -8,6 +8,15 @@ class MenuRender:
         self.background = pygame.image.load(f"{ASSETS_FOLDER}/menu-background.png")
         self.background = pygame.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
         self.buttons_width = 260
+        self.background_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/background-sound-menu.mp3')
+        self.background_sound.play(loops=-1, fade_ms=2000)
+        self.background_sound.set_volume(0.2)
+
+        self.button_click_fx = pygame.mixer.Sound(f'{ASSETS_FOLDER}/menu-click-btn.mp3')
+        self.button_back_fx = pygame.mixer.Sound(f'{ASSETS_FOLDER}/menu-back-btn.mp3')
+
+        self.button_click_fx.set_volume(0.5)
+        self.button_back_fx.set_volume(0.5)
 
         self.menu_options = [
             {"text": "INICIAR", "rect": pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 260, self.buttons_width, 50)},
@@ -43,6 +52,7 @@ class MenuRender:
                     for button in self.menu_options:
                         if button["rect"].collidepoint(event.pos):
                             if button["text"] == "INICIAR":
+                                self.button_click_fx.play()
                                 self.menu_active = False
                                 self.difficulty_menu_active = True
                             elif button["text"] == "SAIR":
@@ -51,9 +61,11 @@ class MenuRender:
                 elif self.difficulty_menu_active:
                     for button in self.menu_levels:
                         if button["rect"].collidepoint(event.pos):
+                            self.button_click_fx.play()
                             self.app.start_game()
                             # print(f"Dificuldade selecionada: {button['text']}")
                     if self.back_button["rect"].collidepoint(event.pos):
+                        self.button_back_fx.play()
                         self.menu_active = True
                         self.difficulty_menu_active = False
 

@@ -12,7 +12,7 @@ class Screens(Enum):
 class App:
     def __init__(self, surface: Surface):
         self.surface = surface
-        self.current_render = MenuRender(self)
+        self.current_render = GameRender(self)
 
     def render(self):
         self.current_render.render()

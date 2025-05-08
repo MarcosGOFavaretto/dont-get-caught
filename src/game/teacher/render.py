@@ -14,6 +14,10 @@ class TeacherRender:
         self.game = game
 
     def render(self):
+        if self.game.game_is_over:
+            self.render_sprite()
+            return
+
         if self.teacher.current_action is None or self.teacher_ends_current_action:
             self.next_action()
 

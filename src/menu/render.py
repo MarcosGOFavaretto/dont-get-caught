@@ -1,5 +1,5 @@
 import pygame
-from ..fonts import merriweather_large as menu_font
+from ..fonts import menu as menu_font
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
 
 class MenuRender:

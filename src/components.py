@@ -10,8 +10,12 @@ def Text(surface: pygame.Surface, content: str, color: pygame.Color, position: t
             surface.blit(text_outline_surface, (text_rect.x + dx, text_rect.y + dy))
     surface.blit(text_surface, text_rect.topleft)
 
-def Button(surface: pygame.Surface, label: str, rect: pygame.Rect, label_font: pygame.font.Font, background_color: pygame.Color):
+def Button(surface: pygame.Surface, label: str, rect: pygame.Rect, label_font: pygame.font.Font, background_color: pygame.Color, on_click = None):
     mouse_pos = pygame.mouse.get_pos()
+    mouse_pressed = pygame.mouse.get_pressed()
+    if on_click is not None and mouse_pressed[0] and rect.collidepoint(mouse_pos):
+        on_click()
+
     is_hovered = rect.collidepoint(mouse_pos)
     btn_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
     btn_opacity = 200 if is_hovered else 150 

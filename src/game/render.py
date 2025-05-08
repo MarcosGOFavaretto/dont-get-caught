@@ -59,7 +59,7 @@ class GameRender:
     # Método para encerrar o jogo e voltar para o menu.
     #
     def game_over(self):
-        self.game_over_screen = GameOver(app=self.app)
+        self.game_over_screen = GameOver(game=self)
         self.exam_timer.stop()
         self.game_is_over = True
 

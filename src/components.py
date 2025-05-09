@@ -18,7 +18,7 @@ def Button(surface: pygame.Surface, label: str, rect: pygame.Rect, label_font: p
 
     is_hovered = rect.collidepoint(mouse_pos)
     btn_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-    btn_opacity = 200 if is_hovered else 150 
+    btn_opacity = 220 if is_hovered else 170 
     btn_surface.fill((*background_color, btn_opacity))
     surface.blit(btn_surface, rect.topleft)
     

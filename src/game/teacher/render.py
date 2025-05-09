@@ -14,7 +14,7 @@ class TeacherRender:
         self.game = game
 
     def render(self):
-        if self.game.game_is_over:
+        if self.game.game_ends:
             self.render_sprite()
             return
 

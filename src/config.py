@@ -1,4 +1,4 @@
-from .constants import TIME_MINUTE
+from .timer import TIME_MINUTE
 
 GAME_NAME = "Don't get caught"
 WINDOW_WIDTH = 1000

@@ -1,7 +1,7 @@
 from .teacher.teachers.sergio import TeacherSergio
 from .classroom.classroom import Classroom, ClassroomRender
 from .teacher.teacher import Teacher, TeacherRender
-from .student.student import Student
+from .student.student import Student, StudentRender
 import copy
 from ..timer import Timer, time_to_string, TIME_SECOND
 import pygame
@@ -14,7 +14,7 @@ from .classroom.desk import ClassroomNpcDesk
 class GameRender:
     def __init__(self, app):
         self.app = app
-        self.npc_students_fill_rate = 0.7
+        self.npc_students_fill_rate = 0.8
         self.clock_tick_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/clock-tick.mp3')
         self.clock_tick_sound.set_volume(0.3)
         self.exam_timer = Timer(wait_time=EXAM_TIME)
@@ -23,7 +23,7 @@ class GameRender:
         self.game_ends = False
         self.classroom, self.classroom_render = self.define_classroom()
         self.teacher, self.teacher_render = self.define_teacher()
-        self.student: Student = self.define_student()
+        self.student, self.student_render = self.define_student()
         self.define_npc_students()
 
     # Método para renderizar as entidades do jogo.
@@ -31,8 +31,9 @@ class GameRender:
     def render(self):
         self.app.surface.fill((255, 255, 255))
 
-        if self.classroom_render: self.classroom_render.render()
-        if self.teacher_render: self.teacher_render.render()
+        self.classroom_render.render()
+        self.teacher_render.render()
+        self.student_render.render()
         self.render_clock()
 
         if self.game_ends and self.game_final_screen:
@@ -80,10 +81,11 @@ class GameRender:
 
     # Define o aluno do jogo.
     #   
-    def define_student(self) -> Student:
+    def define_student(self) -> tuple[Student, StudentRender]:
         column, row = (4, 3)
         student = Student(game=self, position=copy.deepcopy(self.classroom.grid_points[column][row]))
-        return student
+        student_render = student.get_render(self.app.surface)
+        return (student, student_render)
     
     def define_npc_students(self):
         for grid_column in self.classroom.grid_points:

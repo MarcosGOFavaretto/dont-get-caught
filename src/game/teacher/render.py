@@ -93,10 +93,6 @@ class TeacherRender:
         if not self.teacher.is_sleeping:
             self.render_vision()
 
-        vision_points = self.teacher.get_vision_points()
-        for point in vision_points:
-            pygame.draw.circle(self.surface, 'yellow', (point.x, point.y), 5)
-
         # corpo
         size_w = 60
         size_h = size_w / 2
@@ -128,8 +124,7 @@ class TeacherRender:
         pygame.draw.polygon(surface, color, points)
 
     def play_footstep_sound(self):
-        point_offset = self.game.classroom.desk_width / 2 + 40
-        teacher_student_dist = heuristic(self.teacher.position.to_coordenate(), self.game.student.position.to_coordenate()) - point_offset
+        teacher_student_dist = heuristic(self.teacher.position.to_coordenate(), self.game.student.position.to_coordenate())
         sound_volume = map_value(teacher_student_dist, 0, self.game.student.hearing_teacher_steps_range, 1, 0)
         listen_curve = 2
         sound_volume = math.pow(sound_volume, listen_curve)

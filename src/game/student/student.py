@@ -7,4 +7,4 @@ class Student:
     def __init__(self, game: 'GameRender', position: ClassroomGridPoint):
         self.position = position
         self.game = game
-        self.hearing_teacher_steps_range = 500
+        self.hearing_teacher_steps_range = 600

@@ -2,9 +2,13 @@ from .render import ClassroomRender
 from .grid import ClassroomGridPoint
 from .path_find_algorithm import a_star
 from pygame import Surface
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..render import GameRender
 
 class Classroom:
-    def __init__(self, dimension: tuple[int, int], x: int, y: int, rows: int, columns: int):
+    def __init__(self, game: 'GameRender', dimension: tuple[int, int], x: int, y: int, rows: int, columns: int):
+        self.game = game
         self.width, self.height = dimension
         self.grid_rows = rows
         self.grid_columns = columns
@@ -12,12 +16,10 @@ class Classroom:
         self.row_width = self.height / self.grid_rows
         self.x = x
         self.y = y
-        self.grid_points = self.get_grid_points()
-        self.desk_width = 60
-        self.desk_height = self.desk_width - 20
+        self.grid_points = self._generate_grid_points()
 
     def get_render(self, surface: Surface):
-        return ClassroomRender(classroom=self, surface=surface)
+        return ClassroomRender(self.game, classroom=self, surface=surface)
     
     def get_center_coordenate(self):
         center_x = int(self.x + self.width / 2)
@@ -29,8 +31,7 @@ class Classroom:
     def create_grid_point(self, column: int, row: int):
         x = int(self.column_width * column + self.x + self.column_width / 2)
         y = int(self.row_width * row + self.y + self.row_width / 2)
-        is_student_desk = self.is_student_desk(column, row)
-        return ClassroomGridPoint(column, row, x, y, is_student_desk)
+        return ClassroomGridPoint(column, row, x, y, classroom_desk=None)
 
     # Função que verifica se ponto do grid é carteira de aluno ou não
     #
@@ -46,7 +47,7 @@ class Classroom:
     #   . . . . . . . 
     #   @ . @ . @ . @ 
     #
-    def get_grid_points(self):
+    def _generate_grid_points(self):
         movement_points = list[list[ClassroomGridPoint]]()
         for c in range(self.grid_columns):
             grid_col = list[ClassroomGridPoint]()
@@ -54,6 +55,15 @@ class Classroom:
                 grid_col.append(self.create_grid_point(c, r))
             movement_points.append(grid_col)
         return movement_points
+
+    def find_path(self, initial_point: ClassroomGridPoint, final_point: ClassroomGridPoint):
+        initial_point_coordenate = (initial_point.column, initial_point.row)
+        final_point_coordenate = (final_point.column, final_point.row)
+        path_coordenates = a_star(self.grid_points, initial_point_coordenate, final_point_coordenate)
+        if path_coordenates is None:
+            return []
+        path = [self.grid_points[c][r] for c, r in path_coordenates]
+        return path
 
     def get_grid_coordenates(self):
         coordenates = list[list[tuple[int, int]]]()
@@ -63,6 +73,7 @@ class Classroom:
                 column_coordenates.append((point.column, point.row))
             coordenates.append(column_coordenates)
         return coordenates
+    
 
     def grid_point_is_close_to_wall(self, grid_point: ClassroomGridPoint) -> bool:
         neighbors = [(-1, 0),(+1, 0),(0, +1),(0, -1)]
@@ -73,11 +84,18 @@ class Classroom:
                 return True
         return False
 
-    def find_path(self, initial_point: ClassroomGridPoint, final_point: ClassroomGridPoint):
-        initial_point_coordenate = (initial_point.column, initial_point.row)
-        final_point_coordenate = (final_point.column, final_point.row)
-        path_coordenates = a_star(self.grid_points, initial_point_coordenate, final_point_coordenate)
-        if path_coordenates is None:
-            return []
-        path = [self.grid_points[c][r] for c, r in path_coordenates]
-        return path
+    def get_total_desks(self):
+        total_desks = 0
+        for column in self.grid_points:
+            for point in column:
+                if point.classroom_desk is not None:
+                    total_desks += 1
+        return total_desks
+    
+    def get_grid_points_list(self):
+        grid_points: list[ClassroomGridPoint] = []
+        for column in self.grid_points:
+            for point in column:
+                grid_points.append(point)
+        return grid_points
+

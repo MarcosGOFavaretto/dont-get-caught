@@ -62,7 +62,7 @@ class Teacher:
         movement_possibilities = []
         for row in self.classroom.grid_points:
             for point in row:
-                if not point.is_student_desk and point != self.position:
+                if point.classroom_desk is None and point != self.position:
                     movement_possibilities.append(point)
         return movement_possibilities
     

@@ -16,7 +16,7 @@ def get_neighbors(position, grid):
     neighbors = [
         (x+1, y), (x-1, y), (x, y+1), (x, y-1)
     ]
-    return [(nx, ny) for nx, ny in neighbors if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]) and not grid[nx][ny].is_student_desk]
+    return [(nx, ny) for nx, ny in neighbors if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]) and grid[nx][ny].classroom_desk is None]
 
 def a_star(grid, start, goal):
     open_list = []

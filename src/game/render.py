@@ -45,8 +45,7 @@ class GameRender:
             return
 
         if self.exam_timer.time_is_up():
-            # self.game_over()
-            self.you_win()
+            self.game_over()
             return
 
         if self.exam_timer.tick():

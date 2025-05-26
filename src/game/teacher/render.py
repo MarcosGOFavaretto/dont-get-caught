@@ -1,4 +1,4 @@
-from .movement import MovementDirection, MovementActionType
+from .movement import MovementDirection, MovementActionType, MovementActionWalk, MovementActionWait
 import pygame
 import math
 from ...config import WINDOW_WIDTH, WINDOW_HEIGHT
@@ -7,9 +7,10 @@ from ...utils import heuristic, map_value
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..render import GameRender
+    from .teacher import Teacher
 
 class TeacherRender:
-    def __init__(self, game: 'GameRender', teacher, surface: pygame.Surface):
+    def __init__(self, game: 'GameRender', teacher: 'Teacher', surface: pygame.Surface):
         self.surface = surface
         self.teacher = teacher
         self.teacher_ends_current_action = False
@@ -23,6 +24,9 @@ class TeacherRender:
 
         if self.teacher.current_action is None or self.teacher_ends_current_action:
             self.next_action()
+
+        if self.teacher.current_action is None:
+            raise ValueError("Teacher has no current action to render.")
 
         if self.teacher.current_action.action_type == MovementActionType.WALK:
             self.teacher_ends_current_action = False
@@ -42,9 +46,18 @@ class TeacherRender:
         self.teacher.get_next_action()
     
     def animate_walk(self):
+        if self.teacher.current_action is None:
+            raise ValueError("Teacher has no current action to render.")
+
+        if not isinstance(self.teacher.current_action, MovementActionWalk):
+            raise ValueError("Current action is not a walking action.")
+
         walk_direction = self.teacher.current_action.direction
         self.teacher.direction = walk_direction
         self.teacher.vision_direction = walk_direction
+
+        if self.teacher.current_action.next_point is None:
+            raise ValueError("Next point is None, cannot animate walk.")
 
         # Verifica se o professor terminou o passo
         is_next_point = False
@@ -76,6 +89,9 @@ class TeacherRender:
             self.teacher.position.y += self.teacher.walk_speed
 
     def animate_wait(self):
+        if not isinstance(self.teacher.current_action, MovementActionWait):
+            raise ValueError("Current action is not a wait action.")
+
         self.teacher.direction = self.teacher.current_action.direction
         self.teacher.vision_direction = self.teacher.current_action.direction
         if self.teacher.current_action.wait_time_start == 0:
@@ -126,8 +142,8 @@ class TeacherRender:
     def play_footstep_sound(self):
         teacher_student_dist = heuristic(self.teacher.position.to_coordenate(), self.game.student.position.to_coordenate())
         sound_volume = map_value(teacher_student_dist, 0, self.game.student.hearing_teacher_steps_range, 1, 0)
-        listen_curve = 2
-        sound_volume = math.pow(sound_volume, listen_curve)
+        # listen_curve = 2
+        # sound_volume = math.pow(sound_volume, listen_curve)
 
         if sound_volume < 0:
             sound_volume = 0

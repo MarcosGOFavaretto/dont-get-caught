@@ -24,10 +24,10 @@ class Teacher:
         self.is_walking = False
         self.is_waiting = False
         self.is_sleeping = False
-        self.direction = None
+        self.direction: MovementDirection | None = None
         self.vision_radius = 200
         self.vision_angle = math.pi * 0.5
-        self.vision_direction = None
+        self.vision_direction: MovementDirection | None = None
         self.footstep_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/footstep.mp3')
 
     def get_render(self, surface: pygame.Surface):

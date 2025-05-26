@@ -1,7 +1,7 @@
 import heapq
 from ...utils import heuristic
 class Node:
-    def __init__(self, position, parent=None, g=0, h=0):
+    def __init__(self, position, parent=None, g=0, h=0.0):
         self.position = position  # (x, y)
         self.parent = parent
         self.g = g  # Cost from start to this node

@@ -1,14 +1,16 @@
 from ..teacher import Teacher, MovementAction, MovementDirection, MovementActionType, MovementActionWalk, MovementActionWait
 import random
-from ....utils import get_angle_between_points
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..render import GameRender
 
 class TeacherSergio(Teacher):
-    def __init__(self, game: any):
+    def __init__(self, game: 'GameRender'):
         super().__init__(game=game, name="Sérgio", initial_position=(int(game.classroom.grid_columns / 2), 0))
         self.last_action = None
         self.walk_speed = 1.5
 
-    def get_next_action(self) -> MovementAction:
+    def get_next_action(self) :
         self.last_action = self.current_action
 
         if self.last_action is None:
@@ -34,7 +36,7 @@ class TeacherSergio(Teacher):
             walk_speed=self.walk_speed,
             walk_path=self.classroom.find_path(self.position, next_action_final_point))
     
-    def get_wait_action(self, direction_to_look: MovementDirection = None) -> MovementAction:  
+    def get_wait_action(self, direction_to_look: MovementDirection | None = None) -> MovementAction:  
         if direction_to_look is None:
             directions_to_look = list(MovementDirection)
             wall_directions = self.get_neighbor_wall_direction()
@@ -43,7 +45,7 @@ class TeacherSergio(Teacher):
         return MovementActionWait(point=self.position, direction_to_look=direction_to_look, wait_time=random.randint(self.wait_time_range[0], self.wait_time_range[1]))
 
 
-    def get_neighbor_wall_direction(self) -> MovementDirection:
+    def get_neighbor_wall_direction(self) :
         neighbors = [
             dict(offset=(-1, 0), direction=MovementDirection.LEFT),
             dict(offset=(+1, 0), direction=MovementDirection.RIGHT),
@@ -51,7 +53,7 @@ class TeacherSergio(Teacher):
             dict(offset=(0, +1), direction=MovementDirection.DOWN) 
         ]
 
-        directions = []
+        directions: list[MovementDirection] = []
         for neighbor in neighbors:
             nx = self.position.column + neighbor.get('offset')[0]
             ny = self.position.row + neighbor.get('offset')[1]

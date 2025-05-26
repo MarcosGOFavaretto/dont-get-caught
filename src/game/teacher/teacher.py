@@ -6,13 +6,17 @@ import math
 import pygame
 import copy
 from ...config import ASSETS_FOLDER
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..render import GameRender
+
 class Teacher:
-    def __init__(self, game: any, name: str = 'Default', initial_position: tuple = (0, 0)):
+    def __init__(self, game: 'GameRender', name: str = 'Default', initial_position: tuple = (0, 0)):
         self.game = game
         self.name = name
         self.classroom: Classroom = game.classroom
         self.position: ClassroomGridPoint = copy.deepcopy(self.classroom.grid_points[initial_position[0]][initial_position[1]])
-        self.current_action: MovementAction = None
+        self.current_action: MovementAction | None = None
         self.sleep_time_threshold = 2800
         self.time_to_wake_up = 4000
         self.wait_time_range = (1000, 3000)
@@ -31,7 +35,7 @@ class Teacher:
 
     # Dentre as possibilidades de ações possíveis, é escolhida uma aleatoriamente.
     #     
-    def get_next_action(self) -> MovementAction:
+    def get_next_action(self) -> MovementAction | None:
         random_action = random.choice(list(MovementActionType))
         if random_action == MovementActionType.WALK:
             movement_possibilities = self.get_movement_possibilities()
@@ -73,6 +77,8 @@ class Teacher:
             return (-self.vision_angle / 2 - math.pi / 2, self.vision_angle / 2 - math.pi / 2)
         elif self.vision_direction == MovementDirection.DOWN:
             return (-self.vision_angle / 2 + math.pi / 2, self.vision_angle / 2 + math.pi / 2)
+        else:
+            raise ValueError("Invalid vision direction")
         
     # Função para retornar os pontos que estão dentro do raio de visão do professor.
     #

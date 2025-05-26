@@ -21,33 +21,38 @@ class MovementAction:
 
 class MovementActionWalk(MovementAction):
     def __init__(self, current_point: ClassroomGridPoint, final_point: ClassroomGridPoint, walk_speed: float, walk_path: list[ClassroomGridPoint]):
-        super().__init__(MovementActionType.WALK, final_point, None)
-        self.direction = None
-        self.current_point = current_point
-        self.walk_speed = walk_speed
         self.walk_path = walk_path
         self.path_cursor = 0
-        self.next_point: ClassroomGridPoint = copy.deepcopy(self.walk_path[self.path_cursor])
-        self.set_walk_direction()
+        self.next_point: ClassroomGridPoint | None = copy.deepcopy(self.walk_path[self.path_cursor])
+        self.current_point = current_point
+        self.walk_speed = walk_speed
+        self.direction = self.get_walk_direction()
+        super().__init__(MovementActionType.WALK, final_point, self.direction)
 
     def advance_path(self):
         self.path_cursor += 1
         if self.path_cursor >= len(self.walk_path):
             self.next_point = None
             return 
-        self.current_point = self.next_point
+        if self.next_point:
+            self.current_point = self.next_point
         self.next_point = copy.deepcopy(self.walk_path[self.path_cursor])
-        self.set_walk_direction()
+        self.direction = self.get_walk_direction()
     
-    def set_walk_direction(self) :
+    def get_walk_direction(self):
+        if self.next_point is None:
+            raise ValueError("Next point is None, cannot set direction.")
         if self.current_point.row < self.next_point.row:
-            self.direction = MovementDirection.DOWN
+            return MovementDirection.DOWN
         elif self.current_point.row > self.next_point.row:
-            self.direction = MovementDirection.UP
+            return MovementDirection.UP
         elif self.current_point.column < self.next_point.column:
-            self.direction = MovementDirection.RIGHT
+            return MovementDirection.RIGHT
         elif self.current_point.column > self.next_point.column:
-            self.direction = MovementDirection.LEFT
+            return MovementDirection.LEFT
+        else:
+            raise ValueError("Current point and next point are the same, cannot set direction.")
+    
     
 class MovementActionWait(MovementAction):
     def __init__(self, point: ClassroomGridPoint, direction_to_look: MovementDirection, wait_time: float):

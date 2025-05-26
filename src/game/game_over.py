@@ -36,7 +36,7 @@ class GameOver:
         self.rain_list = [Rain(height=WINDOW_HEIGHT, width=WINDOW_WIDTH) for _ in range(100)]
 
     def render(self):
-        self.fade_in_animation(start=0, end=250, velocity=10)
+        self.fade_in_animation(start=0, end=220, velocity=10)
 
         self.surface.fill((0, 0, 0, self.screen_opacity))
 
@@ -46,31 +46,31 @@ class GameOver:
 
         Text(surface=self.surface,
                 content='GAME OVER',
-                color=(255, 255, 255, self.screen_opacity),
+                color=pygame.Color(255, 255, 255, self.screen_opacity),
                 position=(WINDOW_WIDTH // 2, 200),
                 font=fonts.game_final_screen_title,
-                outline_color=(0, 0, 0),
+                outline_color=pygame.Color(0, 0, 0),
                 outline_size=3)
         
         Text(surface=self.surface,
                 content=self.subtext,
-                color=(255, 255, 255, self.screen_opacity),
+                color=pygame.Color(255, 255, 255, self.screen_opacity),
                 position=(WINDOW_WIDTH // 2, 280),
                 font=fonts.game_final_subtext,
-                outline_color=(0, 0, 0),
+                outline_color=pygame.Color(0, 0, 0),
                 outline_size=1)
 
         Button(surface=self.surface,
                 label='Jogar novamente', 
                 label_font=fonts.game_final_btn_label,
-                background_color=(255, 255, 255),
+                background_color=pygame.Color(255, 255, 255),
                 rect=pygame.Rect(WINDOW_WIDTH // 2 - 300 // 2, 340, 300, 50),
                 on_click=self.play_again)
         
         Button(surface=self.surface,
                 label='Ir para o Menu', 
                 label_font=fonts.game_final_btn_label,
-                background_color=(255, 255, 255),
+                background_color=pygame.Color(255, 255, 255),
                 rect=pygame.Rect(WINDOW_WIDTH // 2 - 300 // 2, 420, 300, 50), 
                 on_click=self.go_to_menu)
 

@@ -74,8 +74,10 @@ class Classroom:
         return False
 
     def find_path(self, initial_point: ClassroomGridPoint, final_point: ClassroomGridPoint):
-        initial_point = (initial_point.column, initial_point.row)
-        final_point = (final_point.column, final_point.row)
-        path_coordenates = a_star(self.grid_points, initial_point, final_point)
+        initial_point_coordenate = (initial_point.column, initial_point.row)
+        final_point_coordenate = (final_point.column, final_point.row)
+        path_coordenates = a_star(self.grid_points, initial_point_coordenate, final_point_coordenate)
+        if path_coordenates is None:
+            return []
         path = [self.grid_points[c][r] for c, r in path_coordenates]
         return path

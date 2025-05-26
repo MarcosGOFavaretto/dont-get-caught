@@ -13,11 +13,9 @@ from .you_win import YouWin
 class GameRender:
     def __init__(self, app):
         self.app = app
-        self.classroom: Classroom = None
-        self.teacher: Teacher = None
-        self.student: Student = None
-        self.teacher_render: TeacherRender = None
-        self.classroom_render: ClassroomRender = None
+        self.classroom, self.classroom_render = self.define_classroom()
+        self.teacher, self.teacher_render = self.define_teacher()
+        self.student: Student = self.define_student()
         self.clock_tick_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/clock-tick.mp3')
         self.clock_tick_sound.set_volume(0.3)
         self.exam_timer = Timer(wait_time=EXAM_TIME)
@@ -25,21 +23,17 @@ class GameRender:
         self.game_final_screen = None
         self.game_ends = False
 
-        self.define_classroom()
-        self.define_teacher()
-        self.define_student()
-
 
     # Método para renderizar as entidades do jogo.
     #
     def render(self):
         self.app.surface.fill((255, 255, 255))
 
-        self.classroom_render.render()
-        self.teacher_render.render()
+        if self.classroom_render: self.classroom_render.render()
+        if self.teacher_render: self.teacher_render.render()
         self.render_clock()
 
-        if self.game_ends:
+        if self.game_ends and self.game_final_screen:
             self.game_final_screen.render()
 
     def render_clock(self):
@@ -51,7 +45,8 @@ class GameRender:
             return
 
         if self.exam_timer.time_is_up():
-            self.game_over()
+            # self.game_over()
+            self.you_win()
             return
 
         if self.exam_timer.tick():
@@ -69,18 +64,21 @@ class GameRender:
 
     # Define a sala de aula.
     #   - Cria uma sala de aula com as dimensões, número de linhas e colunas.
-    def define_classroom(self):
-        self.classroom = Classroom(dimension=(1000, 600), x=0, y=0, rows=8, columns=11)
-        self.classroom_render = self.classroom.get_render(self.app.surface)
+    def define_classroom(self) -> tuple[Classroom, ClassroomRender]:
+        classroom = Classroom(dimension=(1000, 600), x=0, y=0, rows=8, columns=11)
+        classroom_render = classroom.get_render(self.app.surface)
+        return (classroom, classroom_render)
 
     # Define o professor do jogo.
     #   
-    def define_teacher(self):
-        self.teacher = TeacherSergio(game=self)
+    def define_teacher(self) -> tuple[Teacher, TeacherRender]:
+        teacher = TeacherSergio(game=self)
         # self.teacher = Teacher(game=self)
-        self.teacher_render = self.teacher.get_render(self.app.surface)
+        teacher_render = teacher.get_render(self.app.surface)
+        return (teacher, teacher_render)
 
     # Define o aluno do jogo.
     #   
-    def define_student(self):
-        self.student = Student(game=self, position=copy.deepcopy(self.classroom.grid_points[4][3]))
+    def define_student(self) -> Student:
+        student = Student(game=self, position=copy.deepcopy(self.classroom.grid_points[4][3]))
+        return student

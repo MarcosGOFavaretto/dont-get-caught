@@ -4,9 +4,12 @@ import math
 from ...config import WINDOW_WIDTH, WINDOW_HEIGHT
 from ...timer import Timer
 from ...utils import heuristic, map_value
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..render import GameRender
 
 class TeacherRender:
-    def __init__(self, game: any, teacher, surface: pygame.Surface):
+    def __init__(self, game: 'GameRender', teacher, surface: pygame.Surface):
         self.surface = surface
         self.teacher = teacher
         self.teacher_ends_current_action = False

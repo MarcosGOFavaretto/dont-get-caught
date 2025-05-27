@@ -4,9 +4,9 @@ TIME_SECOND = 1 * 1000
 TIME_MINUTE = 60 * TIME_SECOND
 
 class Timer:
-    def __init__(self, wait_time: float):
+    def __init__(self, wait_time: float = 0):
         self.wait_time = wait_time
-        self.wait_time_start = 0
+        self.timer_start = 0
         self.is_counting = False
         self.is_stopped = False
         self.last_tick = 0
@@ -15,8 +15,8 @@ class Timer:
     def start(self):
         self.is_counting = True
         self.is_stopped = False
-        self.wait_time_start = pygame.time.get_ticks() 
-        self.last_tick = self.wait_time_start
+        self.timer_start = pygame.time.get_ticks() 
+        self.last_tick = self.timer_start
 
     def stop(self):
         self.is_counting = False
@@ -32,7 +32,7 @@ class Timer:
     def get_time_passed(self):
         if self.is_stopped:
             return self.time_passed
-        self.time_passed = pygame.time.get_ticks() - self.wait_time_start
+        self.time_passed = pygame.time.get_ticks() - self.timer_start
         return self.time_passed
     
     def time_is_up(self):

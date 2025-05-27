@@ -3,7 +3,7 @@ import pygame
 import math
 from ...config import WINDOW_WIDTH, WINDOW_HEIGHT
 from ...timer import Timer
-from ...utils import heuristic, map_value
+from ...utils import heuristic, map_value, senoide
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..render import GameRender
@@ -14,8 +14,12 @@ class TeacherRender:
         self.surface = surface
         self.teacher = teacher
         self.teacher_ends_current_action = False
-        self.footstep_timer = Timer(wait_time=800/self.teacher.walk_speed)
+        self.footstep_interval = 800/self.teacher.walk_speed
+        self.footstep_sound_timer = Timer(wait_time=self.footstep_interval)
+        self.action_timer = Timer()
+        self.action_start_timer = 0
         self.game = game
+        self.footstep_movement_fn = senoide(12, 1/(self.footstep_interval * 2), -90)
 
     def render(self):
         if self.game.game_ends:
@@ -24,6 +28,7 @@ class TeacherRender:
 
         if self.teacher.current_action is None or self.teacher_ends_current_action:
             self.next_action()
+            self.action_timer.restart()
 
         if self.teacher.current_action is None:
             raise ValueError("Teacher has no current action to render.")
@@ -31,9 +36,9 @@ class TeacherRender:
         if self.teacher.current_action.action_type == MovementActionType.WALK:
             self.teacher_ends_current_action = False
             self.teacher.is_walking = True
-            self.play_footstep_sound()
             self.animate_walk()
         elif self.teacher.current_action.action_type == MovementActionType.WAIT:
+            self.footstep_sound_timer.stop()
             self.teacher_ends_current_action = False
             self.teacher.is_waiting = True
             self.animate_wait()
@@ -46,6 +51,12 @@ class TeacherRender:
         self.teacher.get_next_action()
     
     def animate_walk(self):
+        self.render_foots_movement()
+        self.play_footstep_sound()
+
+        if self.footstep_sound_timer.time_is_up():
+            self.footstep_sound_timer.restart()
+
         if self.teacher.current_action is None:
             raise ValueError("Teacher has no current action to render.")
 
@@ -74,7 +85,6 @@ class TeacherRender:
             self.teacher.position = self.teacher.current_action.next_point
             self.teacher.current_action.advance_path()
             if self.teacher.current_action.next_point is None:
-                # self.teacher.current_action = None
                 self.teacher_ends_current_action = True
             return
 
@@ -91,7 +101,6 @@ class TeacherRender:
     def animate_wait(self):
         if not isinstance(self.teacher.current_action, MovementActionWait):
             raise ValueError("Current action is not a wait action.")
-
         self.teacher.direction = self.teacher.current_action.direction
         self.teacher.vision_direction = self.teacher.current_action.direction
         if self.teacher.current_action.wait_time_start == 0:
@@ -108,21 +117,42 @@ class TeacherRender:
     def render_sprite(self):
         if not self.teacher.is_sleeping:
             self.render_vision()
-
         # corpo
         size_w = 60
-        size_h = size_w / 2
+        size_h = size_w // 2
         if self.teacher.direction in (MovementDirection.UP, MovementDirection.DOWN):
-            pygame.draw.ellipse(self.surface, 'green', (self.teacher.position.x - size_w / 2, self.teacher.position.y - size_h / 2, size_w, size_h), 20)
+            pygame.draw.ellipse(self.surface, 'green', (self.teacher.position.x - size_w // 2, self.teacher.position.y - size_h // 2, size_w, size_h), 20)
         if self.teacher.direction in (MovementDirection.LEFT, MovementDirection.RIGHT):
-            pygame.draw.ellipse(self.surface, 'green', (self.teacher.position.x - size_h / 2, self.teacher.position.y - size_w / 2, size_h, size_w), 20)
-
+            pygame.draw.ellipse(self.surface, 'green', (self.teacher.position.x - size_h // 2, self.teacher.position.y - size_w // 2, size_h, size_w), 20)
         # cabeça
         pygame.draw.circle(self.surface, 'black', (self.teacher.position.x, self.teacher.position.y), 20)
-
         # se estiver dormindo
         if self.teacher.is_sleeping:
             pygame.draw.circle(self.surface, 'blue', (self.teacher.position.x, self.teacher.position.y), 5)
+
+    def render_foots_movement(self):
+        foot_dist = 14
+        foot_size = 8
+        movement_amplitude = self.footstep_movement_fn(self.action_timer.get_time_passed())
+        left_foot_offset = movement_amplitude
+        right_foot_offset = -left_foot_offset
+
+        if self.teacher.direction == MovementDirection.DOWN:
+            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x - foot_dist, self.teacher.position.y+left_foot_offset), foot_size) # left foot
+            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x + foot_dist, self.teacher.position.y+right_foot_offset), foot_size) # right foot
+
+        if self.teacher.direction == MovementDirection.UP:
+            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x - foot_dist, self.teacher.position.y-left_foot_offset), foot_size) # left foot
+            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x + foot_dist, self.teacher.position.y-right_foot_offset), foot_size) # right foot
+            
+        if self.teacher.direction == MovementDirection.LEFT:
+            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x - left_foot_offset, self.teacher.position.y-foot_dist), foot_size) # left foot
+            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x - right_foot_offset, self.teacher.position.y+foot_dist), foot_size) # right foot
+        
+        if self.teacher.direction == MovementDirection.RIGHT:
+            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x + left_foot_offset, self.teacher.position.y-foot_dist), foot_size) # left foot
+            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x + right_foot_offset, self.teacher.position.y+foot_dist), foot_size) # right foot
+        
         
     def render_vision(self):
         vision_surface = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)
@@ -142,8 +172,6 @@ class TeacherRender:
     def play_footstep_sound(self):
         teacher_student_dist = heuristic(self.teacher.position.to_coordenate(), self.game.student.position.to_coordenate())
         sound_volume = map_value(teacher_student_dist, 0, self.game.student.hearing_teacher_steps_range, 1, 0)
-        # listen_curve = 2
-        # sound_volume = math.pow(sound_volume, listen_curve)
 
         if sound_volume < 0:
             sound_volume = 0
@@ -152,9 +180,8 @@ class TeacherRender:
 
         self.teacher.footstep_sound.set_volume(sound_volume)
 
-        if not self.footstep_timer.is_counting:
-            self.footstep_timer.start()
+        if not self.footstep_sound_timer.is_counting:
+            self.footstep_sound_timer.start()
             self.teacher.footstep_sound.play()
-        if self.footstep_timer.time_is_up():
+        if self.footstep_sound_timer.time_is_up():
             self.teacher.footstep_sound.play()
-            self.footstep_timer.restart()

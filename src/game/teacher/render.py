@@ -3,7 +3,8 @@ import pygame
 import math
 from ...config import WINDOW_WIDTH, WINDOW_HEIGHT
 from ...timer import Timer
-from ...utils import heuristic, map_value, senoide
+from ...utils import heuristic, map_value, senoide, circular
+from ...fonts import teacher_zzz
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..render import GameRender
@@ -17,6 +18,7 @@ class TeacherRender:
         self.footstep_interval = 800/self.teacher.walk_speed
         self.footstep_sound_timer = Timer(wait_time=self.footstep_interval)
         self.action_timer = Timer()
+        self.sleeping_timer = Timer()
         self.action_start_timer = 0
         self.game = game
         # self.footstep_movement_fn = senoide(12, 1/(self.footstep_interval * 2), math.pi/2)
@@ -107,9 +109,11 @@ class TeacherRender:
             self.teacher.current_action.start_timer()
         time_passed = self.teacher.current_action.get_time_passed()
         if time_passed >= self.teacher.sleep_time_threshold and not self.teacher.is_sleeping:
+            self.sleeping_timer.start()
             self.teacher.is_sleeping = True
             self.teacher.current_action.wait_time += self.teacher.time_to_wake_up
         if time_passed >= self.teacher.current_action.wait_time:
+            self.sleeping_timer.stop()
             self.wait_time_start = 0
             self.teacher.is_sleeping = False
             self.teacher_ends_current_action = True
@@ -128,10 +132,27 @@ class TeacherRender:
         pygame.draw.circle(self.surface, 'black', (self.teacher.position.x, self.teacher.position.y), 20)
         # se estiver dormindo
         if self.teacher.is_sleeping:
-            pygame.draw.circle(self.surface, 'blue', (self.teacher.position.x, self.teacher.position.y), 5)
+            self.render_sleeping_animation()
+            # pygame.draw.circle(self.surface, 'blue', (self.teacher.position.x, self.teacher.position.y), 5)
+
+    def render_sleeping_animation(self):
+        radius = 24
+        velocity = 0.002
+        sleeping_time = self.sleeping_timer.get_time_passed()
+        z1 = circular(self.teacher.position.x, self.teacher.position.y, radius, velocity, 0, sleeping_time)
+        z2 = circular(self.teacher.position.x, self.teacher.position.y, radius, velocity, math.pi, sleeping_time)
+
+        text_surface = teacher_zzz.render('ZzZ', True, 'blue')
+        z1_text = text_surface.get_rect(center=z1)
+        z2_text = text_surface.get_rect(center=z2)
+        self.surface.blit(text_surface, z1_text)
+        self.surface.blit(text_surface, z2_text)
+        # pygame.draw.circle(self.surface, 'blue', z1, 6)
+        # pygame.draw.circle(self.surface, 'blue', z2, 6)
+
 
     def render_foots_movement(self):
-        movement_amplitude = senoide(self.teacher.step_amplitude, 1/(self.footstep_interval * 2), -90, 0, 0.2, self.action_timer.get_time_passed())
+        movement_amplitude = senoide(self.teacher.step_amplitude, 1/(self.footstep_interval * 2), -math.pi/2, 0, 0.2, self.action_timer.get_time_passed())
         left_foot_offset = movement_amplitude
         right_foot_offset = -left_foot_offset
 

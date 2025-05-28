@@ -17,3 +17,8 @@ def senoide(max_amplitude: float, frequency: float, offset_x: float, offset_y: f
     max_amplitude *= 1 + square_shapping 
     wave = math.sin(w * time + offset_x)
     return max_amplitude * (wave/(abs(wave) + square_shapping)) + offset_y
+
+def circular(center_x: float, center_y: float, radius: float, velocity: float, offset: float, time: float):
+    x = center_x + radius * math.cos(time * velocity + offset)
+    y = center_y + radius * math.sin(time * velocity + offset)
+    return (x, y)

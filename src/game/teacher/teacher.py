@@ -18,7 +18,7 @@ class Teacher:
         self.position: ClassroomGridPoint = copy.deepcopy(self.classroom.grid_points[initial_position[0]][initial_position[1]])
         self.current_action: MovementAction | None = None
         self.sleep_time_threshold = 2800
-        self.time_to_wake_up = 4000
+        self.time_to_wake_up = 5000
         self.wait_time_range = (1000, 3000)
         self.walk_speed = 2
         self.is_walking = False

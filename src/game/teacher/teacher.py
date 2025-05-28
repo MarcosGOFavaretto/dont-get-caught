@@ -31,7 +31,7 @@ class Teacher:
         self.footstep_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/footstep.mp3')
         self.foot_dist = 10
         self.foot_size = 6
-        self.step_amplitude = 12
+        self.step_amplitude = 14
 
     def get_render(self, surface: pygame.Surface):
         return TeacherRender(game=self.game, teacher=self, surface=surface)

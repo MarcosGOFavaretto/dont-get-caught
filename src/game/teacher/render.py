@@ -3,7 +3,7 @@ import pygame
 import math
 from ...config import WINDOW_WIDTH, WINDOW_HEIGHT
 from ...timer import Timer
-from ...utils import heuristic, map_value, senoide, circular
+from ...utils import heuristic, map_value, senoide, circular, triangle_senoide
 from ...fonts import teacher_zzz
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -21,7 +21,6 @@ class TeacherRender:
         self.sleeping_timer = Timer()
         self.action_start_timer = 0
         self.game = game
-        # self.footstep_movement_fn = senoide(12, 1/(self.footstep_interval * 2), math.pi/2)
 
     def render(self):
         if self.game.game_ends:
@@ -90,15 +89,19 @@ class TeacherRender:
                 self.teacher_ends_current_action = True
             return
 
+        movement_amplitude = triangle_senoide(self.teacher.step_amplitude, 1/self.footstep_interval, 0, 0, self.action_timer.get_time_passed())
+        max_amp = self.teacher.step_amplitude * 2
+        speed = map_value(max_amp - movement_amplitude, 0, max_amp, 0, self.teacher.walk_speed - 0.2)
+
         # Muda os pontos de coordenada para movimentar o professor.
         if walk_direction == MovementDirection.LEFT:
-            self.teacher.position.x -= self.teacher.walk_speed
+            self.teacher.position.x -= speed
         elif walk_direction == MovementDirection.RIGHT:
-            self.teacher.position.x += self.teacher.walk_speed
+            self.teacher.position.x += speed
         elif walk_direction == MovementDirection.UP:
-            self.teacher.position.y -= self.teacher.walk_speed
+            self.teacher.position.y -= speed
         elif walk_direction == MovementDirection.DOWN:
-            self.teacher.position.y += self.teacher.walk_speed
+            self.teacher.position.y += speed
 
     def animate_wait(self):
         if not isinstance(self.teacher.current_action, MovementActionWait):
@@ -129,7 +132,7 @@ class TeacherRender:
         if self.teacher.direction in (MovementDirection.LEFT, MovementDirection.RIGHT):
             pygame.draw.ellipse(self.surface, 'green', (self.teacher.position.x - size_h // 2, self.teacher.position.y - size_w // 2, size_h, size_w), 20)
         # cabeça
-        pygame.draw.circle(self.surface, 'black', (self.teacher.position.x, self.teacher.position.y), 20)
+        pygame.draw.circle(self.surface, 'black', (self.teacher.position.x, self.teacher.position.y), 16)
         # se estiver dormindo
         if self.teacher.is_sleeping:
             self.render_sleeping_animation()
@@ -141,18 +144,15 @@ class TeacherRender:
         sleeping_time = self.sleeping_timer.get_time_passed()
         z1 = circular(self.teacher.position.x, self.teacher.position.y, radius, velocity, 0, sleeping_time)
         z2 = circular(self.teacher.position.x, self.teacher.position.y, radius, velocity, math.pi, sleeping_time)
-
         text_surface = teacher_zzz.render('ZzZ', True, 'blue')
         z1_text = text_surface.get_rect(center=z1)
         z2_text = text_surface.get_rect(center=z2)
         self.surface.blit(text_surface, z1_text)
         self.surface.blit(text_surface, z2_text)
-        # pygame.draw.circle(self.surface, 'blue', z1, 6)
-        # pygame.draw.circle(self.surface, 'blue', z2, 6)
 
 
     def render_foots_movement(self):
-        movement_amplitude = senoide(self.teacher.step_amplitude, 1/(self.footstep_interval * 2), -math.pi/2, 0, 0.2, self.action_timer.get_time_passed())
+        movement_amplitude = senoide(self.teacher.step_amplitude, 1/(self.footstep_interval * 2), -math.pi/2, 0, 0.1, self.action_timer.get_time_passed())
         left_foot_offset = movement_amplitude
         right_foot_offset = -left_foot_offset
 

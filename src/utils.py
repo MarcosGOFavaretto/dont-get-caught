@@ -22,3 +22,7 @@ def circular(center_x: float, center_y: float, radius: float, velocity: float, o
     x = center_x + radius * math.cos(time * velocity + offset)
     y = center_y + radius * math.sin(time * velocity + offset)
     return (x, y)
+
+def triangle_senoide(max_amplitude: float, frequency: float, offset_x: float, offset_y: float, time: float):
+    w = 2 * math.pi * frequency
+    return max_amplitude * 2 / math.pi * math.asin(math.sin(w * time + offset_x)) + offset_y

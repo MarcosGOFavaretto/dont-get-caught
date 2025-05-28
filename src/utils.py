@@ -12,6 +12,8 @@ def heuristic(a: tuple[int, int], b: tuple[int, int]) -> float:
 def map_value(value: float, in_min: float, in_max: float, out_min: float, out_max: float) -> float:
     return (value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
-def senoide(max_amplitude: float, frequency: float, phase: float):
+def senoide(max_amplitude: float, frequency: float, offset_x: float, offset_y: float, square_shapping: float, time: float):
     w = 2 * math.pi * frequency
-    return lambda t: max_amplitude * math.sin(w * t + phase)
+    max_amplitude *= 1 + square_shapping 
+    wave = math.sin(w * time + offset_x)
+    return max_amplitude * (wave/(abs(wave) + square_shapping)) + offset_y

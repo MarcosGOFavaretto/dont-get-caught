@@ -29,6 +29,9 @@ class Teacher:
         self.vision_angle = math.pi * 0.5
         self.vision_direction: MovementDirection | None = None
         self.footstep_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/footstep.mp3')
+        self.foot_dist = 12
+        self.foot_size = 8
+        self.step_amplitude = 12
 
     def get_render(self, surface: pygame.Surface):
         return TeacherRender(game=self.game, teacher=self, surface=surface)

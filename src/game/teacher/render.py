@@ -19,7 +19,7 @@ class TeacherRender:
         self.action_timer = Timer()
         self.action_start_timer = 0
         self.game = game
-        self.footstep_movement_fn = senoide(12, 1/(self.footstep_interval * 2), -90)
+        # self.footstep_movement_fn = senoide(12, 1/(self.footstep_interval * 2), math.pi/2)
 
     def render(self):
         if self.game.game_ends:
@@ -131,27 +131,25 @@ class TeacherRender:
             pygame.draw.circle(self.surface, 'blue', (self.teacher.position.x, self.teacher.position.y), 5)
 
     def render_foots_movement(self):
-        foot_dist = 14
-        foot_size = 8
-        movement_amplitude = self.footstep_movement_fn(self.action_timer.get_time_passed())
+        movement_amplitude = senoide(self.teacher.step_amplitude, 1/(self.footstep_interval * 2), -90, 0, 0.2, self.action_timer.get_time_passed())
         left_foot_offset = movement_amplitude
         right_foot_offset = -left_foot_offset
 
         if self.teacher.direction == MovementDirection.DOWN:
-            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x - foot_dist, self.teacher.position.y+left_foot_offset), foot_size) # left foot
-            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x + foot_dist, self.teacher.position.y+right_foot_offset), foot_size) # right foot
+            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x - self.teacher.foot_dist, self.teacher.position.y+left_foot_offset), self.teacher.foot_size) # left foot
+            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x + self.teacher.foot_dist, self.teacher.position.y+right_foot_offset), self.teacher.foot_size) # right foot
 
         if self.teacher.direction == MovementDirection.UP:
-            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x - foot_dist, self.teacher.position.y-left_foot_offset), foot_size) # left foot
-            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x + foot_dist, self.teacher.position.y-right_foot_offset), foot_size) # right foot
+            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x - self.teacher.foot_dist, self.teacher.position.y-left_foot_offset), self.teacher.foot_size) # left foot
+            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x + self.teacher.foot_dist, self.teacher.position.y-right_foot_offset), self.teacher.foot_size) # right foot
             
         if self.teacher.direction == MovementDirection.LEFT:
-            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x - left_foot_offset, self.teacher.position.y-foot_dist), foot_size) # left foot
-            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x - right_foot_offset, self.teacher.position.y+foot_dist), foot_size) # right foot
+            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x - left_foot_offset, self.teacher.position.y-self.teacher.foot_dist), self.teacher.foot_size) # left foot
+            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x - right_foot_offset, self.teacher.position.y+self.teacher.foot_dist), self.teacher.foot_size) # right foot
         
         if self.teacher.direction == MovementDirection.RIGHT:
-            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x + left_foot_offset, self.teacher.position.y-foot_dist), foot_size) # left foot
-            pygame.draw.circle(self.surface, 'black', (self.teacher.position.x + right_foot_offset, self.teacher.position.y+foot_dist), foot_size) # right foot
+            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x + left_foot_offset, self.teacher.position.y-self.teacher.foot_dist), self.teacher.foot_size) # left foot
+            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x + right_foot_offset, self.teacher.position.y+self.teacher.foot_dist), self.teacher.foot_size) # right foot
         
         
     def render_vision(self):

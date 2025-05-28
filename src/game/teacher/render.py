@@ -3,7 +3,7 @@ import pygame
 import math
 from ...config import WINDOW_WIDTH, WINDOW_HEIGHT
 from ...timer import Timer
-from ...utils import heuristic, map_value, senoide, circular, triangle_senoide
+from ...utils import heuristic, map_value, senoide, circular
 from ...fonts import teacher_zzz
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -89,19 +89,15 @@ class TeacherRender:
                 self.teacher_ends_current_action = True
             return
 
-        movement_amplitude = triangle_senoide(self.teacher.step_amplitude, 1/self.footstep_interval, 0, 0, self.action_timer.get_time_passed())
-        max_amp = self.teacher.step_amplitude * 2
-        speed = map_value(max_amp - movement_amplitude, 0, max_amp, 0, self.teacher.walk_speed - 0.2)
-
         # Muda os pontos de coordenada para movimentar o professor.
         if walk_direction == MovementDirection.LEFT:
-            self.teacher.position.x -= speed
+            self.teacher.position.x -= self.teacher.walk_speed
         elif walk_direction == MovementDirection.RIGHT:
-            self.teacher.position.x += speed
+            self.teacher.position.x += self.teacher.walk_speed
         elif walk_direction == MovementDirection.UP:
-            self.teacher.position.y -= speed
+            self.teacher.position.y -= self.teacher.walk_speed
         elif walk_direction == MovementDirection.DOWN:
-            self.teacher.position.y += speed
+            self.teacher.position.y += self.teacher.walk_speed
 
     def animate_wait(self):
         if not isinstance(self.teacher.current_action, MovementActionWait):

@@ -4,15 +4,22 @@ from .teacher.teacher import Teacher, TeacherRender
 from .student.student import Student, StudentRender
 import copy
 from ..timer import Timer, time_to_string, TIME_SECOND
+from ..config import WINDOW_WIDTH
 import pygame
 from ..config import ASSETS_FOLDER, EXAM_TIME
 from ..fonts import merriweather
 from .game_over import GameOver
 from .you_win import YouWin
+from .options_menu import OptionsMenu
 import random
 from .classroom.desk import ClassroomNpcDesk
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..app import App
+from ..components import ButtonIcon
+
 class GameRender:
-    def __init__(self, app):
+    def __init__(self, app: 'App'):
         self.app = app
         self.npc_students_fill_rate = 0.8
         self.clock_tick_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/clock-tick.mp3')
@@ -26,6 +33,12 @@ class GameRender:
         self.student, self.student_render = self.define_student()
         self.define_npc_students()
 
+        self.game_options_icon = pygame.image.load(f'{ASSETS_FOLDER}/icons/settings-icon.png')
+        self.game_options_icon = pygame.transform.scale(self.game_options_icon, (26, 26)) 
+
+        self.options_menu = OptionsMenu(self)
+        self.show_options = False
+
     # Método para renderizar as entidades do jogo.
     #
     def render(self):
@@ -35,6 +48,9 @@ class GameRender:
         self.teacher_render.render()
         self.student_render.render()
         self.render_clock()
+        self.render_game_options_button()
+        if self.show_options:
+            self.render_game_options_menu()
 
         if self.game_ends and self.game_final_screen:
             self.game_final_screen.render()
@@ -43,16 +59,23 @@ class GameRender:
         time_str = time_to_string(EXAM_TIME - self.exam_timer.get_time_passed() + TIME_SECOND)
         s = merriweather.render(time_str, True, 'black', 'white')
         self.app.surface.blit(s, (10, 10))
-
         if self.game_ends:
             return
-
         if self.exam_timer.time_is_up():
             self.game_over()
             return
-
         if self.exam_timer.tick():
             self.clock_tick_sound.play()
+    
+    def render_game_options_menu(self):
+        def hide_options():
+            self.show_options = False
+        self.options_menu.render(on_close_menu=hide_options)
+
+    def render_game_options_button(self):
+        def show_options():
+            self.show_options = True
+        ButtonIcon(self.app.surface, pygame.rect.Rect(WINDOW_WIDTH - 50, 10, 40, 40), self.game_options_icon, on_click=show_options)
 
     def game_over(self):
         self.game_final_screen = GameOver(game=self)
@@ -64,23 +87,19 @@ class GameRender:
         self.exam_timer.stop()
         self.game_ends = True
 
-    # Define a sala de aula.
-    #   - Cria uma sala de aula com as dimensões, número de linhas e colunas.
+    # MÉTODOS DE DEFINIÇÃO INICIAL DO JOGO
+
     def define_classroom(self) -> tuple[Classroom, ClassroomRender]:
         classroom = Classroom(game=self, dimension=(1000, 600), x=0, y=0, rows=8, columns=11)
         classroom_render = classroom.get_render(self.app.surface)
         return (classroom, classroom_render)
 
-    # Define o professor do jogo.
-    #   
     def define_teacher(self) -> tuple[Teacher, TeacherRender]:
         teacher = TeacherSergio(game=self)
         # self.teacher = Teacher(game=self)
         teacher_render = teacher.get_render(self.app.surface)
         return (teacher, teacher_render)
 
-    # Define o aluno do jogo.
-    #   
     def define_student(self) -> tuple[Student, StudentRender]:
         desk_points = self.classroom.get_desk_points()
         column, row = random.choice(desk_points).to_grid_point()

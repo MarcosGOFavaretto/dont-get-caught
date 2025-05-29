@@ -29,4 +29,12 @@ def Button(surface: pygame.Surface, label: str, rect: pygame.Rect, label_font: p
         outline_size=2,
         position=rect.center,
         font=label_font)
+
+def ButtonIcon(surface: pygame.Surface, rect: pygame.Rect, icon: pygame.Surface, on_click = None):
+    mouse_pos = pygame.mouse.get_pos()
+    mouse_pressed = pygame.mouse.get_pressed()
+    if on_click is not None and mouse_pressed[0] and rect.collidepoint(mouse_pos):
+        on_click()
+    surface.blit(icon, rect.topleft)
+
     

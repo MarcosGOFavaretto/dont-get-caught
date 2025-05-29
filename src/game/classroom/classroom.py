@@ -92,6 +92,14 @@ class Classroom:
                     total_desks += 1
         return total_desks
     
+    def get_desk_points(self):
+        desks_points: list[ClassroomGridPoint] = []
+        for column in self.grid_points:
+            for point in column:
+                if self.is_student_desk(point.column, point.row):
+                    desks_points.append(point)
+        return desks_points
+    
     def get_grid_points_list(self):
         grid_points: list[ClassroomGridPoint] = []
         for column in self.grid_points:

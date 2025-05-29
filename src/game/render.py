@@ -82,7 +82,9 @@ class GameRender:
     # Define o aluno do jogo.
     #   
     def define_student(self) -> tuple[Student, StudentRender]:
-        column, row = (4, 3)
+        desk_points = self.classroom.get_desk_points()
+        column, row = random.choice(desk_points).to_grid_point()
+        self.classroom.get_total_desks()
         student = Student(game=self, position=copy.deepcopy(self.classroom.grid_points[column][row]))
         student_render = student.get_render(self.app.surface)
         return (student, student_render)

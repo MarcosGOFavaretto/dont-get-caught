@@ -23,7 +23,7 @@ class TeacherRender:
         self.game = game
 
     def render(self):
-        if self.game.game_ends:
+        if self.game.game_ends or not self.game.started:
             self.render_sprite()
             return
 
@@ -118,7 +118,7 @@ class TeacherRender:
             self.teacher_ends_current_action = True
 
     def render_sprite(self):
-        if not self.teacher.is_sleeping:
+        if not self.teacher.is_sleeping and self.game.started:
             self.render_vision()
         # corpo
         size_w = 60

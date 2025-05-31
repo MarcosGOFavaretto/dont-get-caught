@@ -14,8 +14,7 @@ class Teacher:
     def __init__(self, game: 'GameRender', name: str = 'Default', initial_position: tuple = (0, 0)):
         self.game = game
         self.name = name
-        self.classroom: Classroom = game.classroom
-        self.position: ClassroomGridPoint = copy.deepcopy(self.classroom.grid_points[initial_position[0]][initial_position[1]])
+        self.position: ClassroomGridPoint = copy.deepcopy(self.game.classroom.grid_points[initial_position[0]][initial_position[1]])
         self.current_action: MovementAction | None = None
         self.sleep_time_threshold = 2800
         self.time_to_wake_up = 5000
@@ -24,7 +23,7 @@ class Teacher:
         self.is_walking = False
         self.is_waiting = False
         self.is_sleeping = False
-        self.direction: MovementDirection | None = None
+        self.direction: MovementDirection = MovementDirection.DOWN
         self.vision_radius = 200
         self.vision_angle = math.pi * 0.5
         self.vision_direction: MovementDirection | None = None
@@ -47,7 +46,7 @@ class Teacher:
                 current_point=self.position, 
                 final_point=next_action_final_point, 
                 walk_speed=self.walk_speed,
-                walk_path=self.classroom.find_path(self.position, next_action_final_point))
+                walk_path=self.game.classroom.find_path(self.position, next_action_final_point))
             self.current_action = next_action
             return
         
@@ -63,7 +62,7 @@ class Teacher:
     #
     def get_movement_possibilities(self) -> list[ClassroomGridPoint]:
         movement_possibilities = []
-        for row in self.classroom.grid_points:
+        for row in self.game.classroom.grid_points:
             for point in row:
                 if point.classroom_desk is None and point != self.position:
                     movement_possibilities.append(point)
@@ -89,7 +88,7 @@ class Teacher:
         if self.is_sleeping:
             return []
         points_in_vision = []
-        for column in self.classroom.grid_points:
+        for column in self.game.classroom.grid_points:
             for point in column:
                 # if point.is_student_desk and self.point_is_in_vision(point):
                 if self.point_is_in_vision(point):

@@ -36,7 +36,10 @@ class Timer:
         return self.time_passed
     
     def time_is_up(self):
-        return self.get_time_passed() >= self.wait_time
+        is_up = self.get_time_passed() >= self.wait_time
+        if is_up:
+            self.is_counting = False
+        return is_up
 
     def restart(self):
         self.stop()

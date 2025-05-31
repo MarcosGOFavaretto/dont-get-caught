@@ -17,6 +17,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..app import App
 from ..components import ButtonIcon
+import time
 
 class GameRender:
     def __init__(self, app: 'App'):
@@ -25,13 +26,8 @@ class GameRender:
         self.clock_tick_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/clock-tick.mp3')
         self.clock_tick_sound.set_volume(0.3)
         self.exam_timer = Timer(wait_time=EXAM_TIME)
-        self.exam_timer.start()
         self.game_final_screen = None
         self.game_ends = False
-        self.classroom, self.classroom_render = self.define_classroom()
-        self.teacher, self.teacher_render = self.define_teacher()
-        self.student, self.student_render = self.define_student()
-        self.define_npc_students()
 
         self.game_options_icon = pygame.image.load(f'{ASSETS_FOLDER}/icons/settings-icon.png')
         self.game_options_icon = pygame.transform.scale(self.game_options_icon, (26, 26)) 
@@ -39,21 +35,55 @@ class GameRender:
         self.options_menu = OptionsMenu(self)
         self.show_options = False
 
+        self.started = False
+        self.animation_classroom_offset = 200
+        self.animation_control = 0
+        self.start_animation_timer = Timer(wait_time=2 * TIME_SECOND)
+        self.start_animation_timer.start()
+
+        self.classroom, self.classroom_render = self.define_classroom()
+        self.teacher, self.teacher_render = self.define_teacher()
+        self.student, self.student_render = self.define_student()
+        self.define_npc_students()
+
     # Método para renderizar as entidades do jogo.
     #
     def render(self):
-        self.app.surface.fill((255, 255, 255))
+        self.app.surface.fill('oldlace')
 
         self.classroom_render.render()
         self.teacher_render.render()
         self.student_render.render()
-        self.render_clock()
+
+        if not self.started:
+            self.animate_game_start()
+
+        if self.started:
+            self.render_clock()
         self.render_game_options_button()
         if self.show_options:
             self.render_game_options_menu()
 
         if self.game_ends and self.game_final_screen:
             self.game_final_screen.render()
+
+    def start_game(self):
+        self.started = True
+        self.exam_timer.start()
+        self.classroom.y = 0
+
+    def animate_game_start(self):
+        if self.animation_control >= self.animation_classroom_offset:
+            self.start_game()
+            return
+        animation_fn = lambda t: t**1.3 / 10000
+        animation_speed = animation_fn(self.start_animation_timer.get_time_passed())
+        self.classroom.y -= animation_speed
+        self.teacher.position.y -= animation_speed
+        self.student.position.y -= animation_speed
+        self.animation_control += animation_speed
+        self.classroom.update_grid_points_position()
+
 
     def render_clock(self):
         time_str = time_to_string(EXAM_TIME - self.exam_timer.get_time_passed() + TIME_SECOND)
@@ -90,13 +120,12 @@ class GameRender:
     # MÉTODOS DE DEFINIÇÃO INICIAL DO JOGO
 
     def define_classroom(self) -> tuple[Classroom, ClassroomRender]:
-        classroom = Classroom(game=self, dimension=(1000, 600), x=0, y=0, rows=8, columns=11)
+        classroom = Classroom(game=self, dimension=(1000, 600), x=0, y=self.animation_classroom_offset, rows=8, columns=11)
         classroom_render = classroom.get_render(self.app.surface)
         return (classroom, classroom_render)
 
     def define_teacher(self) -> tuple[Teacher, TeacherRender]:
         teacher = TeacherSergio(game=self)
-        # self.teacher = Teacher(game=self)
         teacher_render = teacher.get_render(self.app.surface)
         return (teacher, teacher_render)
 

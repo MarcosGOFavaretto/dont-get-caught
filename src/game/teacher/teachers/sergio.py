@@ -34,7 +34,7 @@ class TeacherSergio(Teacher):
             current_point=self.position, 
             final_point=next_action_final_point, 
             walk_speed=self.walk_speed,
-            walk_path=self.classroom.find_path(self.position, next_action_final_point))
+            walk_path=self.game.classroom.find_path(self.position, next_action_final_point))
     
     def get_wait_action(self, direction_to_look: MovementDirection | None = None) -> MovementAction:  
         if direction_to_look is None:
@@ -57,6 +57,6 @@ class TeacherSergio(Teacher):
         for neighbor in neighbors:
             nx = self.position.column + neighbor.get('offset')[0]
             ny = self.position.row + neighbor.get('offset')[1]
-            if nx < 0 or nx >= len(self.classroom.grid_points) or ny < 0 or ny >= len(self.classroom.grid_points[0]):
+            if nx < 0 or nx >= len(self.game.classroom.grid_points) or ny < 0 or ny >= len(self.game.classroom.grid_points[0]):
                 directions.append(neighbor.get('direction'))
         return directions

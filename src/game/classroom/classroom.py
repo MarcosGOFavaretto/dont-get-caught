@@ -65,6 +65,11 @@ class Classroom:
         path = [self.grid_points[c][r] for c, r in path_coordenates]
         return path
 
+    def update_grid_points_position(self):
+        for point in self.get_grid_points_list():
+            point.x = int(self.column_width * point.column + self.x + self.column_width / 2)
+            point.y = int(self.row_width * point.row + self.y + self.row_width / 2)
+
     def get_grid_coordenates(self):
         coordenates = list[list[tuple[int, int]]]()
         for column in self.grid_points:

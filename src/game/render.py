@@ -71,6 +71,7 @@ class GameRender:
         self.started = True
         self.exam_timer.start()
         self.classroom.y = 0
+        self.teacher.set_default_position()
 
     def animate_game_start(self):
         if self.animation_control >= self.animation_classroom_offset:

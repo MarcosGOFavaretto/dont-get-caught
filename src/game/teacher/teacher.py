@@ -14,6 +14,7 @@ class Teacher:
     def __init__(self, game: 'GameRender', name: str = 'Default', initial_position: tuple = (0, 0)):
         self.game = game
         self.name = name
+        self.initial_position = initial_position
         self.position: ClassroomGridPoint = copy.deepcopy(self.game.classroom.grid_points[initial_position[0]][initial_position[1]])
         self.current_action: MovementAction | None = None
         self.sleep_time_threshold = 2800
@@ -31,6 +32,9 @@ class Teacher:
         self.foot_dist = 10
         self.foot_size = 6
         self.step_amplitude = 14
+
+    def set_default_position(self):
+        self.position = copy.deepcopy(self.game.classroom.grid_points[self.initial_position[0]][self.initial_position[1]])
 
     def get_render(self, surface: pygame.Surface):
         return TeacherRender(game=self.game, teacher=self, surface=surface)

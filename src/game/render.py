@@ -47,7 +47,6 @@ class GameRender:
         self.define_npc_students()
 
     # Método para renderizar as entidades do jogo.
-    #
     def render(self):
         self.app.surface.fill('oldlace')
 
@@ -156,3 +155,13 @@ class GameRender:
             grid_point = self.classroom.grid_points[random_grid_point.column][random_grid_point.row]
             if grid_point.classroom_desk is not None and not grid_point.classroom_desk.has_student:
                 return grid_point.classroom_desk
+            
+    def handle_event(self, event):
+        if not self.started:
+            return
+        
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
+            self.app.start_cola_overlay()
+            if event.key == pygame.K_SPACE:
+                from ..app import Screens
+                self.app.set_render(Screens.COLA)

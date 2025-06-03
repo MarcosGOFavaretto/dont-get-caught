@@ -1,6 +1,7 @@
 import pygame
 from ..fonts import menu as menu_font
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
+from ..screens import Screens
 
 class MenuRender:
     def __init__(self, app):
@@ -46,30 +47,6 @@ class MenuRender:
             self.draw_buttons(self.menu_levels)
             self.draw_text_with_outline(self.back_button["text"], menu_font, (0, 0, 0), (255, 255, 255), self.back_button["rect"].center)
 
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if self.menu_active:
-                    for button in self.menu_options:
-                        if button["rect"].collidepoint(event.pos):
-                            if button["text"] == "INICIAR":
-                                self.button_click_fx.play()
-                                self.menu_active = False
-                                self.difficulty_menu_active = True
-                            elif button["text"] == "SAIR":
-                                pygame.quit()
-                                exit()
-                elif self.difficulty_menu_active:
-                    for button in self.menu_levels:
-                        if button["rect"].collidepoint(event.pos):
-                            self.button_click_fx.play()
-                            self.app.start_game()
-                            self.background_sound.stop()
-                            # print(f"Dificuldade selecionada: {button['text']}")
-                    if self.back_button["rect"].collidepoint(event.pos):
-                        self.button_back_fx.play()
-                        self.menu_active = True
-                        self.difficulty_menu_active = False
-
     def draw_text_with_outline(self, text, font, text_color, outline_color, position):
         textsurface = font.render(text, True, text_color)
         outlinesurface = font.render(text, True, outline_color)
@@ -91,4 +68,34 @@ class MenuRender:
             surfacebtn.fill((255, 255, 255, btnmouse))
             self.app.surface.blit(surfacebtn, button["rect"].topleft)
             
-            self.draw_text_with_outline(button["text"], menu_font, (0, 0, 0), (255, 255, 255), button["rect"].center)        
+            self.draw_text_with_outline(button["text"], menu_font, (0, 0, 0), (255, 255, 255), button["rect"].center)
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.menu_active:
+                for button in self.menu_options:
+                    if button["rect"].collidepoint(event.pos):
+                        if button["text"] == "INICIAR":
+                            self.button_click_fx.play()
+                            self.menu_active = False
+                            self.difficulty_menu_active = True
+                        elif button["text"] == "SAIR":
+                            pygame.quit()
+                            exit()
+            elif self.difficulty_menu_active:
+                for button in self.menu_levels:
+                    if button["rect"].collidepoint(event.pos):
+                        self.button_click_fx.play()
+                        text = button["text"]
+                        if text == "FACIL":
+                            self.app.fase_atual = 1
+                        elif text == "MEDIO":
+                            self.app.fase_atual = 2
+                        elif text == "DIFICIL":
+                            self.app.fase_atual = 3
+                        self.app.set_render(Screens.GAME_RUNTIME)
+                        self.background_sound.stop()
+                if self.back_button["rect"].collidepoint(event.pos):
+                    self.button_back_fx.play()
+                    self.menu_active = True
+                    self.difficulty_menu_active = False

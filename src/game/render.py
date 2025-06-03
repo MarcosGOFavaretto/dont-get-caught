@@ -17,11 +17,12 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..app import App
 from ..components import ButtonIcon
-import time
+from ..enums import GameLevels
 
 class GameRender:
-    def __init__(self, app: 'App'):
+    def __init__(self, app: 'App', selected_level: GameLevels):
         self.app = app
+        self.selected_level = selected_level
         self.npc_students_fill_rate = 0.8
         self.clock_tick_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/clock-tick.mp3')
         self.clock_tick_sound.set_volume(0.3)
@@ -163,5 +164,4 @@ class GameRender:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
             self.app.start_cola_overlay()
             if event.key == pygame.K_SPACE:
-                from ..app import Screens
-                self.app.set_render(Screens.COLA)
+                self.app.open_cola()

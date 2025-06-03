@@ -87,7 +87,7 @@ class GameOver:
         self.crying_sniffing_sound.stop()
 
     def play_again(self):
-        self.game.app.start_game()
+        self.game.app.start_game(self.game.selected_level)
         self.crying_sniffing_sound.stop()
 
     def fade_in_animation(self, start: int, end: int, velocity: int = 1):

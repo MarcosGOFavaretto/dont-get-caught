@@ -89,7 +89,7 @@ class YouWin:
         self.winning_song.stop()
 
     def play_again(self):
-        self.game.app.start_game()
+        self.game.app.start_game(self.game.selected_level)
         self.winning_hehe.stop()
         self.winning_song.stop()
 

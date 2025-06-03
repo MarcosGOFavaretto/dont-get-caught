@@ -1,7 +1,7 @@
 import pygame
 from ..fonts import menu as menu_font
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
-from ..enums import Screens, GameLevels
+from ..enums import GameLevels
 from ..components import Button
 
 from typing import TYPE_CHECKING
@@ -102,33 +102,6 @@ class MenuRender:
         self.button_back_fx.play()
 
     def set_level(self, level: GameLevels):
-        self.app.selected_level = level
         self.button_click_fx.play()
         self.background_sound.stop()
-        self.app.set_render(Screens.GAME_RUNTIME)
-
-    # def handle_event(self, event):
-    #     if event.type == pygame.MOUSEBUTTONDOWN:
-    #         if self.menu_active:
-    #             for button in self.menu_options:
-    #                 if button["rect"].collidepoint(event.pos):
-    #                     if button["text"] == "INICIAR":
-    #                         self.button_click_fx.play()
-    #                         self.menu_active = False
-    #                         self.difficulty_menu_active = True
-    #                     elif button["text"] == "SAIR":
-    #                         pygame.quit()
-    #                         exit()
-    #         elif self.difficulty_menu_active:
-    #             for button in self.levels_options:
-    #                 if button["rect"].collidepoint(event.pos):
-    #                     self.button_click_fx.play()
-    #                     text = button["text"]
-    #                     if text == "FACIL":
-    #                         self.app.fase_atual = 1
-    #                     elif text == "MEDIO":
-    #                         self.app.fase_atual = 2
-    #                     elif text == "DIFICIL":
-    #                         self.app.fase_atual = 3
-    #                     self.app.set_render(Screens.GAME_RUNTIME)
-    #                     self.background_sound.stop()
+        self.app.start_game(level)

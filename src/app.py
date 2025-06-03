@@ -1,5 +1,5 @@
 from pygame import Surface
-from .enums import Screens, GameLevels
+from .enums import GameLevels
 from .game.render import GameRender
 from .menu.render import MenuRender
 from .cola.render import ColaRender
@@ -13,7 +13,6 @@ class App:
         self.overlay_render = None
         self.cola_frase_atual = None           
         self.cola_texto_digitado = ""
-        self.selected_level: GameLevels = GameLevels.EASY
 
     def render(self, event_list: list[Event]):
         self.event_list = event_list
@@ -22,30 +21,15 @@ class App:
             self.overlay_render.render()
         
     def open_menu(self):
-        self.set_render(Screens.MENU)
+        self.current_render = MenuRender(self)
 
-    def start_game(self):
-        self.set_render(Screens.GAME_RUNTIME)
+    def start_game(self, selected_level: GameLevels):
+        self.current_render = GameRender(self, selected_level=selected_level)
 
-    def open_settings(self):
-        self.set_render(Screens.SETTINGS)
-
-    def open_credits_page(self):
-        self.set_render(Screens.CREDITS)
-
-    def set_render(self, screen: Screens):
-        if screen == Screens.MENU:
-            self.current_render = MenuRender(self)
-        elif screen == Screens.GAME_RUNTIME:
-            self.current_render = GameRender(self)
-        elif screen == Screens.COLA:
-            from.cola.render import ColaRender
-            dificuldade = self.get_dificuldade()
-            self.current_render = ColaRender(self, dificuldade)
-        elif screen == Screens.SETTINGS:
-            pass
-        elif screen == Screens.CREDITS:
-            pass
+    def open_cola(self):
+        from .cola.render import ColaRender
+        dificuldade = self.get_dificuldade()
+        self.current_render = ColaRender(self, dificuldade)
 
     def get_dificuldade(self):
         if hasattr(self, "fase_atual"):

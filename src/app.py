@@ -1,8 +1,9 @@
 from pygame import Surface
-from .screens import Screens
+from .enums import Screens, GameLevels
 from .game.render import GameRender
 from .menu.render import MenuRender
-from .cola.render import ColaRender  
+from .cola.render import ColaRender
+from pygame.event import Event  
 
 class App:
     def __init__(self, surface: Surface):
@@ -12,8 +13,10 @@ class App:
         self.overlay_render = None
         self.cola_frase_atual = None           
         self.cola_texto_digitado = ""
+        self.selected_level: GameLevels = GameLevels.EASY
 
-    def render(self):
+    def render(self, event_list: list[Event]):
+        self.event_list = event_list
         self.current_render.render()
         if self.overlay_render:
             self.overlay_render.render()
@@ -69,6 +72,6 @@ class App:
     def handle_event(self, event):
         if self.overlay_render:
             self.overlay_render.handle_event(event)
-        else:
-            self.current_render.handle_event(event)
+        # else:
+        #     self.current_render.handle_event(event)
 

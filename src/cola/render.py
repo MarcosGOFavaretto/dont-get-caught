@@ -6,7 +6,7 @@ class ColaRender:
     def __init__(self, app, dificuldade=1, frase_salva=None, texto_digitado=""):
         self.app = app
         self.surface = app.surface
-        self.font = pygame.font.SysFont(None, 28)
+        self.font = pygame.font.SysFont('', 28)
         self.user_input = texto_digitado
         self.dificuldade = dificuldade
         self.cola_text = frase_salva if frase_salva else self.get_random_phrase()

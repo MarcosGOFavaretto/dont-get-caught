@@ -5,8 +5,12 @@ from .. import fonts
 from ..timer import Timer, TIME_SECOND
 import random
 from ..animations import Rain
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .render import GameRender
 class GameOver:
-    def __init__(self, game):
+    def __init__(self, game: 'GameRender'):
         self.game = game
         self.surface = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)
         self.darken_animation_timer = Timer(wait_time=0.5 * TIME_SECOND)
@@ -65,14 +69,16 @@ class GameOver:
                 label_font=fonts.game_final_btn_label,
                 background_color=pygame.Color(255, 255, 255),
                 rect=pygame.Rect(WINDOW_WIDTH // 2 - 300 // 2, 340, 300, 50),
-                on_click=self.play_again)
+                on_click=self.play_again,
+                event_list=self.game.app.event_list)
         
         Button(surface=self.surface,
                 label='Ir para o Menu', 
                 label_font=fonts.game_final_btn_label,
                 background_color=pygame.Color(255, 255, 255),
                 rect=pygame.Rect(WINDOW_WIDTH // 2 - 300 // 2, 420, 300, 50), 
-                on_click=self.go_to_menu)
+                on_click=self.go_to_menu,
+                event_list=self.game.app.event_list)
 
         self.game.app.surface.blit(self.surface, (0, 0))      
 

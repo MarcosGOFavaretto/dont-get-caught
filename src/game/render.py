@@ -59,7 +59,7 @@ class GameRender:
 
         if self.started:
             self.render_clock()
-        self.render_game_options_button()
+            self.render_game_options_button()
         if self.show_options:
             self.render_game_options_menu()
 
@@ -105,7 +105,7 @@ class GameRender:
     def render_game_options_button(self):
         def show_options():
             self.show_options = True
-        ButtonIcon(self.app.surface, pygame.rect.Rect(WINDOW_WIDTH - 50, 10, 40, 40), self.game_options_icon, on_click=show_options)
+        ButtonIcon(self.app.surface, pygame.rect.Rect(WINDOW_WIDTH - 50, 10, 40, 40), self.game_options_icon, on_click=show_options, event_list=self.app.event_list)
 
     def game_over(self):
         self.game_final_screen = GameOver(game=self)

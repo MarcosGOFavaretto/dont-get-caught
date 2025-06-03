@@ -19,13 +19,14 @@ running = True
 app = App(main_surface)
 
 while running:
-    for event in pygame.event.get():
+    event_list = pygame.event.get()
+    for event in event_list:
         if event.type == pygame.QUIT:
             running = False
         else:
             app.handle_event(event)
 
-    app.render()
+    app.render(event_list)
     pygame.display.flip()
     clock.tick(FPS)
 

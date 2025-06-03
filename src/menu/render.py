@@ -1,10 +1,15 @@
 import pygame
 from ..fonts import menu as menu_font
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
-from ..screens import Screens
+from ..enums import Screens, GameLevels
+from ..components import Button
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..app import App
 
 class MenuRender:
-    def __init__(self, app):
+    def __init__(self, app: 'App'):
         self.app = app
         self.background = pygame.image.load(f"{ASSETS_FOLDER}/menu-background.png")
         self.background = pygame.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -19,83 +24,111 @@ class MenuRender:
         self.button_click_fx.set_volume(0.5)
         self.button_back_fx.set_volume(0.5)
 
-        self.menu_options = [
-            {"text": "INICIAR", "rect": pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 260, self.buttons_width, 50)},
-            {"text": "OPÇOES", "rect": pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 340, self.buttons_width, 50)},
-            {"text": "SAIR", "rect": pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 420, self.buttons_width, 50)}
-        ]
-
-        self.menu_levels = [
-            {"text": "FACIL", "rect": pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 260, self.buttons_width, 50)},
-            {"text": "MEDIO", "rect": pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 340, self.buttons_width, 50)},
-            {"text": "DIFICIL", "rect": pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 420, self.buttons_width, 50)}
-        ]
-
-        self.back_button = {"text": "VOLTAR", "rect": pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 500, self.buttons_width, 50)}
-
-        self.button_mouse = 150  #Transparência do botão aumenta ao passar o mouse sobre ele
-
         self.menu_active = True
         self.difficulty_menu_active = False
+        self.how_to_play_active = True
 
     def render(self):
         self.app.surface.blit(self.background, (0, 0))
-
         if self.menu_active:
-            self.draw_buttons(self.menu_options)
+            self.render_menu_options()
         elif self.difficulty_menu_active:
-            self.draw_buttons(self.menu_levels)
-            self.draw_text_with_outline(self.back_button["text"], menu_font, (0, 0, 0), (255, 255, 255), self.back_button["rect"].center)
+            self.render_levels_options()
 
-    def draw_text_with_outline(self, text, font, text_color, outline_color, position):
-        textsurface = font.render(text, True, text_color)
-        outlinesurface = font.render(text, True, outline_color)
-        textrect = textsurface.get_rect(center=position)
-        offsets = [(-2, 0), (2, 0), (0, -2), (0, 2)]
-        for dx, dy in offsets:
-            self.app.surface.blit(outlinesurface, (textrect.x + dx, textrect.y + dy))
-        self.app.surface.blit(textsurface, textrect.topleft)
+    def render_menu_options(self):
+        Button(surface=self.app.surface,
+            label='INICIAR', 
+            label_font=menu_font,
+            background_color=pygame.Color(255, 255, 255),
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 260, self.buttons_width, 50),
+            on_click=self.open_levels,
+            event_list=self.app.event_list)
+        
+        Button(surface=self.app.surface,
+            label='OPÇÕES', 
+            label_font=menu_font,
+            background_color=pygame.Color(255, 255, 255),
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 340, self.buttons_width, 50))
+        
+        Button(surface=self.app.surface,
+            label='SAIR', 
+            label_font=menu_font,
+            background_color=pygame.Color(255, 255, 255),
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 420, self.buttons_width, 50),
+            on_click=lambda: pygame.quit(),
+            event_list=self.app.event_list)
 
-    def draw_buttons(self, button_list):
-        mouse_pos = pygame.mouse.get_pos() #Pega a posição do mouse
 
-        #'for' usado para detectar se o mouse está sobre o botão
-        for button in button_list:
-            is_hovered = button["rect"].collidepoint(mouse_pos)
-            btnmouse = self.button_mouse if is_hovered else 100  #Se passar o mouse no botão, diminui a transparência dele
+    def render_levels_options(self):
+        Button(surface=self.app.surface,
+            label='FÁCIL',
+            label_font=menu_font,
+            background_color=pygame.Color(255, 255, 255),
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 260, self.buttons_width, 50),
+            on_click=lambda: self.set_level(GameLevels.EASY),
+            event_list=self.app.event_list)
 
-            surfacebtn = pygame.Surface((button["rect"].width, button["rect"].height), pygame.SRCALPHA)
-            surfacebtn.fill((255, 255, 255, btnmouse))
-            self.app.surface.blit(surfacebtn, button["rect"].topleft)
-            
-            self.draw_text_with_outline(button["text"], menu_font, (0, 0, 0), (255, 255, 255), button["rect"].center)
+        Button(surface=self.app.surface,
+            label='MÉDIO',
+            label_font=menu_font,
+            background_color=pygame.Color(255, 255, 255),
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 340, self.buttons_width, 50),
+            on_click=lambda: self.set_level(GameLevels.MEDIUM),
+            event_list=self.app.event_list)
 
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.menu_active:
-                for button in self.menu_options:
-                    if button["rect"].collidepoint(event.pos):
-                        if button["text"] == "INICIAR":
-                            self.button_click_fx.play()
-                            self.menu_active = False
-                            self.difficulty_menu_active = True
-                        elif button["text"] == "SAIR":
-                            pygame.quit()
-                            exit()
-            elif self.difficulty_menu_active:
-                for button in self.menu_levels:
-                    if button["rect"].collidepoint(event.pos):
-                        self.button_click_fx.play()
-                        text = button["text"]
-                        if text == "FACIL":
-                            self.app.fase_atual = 1
-                        elif text == "MEDIO":
-                            self.app.fase_atual = 2
-                        elif text == "DIFICIL":
-                            self.app.fase_atual = 3
-                        self.app.set_render(Screens.GAME_RUNTIME)
-                        self.background_sound.stop()
-                if self.back_button["rect"].collidepoint(event.pos):
-                    self.button_back_fx.play()
-                    self.menu_active = True
-                    self.difficulty_menu_active = False
+        Button(surface=self.app.surface,
+            label='DIFÍCIL',
+            label_font=menu_font,
+            background_color=pygame.Color(255, 255, 255),
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 420, self.buttons_width, 50),
+            on_click=lambda: self.set_level(GameLevels.HARD),
+            event_list=self.app.event_list)
+        
+        Button(surface=self.app.surface,
+            label='VOLTAR', 
+            label_font=menu_font,
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 500, self.buttons_width, 50),
+            on_click=self.onclick_back,
+            event_list=self.app.event_list)
+
+    def open_levels(self):
+        self.button_click_fx.play()
+        self.menu_active = False
+        self.difficulty_menu_active = True
+
+    def onclick_back(self):
+        self.menu_active = True
+        self.difficulty_menu_active = False
+        self.button_back_fx.play()
+
+    def set_level(self, level: GameLevels):
+        self.app.selected_level = level
+        self.button_click_fx.play()
+        self.background_sound.stop()
+        self.app.set_render(Screens.GAME_RUNTIME)
+
+    # def handle_event(self, event):
+    #     if event.type == pygame.MOUSEBUTTONDOWN:
+    #         if self.menu_active:
+    #             for button in self.menu_options:
+    #                 if button["rect"].collidepoint(event.pos):
+    #                     if button["text"] == "INICIAR":
+    #                         self.button_click_fx.play()
+    #                         self.menu_active = False
+    #                         self.difficulty_menu_active = True
+    #                     elif button["text"] == "SAIR":
+    #                         pygame.quit()
+    #                         exit()
+    #         elif self.difficulty_menu_active:
+    #             for button in self.levels_options:
+    #                 if button["rect"].collidepoint(event.pos):
+    #                     self.button_click_fx.play()
+    #                     text = button["text"]
+    #                     if text == "FACIL":
+    #                         self.app.fase_atual = 1
+    #                     elif text == "MEDIO":
+    #                         self.app.fase_atual = 2
+    #                     elif text == "DIFICIL":
+    #                         self.app.fase_atual = 3
+    #                     self.app.set_render(Screens.GAME_RUNTIME)
+    #                     self.background_sound.stop()

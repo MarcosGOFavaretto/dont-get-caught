@@ -4,6 +4,7 @@ from .game.render import GameRender
 from .menu.render import MenuRender
 from .cola.render import ColaRender
 from pygame.event import Event  
+from .cola.render import ColaRender
 
 class App:
     def __init__(self, surface: Surface):
@@ -27,7 +28,6 @@ class App:
         self.current_render = GameRender(self, selected_level=selected_level)
 
     def open_cola(self):
-        from .cola.render import ColaRender
         dificuldade = self.get_dificuldade()
         self.current_render = ColaRender(self, dificuldade)
 
@@ -37,7 +37,6 @@ class App:
         return 1
     
     def start_cola_overlay(self):
-        from .cola.render import ColaRender
         dificuldade = self.get_dificuldade()
         self.overlay_render = ColaRender(
             self,
@@ -56,6 +55,7 @@ class App:
     def handle_event(self, event):
         if self.overlay_render:
             self.overlay_render.handle_event(event)
-        # else:
-        #     self.current_render.handle_event(event)
+        else:
+            if hasattr(self.current_render, 'handle_event'):
+                self.current_render.handle_event(event)
 

@@ -25,13 +25,9 @@ class MenuHowToPlay:
 
     def render(self):
         self.menu.app.surface.blit(self.background, (0, 0))
-
         controls_area = pygame.draw.rect(self.surface, pygame.Color(255, 255, 255, 200), pygame.Rect(self.margin_top, self.margin_x, WINDOW_WIDTH - 2 * self.margin_x, 460))
-
         self.render_controls(controls_area)
-
         self.menu.app.surface.blit(self.surface, (0, 0))
-
         Button(surface=self.menu.app.surface,
             label='VOLTAR', 
             label_font=menu_lg,

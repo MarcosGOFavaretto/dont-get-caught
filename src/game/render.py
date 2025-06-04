@@ -161,7 +161,7 @@ class GameRender:
         if not self.started:
             return
         
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_c and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.app.start_cola_overlay()
             if event.key == pygame.K_SPACE:
                 self.app.open_cola()

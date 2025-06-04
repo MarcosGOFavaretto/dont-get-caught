@@ -30,7 +30,7 @@ class Teacher:
         self.vision_direction: MovementDirection | None = None
         self.footstep_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/footstep.mp3')
         self.foot_dist = 10
-        self.foot_size = 6
+        self.foot_size = 7
         self.step_amplitude = 14
 
     def set_default_position(self):

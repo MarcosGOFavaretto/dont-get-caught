@@ -52,10 +52,7 @@ class App:
         self.overlay_render = None
 
 
-    def handle_event(self, event):
-        if self.overlay_render:
-            self.overlay_render.handle_event(event)
-        else:
-            if hasattr(self.current_render, 'handle_event'):
-                self.current_render.handle_event(event)
+    # def handle_event(self, event):
+    #     if self.overlay_render:
+    #         self.overlay_render.handle_event(event)
 

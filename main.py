@@ -23,8 +23,6 @@ while running:
     for event in event_list:
         if event.type == pygame.QUIT:
             running = False
-        else:
-            app.handle_event(event)
 
     app.render(event_list)
     pygame.display.flip()

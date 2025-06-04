@@ -2,8 +2,12 @@ import pygame
 import random
 from pygame import Surface
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..app import App
+
 class ColaRender:
-    def __init__(self, app, dificuldade=1, frase_salva=None, texto_digitado=""):
+    def __init__(self, app: 'App', dificuldade=1, frase_salva=None, texto_digitado=""):
         self.app = app
         self.surface = app.surface
         self.font = pygame.font.SysFont('', 28)
@@ -43,6 +47,9 @@ class ColaRender:
         self.surface.fill((255, 255, 255))
         width, height = self.surface.get_size()
 
+        for event in self.app.event_list:
+            self.handle_event(event)
+
         pygame.draw.line(self.surface, (0, 0, 0), (width // 2, 0), (width // 2, height))
 
         self.render_multiline_text(self.cola_text, 20, 20, width // 2 - 40, (0, 0, 0))
@@ -61,10 +68,8 @@ class ColaRender:
                 self.app.close_cola_overlay(self.cola_text, self.user_input)
             elif event.key == pygame.K_BACKSPACE:
                 self.user_input = self.user_input[:-1]
-            elif event.key == pygame.K_RETURN:
-                self.user_input += '\n'
-            else:
-                letra = event.unicode
+            elif event.unicode.isprintable():
+                letra = str(event.unicode)
                 if letra in ["´", "`", "~", "^", '"']:
                     self.composicao = letra
                 elif self.composicao:

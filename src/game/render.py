@@ -59,6 +59,12 @@ class GameRender:
             self.animate_game_start()
 
         if self.started:
+            for event in self.app.event_list:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_c and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                        self.app.start_cola_overlay()
+                    if event.key == pygame.K_SPACE:
+                        self.app.open_cola()
             self.render_clock()
             self.render_game_options_button()
         if self.show_options:
@@ -160,7 +166,6 @@ class GameRender:
     def handle_event(self, event):
         if not self.started:
             return
-        
         if event.type == pygame.KEYDOWN and event.key == pygame.K_c and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.app.start_cola_overlay()
             if event.key == pygame.K_SPACE:

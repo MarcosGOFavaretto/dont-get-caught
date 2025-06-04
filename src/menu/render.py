@@ -1,12 +1,15 @@
 import pygame
-from ..fonts import menu as menu_font
+from ..fonts import menu_lg
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
-from ..enums import GameLevels
 from ..components import Button
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..app import App
+
+from .levels import MenuLevels
+from .how_to_play import MenuHowToPlay
+from ..enums import MenuPage
 
 class MenuRender:
     def __init__(self, app: 'App'):
@@ -14,13 +17,12 @@ class MenuRender:
         self.background = pygame.image.load(f"{ASSETS_FOLDER}/menu-background.png")
         self.background = pygame.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
         self.buttons_width = 260
+
         self.background_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/background-sound-menu.mp3')
         self.background_sound.play(loops=-1, fade_ms=2000)
         self.background_sound.set_volume(0.2)
-
         self.button_click_fx = pygame.mixer.Sound(f'{ASSETS_FOLDER}/menu-click-btn.mp3')
         self.button_back_fx = pygame.mixer.Sound(f'{ASSETS_FOLDER}/menu-back-btn.mp3')
-
         self.button_click_fx.set_volume(0.5)
         self.button_back_fx.set_volume(0.5)
 
@@ -28,80 +30,45 @@ class MenuRender:
         self.difficulty_menu_active = False
         self.how_to_play_active = True
 
+        self.active_page: MenuPage = MenuPage.MAIN
+        self.menu_levels = MenuLevels(self)
+        self.menu_how_to_play = MenuHowToPlay(self)
+
     def render(self):
-        self.app.surface.blit(self.background, (0, 0))
-        if self.menu_active:
-            self.render_menu_options()
-        elif self.difficulty_menu_active:
-            self.render_levels_options()
+        match self.active_page:
+            case MenuPage.MAIN:
+                self.render_menu_options()
+            case MenuPage.GAME_LEVELS:
+                self.menu_levels.render()
+            case MenuPage.HOW_TO_PLAY:
+                self.menu_how_to_play.render()
 
     def render_menu_options(self):
+        self.app.surface.blit(self.background, (0, 0))
         Button(surface=self.app.surface,
-            label='INICIAR', 
-            label_font=menu_font,
+            label='JOGAR', 
+            label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
             rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 260, self.buttons_width, 50),
-            on_click=self.open_levels,
+            on_click=lambda: self.open_page(MenuPage.GAME_LEVELS),
             event_list=self.app.event_list)
         
         Button(surface=self.app.surface,
-            label='OPÇÕES', 
-            label_font=menu_font,
+            label='COMO JOGAR', 
+            label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
-            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 340, self.buttons_width, 50))
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - (self.buttons_width + 100) // 2, 340, self.buttons_width + 100, 50),
+            on_click=lambda: self.open_page(MenuPage.HOW_TO_PLAY),
+            event_list=self.app.event_list)
         
         Button(surface=self.app.surface,
             label='SAIR', 
-            label_font=menu_font,
+            label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
             rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 420, self.buttons_width, 50),
             on_click=lambda: pygame.quit(),
             event_list=self.app.event_list)
 
-
-    def render_levels_options(self):
-        Button(surface=self.app.surface,
-            label='FÁCIL',
-            label_font=menu_font,
-            background_color=pygame.Color(255, 255, 255),
-            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 260, self.buttons_width, 50),
-            on_click=lambda: self.set_level(GameLevels.EASY),
-            event_list=self.app.event_list)
-
-        Button(surface=self.app.surface,
-            label='MÉDIO',
-            label_font=menu_font,
-            background_color=pygame.Color(255, 255, 255),
-            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 340, self.buttons_width, 50),
-            on_click=lambda: self.set_level(GameLevels.MEDIUM),
-            event_list=self.app.event_list)
-
-        Button(surface=self.app.surface,
-            label='DIFÍCIL',
-            label_font=menu_font,
-            background_color=pygame.Color(255, 255, 255),
-            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 420, self.buttons_width, 50),
-            on_click=lambda: self.set_level(GameLevels.HARD),
-            event_list=self.app.event_list)
-        
-        Button(surface=self.app.surface,
-            label='VOLTAR', 
-            label_font=menu_font,
-            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 500, self.buttons_width, 50),
-            on_click=self.onclick_back,
-            event_list=self.app.event_list)
-
-    def open_levels(self):
+    def open_page(self, menu_page: MenuPage):
         self.button_click_fx.play()
-        self.menu_active = False
-        self.difficulty_menu_active = True
-
-    def onclick_back(self):
-        self.menu_active = True
-        self.difficulty_menu_active = False
-        self.button_back_fx.play()
-
-    def set_level(self, level: GameLevels):
-        self.button_click_fx.play()
-        self.background_sound.stop()
-        self.app.start_game(level)
+        self.active_page = menu_page

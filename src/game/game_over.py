@@ -1,11 +1,10 @@
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
 import pygame
-from ..components import Button, Text
+from ..components import Button, Text, RectPosition
 from .. import fonts
 from ..timer import Timer, TIME_SECOND
 import random
 from ..animations import Rain
-
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .render import GameRender
@@ -54,7 +53,8 @@ class GameOver:
                 position=(WINDOW_WIDTH // 2, 200),
                 font=fonts.game_final_screen_title,
                 outline_color=pygame.Color(0, 0, 0),
-                outline_size=3)
+                outline_size=3,
+                rect_pos=RectPosition.CENTER)
         
         Text(surface=self.surface,
                 content=self.subtext,
@@ -62,7 +62,8 @@ class GameOver:
                 position=(WINDOW_WIDTH // 2, 280),
                 font=fonts.game_final_subtext,
                 outline_color=pygame.Color(0, 0, 0),
-                outline_size=1)
+                outline_size=1,
+                rect_pos=RectPosition.CENTER)
 
         Button(surface=self.surface,
                 label='Jogar novamente', 

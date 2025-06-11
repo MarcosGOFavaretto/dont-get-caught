@@ -85,19 +85,26 @@ class Teacher:
             return (-self.vision_angle / 2 + math.pi / 2, self.vision_angle / 2 + math.pi / 2)
         else:
             raise ValueError("Invalid vision direction")
-        
+
     # Função para retornar os pontos que estão dentro do raio de visão do professor.
     #
     def get_vision_points(self):
         if self.is_sleeping:
-            return []
-        points_in_vision = []
+            return list[ClassroomGridPoint]()
+        points_in_vision = list[ClassroomGridPoint]()
         for column in self.game.classroom.grid_points:
             for point in column:
-                # if point.is_student_desk and self.point_is_in_vision(point):
                 if self.point_is_in_vision(point):
                     points_in_vision.append(point)
         return points_in_vision
+    
+    def is_looking_for_player(self) -> bool:
+        if self.is_sleeping:
+            return False
+        for point in self.get_vision_points():
+            if self.game.student.position.to_grid_point() == point.to_grid_point():
+                return True
+        return False
     
     # Verifica se o ponto está dentro do raio de visão e dentro do ângulo de visão.
     #

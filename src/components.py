@@ -1,8 +1,17 @@
 import pygame
+from enum import Enum
+class RectPosition(Enum):
+    TOP_LEFT = 'topleft'
+    CENTER = 'center'
 
-def Text(surface: pygame.Surface, content: str, color: pygame.Color, position: tuple[int, int], font: pygame.font.Font, outline_color: pygame.Color | None = None, outline_size: int = 2):
+def Text(surface: pygame.Surface, content: str, color: pygame.Color, position: tuple[int, int], font: pygame.font.Font, outline_color: pygame.Color | None = None, outline_size: int = 2, rect_pos: RectPosition = RectPosition.TOP_LEFT):
     text_surface = font.render(content, True, color)
-    text_rect = text_surface.get_rect(topleft=position)
+    if rect_pos == RectPosition.CENTER:
+        text_rect = text_surface.get_rect(center=position)
+    elif rect_pos == RectPosition.TOP_LEFT:
+        text_rect = text_surface.get_rect(topleft=position)
+    else:
+        raise ValueError("Invalid rect_pos value. Must be 'topleft' or 'center'")
     if outline_color:
         text_outline_surface = font.render(content, True, outline_color)
         outline_offsets = [(-outline_size, 0), (outline_size, 0), (0, -outline_size), (0, outline_size)]

@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from ..app import App
 from ..components import ButtonIcon
 from ..enums import GameLevels
+from .cola import ColaRender
 
 class GameRender:
     def __init__(self, app: 'App', selected_level: GameLevels):
@@ -35,7 +36,6 @@ class GameRender:
 
         self.options_menu = OptionsMenu(self)
         self.show_options = False
-
         self.started = False
         self.animation_classroom_offset = 200
         self.animation_control = 0
@@ -46,6 +46,9 @@ class GameRender:
         self.teacher, self.teacher_render = self.define_teacher()
         self.student, self.student_render = self.define_student()
         self.define_npc_students()
+
+        self.exam_sheet_render = ColaRender(self)
+        self.player_is_cheatting = False
 
     # Método para renderizar as entidades do jogo.
     def render(self):
@@ -58,17 +61,23 @@ class GameRender:
         if not self.started:
             self.animate_game_start()
 
+        if self.player_is_cheatting:
+            self.exam_sheet_render.render(on_exit=self.exit_exam_cheat)
+
         if self.started:
-            for event in self.app.event_list:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_c and pygame.key.get_mods() & pygame.KMOD_CTRL:
-                        self.app.start_cola_overlay()
-                    if event.key == pygame.K_SPACE:
-                        self.app.open_cola()
             self.render_clock()
-            self.render_game_options_button()
-        if self.show_options:
-            self.render_game_options_menu()
+
+            if self.player_is_cheatting and self.teacher.is_looking_for_player():
+                self.game_over()
+
+            if not self.player_is_cheatting:
+                for event in self.app.event_list:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_c and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                            self.player_is_cheatting = True
+                self.render_game_options_button()
+                if self.show_options:
+                    self.render_game_options_menu()
 
         if self.game_ends and self.game_final_screen:
             self.game_final_screen.render()
@@ -91,11 +100,11 @@ class GameRender:
         self.animation_control += animation_speed
         self.classroom.update_grid_points_position()
 
-
     def render_clock(self):
-        time_str = time_to_string(EXAM_TIME - self.exam_timer.get_time_passed() + TIME_SECOND)
-        s = merriweather.render(time_str, True, 'black', 'white')
-        self.app.surface.blit(s, (10, 10))
+        if not self.player_is_cheatting:
+            time_str = time_to_string(EXAM_TIME - self.exam_timer.get_time_passed() + TIME_SECOND)
+            s = merriweather.render(time_str, True, 'black', 'white')
+            self.app.surface.blit(s, (10, 10))
         if self.game_ends:
             return
         if self.exam_timer.time_is_up():
@@ -118,11 +127,17 @@ class GameRender:
         self.game_final_screen = GameOver(game=self)
         self.exam_timer.stop()
         self.game_ends = True
+        self.player_is_cheatting = False
 
     def you_win(self):
         self.game_final_screen = YouWin(game=self)
         self.exam_timer.stop()
         self.game_ends = True
+        self.player_is_cheatting = False
+
+    def exit_exam_cheat(self):
+        self.player_is_cheatting = False
+
 
     # MÉTODOS DE DEFINIÇÃO INICIAL DO JOGO
 
@@ -163,10 +178,3 @@ class GameRender:
             if grid_point.classroom_desk is not None and not grid_point.classroom_desk.has_student:
                 return grid_point.classroom_desk
             
-    def handle_event(self, event):
-        if not self.started:
-            return
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_c and pygame.key.get_mods() & pygame.KMOD_CTRL:
-            self.app.start_cola_overlay()
-            if event.key == pygame.K_SPACE:
-                self.app.open_cola()

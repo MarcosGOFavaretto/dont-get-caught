@@ -1,17 +1,20 @@
 import pygame
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from .classroom import Classroom
     from ..render import GameRender
-from ...config import WINDOW_WIDTH
+from ...config import WINDOW_WIDTH, WINDOW_HEIGHT, ASSETS_FOLDER
 
 class ClassroomRender:
     def __init__(self, game: 'GameRender', classroom: 'Classroom', surface: pygame.Surface):
         self.game = game
         self.classroom = classroom
         self.surface = surface
+        self.floor_sprite = pygame.image.load(f'{ASSETS_FOLDER}/classroom-floor.png')
         
     def render(self):
+        self.render_floor()
         self.render_desks()
 
         if not self.game.started:
@@ -49,3 +52,8 @@ class ClassroomRender:
                     pygame.draw.rect(self.surface, 'brown', (point.x - 20, point.y + 26, 40, 10), 0)
                     pygame.draw.ellipse(self.surface, 'blue', (point.x - 20, point.y + 6, 40, 24), 20)
                     pygame.draw.circle(self.surface, 'black', (point.x, point.y + 8), 14)
+    
+    def render_floor(self):
+        for x in range(0, WINDOW_WIDTH, 64):
+            for y in range(0, WINDOW_HEIGHT + self.game.animation_classroom_offset, 64):
+                self.surface.blit(self.floor_sprite, (x, self.classroom.y + y - self.game.animation_classroom_offset))

@@ -1,12 +1,10 @@
 from .teacher.teachers.easy import TeacherEasy
-from .teacher.teachers.medium import TeacherMedium
-from .teacher.teachers.hard import TeacherHard
 from .classroom.classroom import Classroom, ClassroomRender
 from .teacher.teacher import Teacher, TeacherRender
 from .student.student import Student, StudentRender
 import copy
 from ..timer import Timer, time_to_string, TIME_SECOND
-from ..config import WINDOW_HEIGHT, WINDOW_WIDTH
+from ..config import WINDOW_WIDTH
 import pygame
 from ..config import ASSETS_FOLDER, EXAM_TIME
 from ..fonts import merriweather
@@ -39,7 +37,7 @@ class GameRender:
         self.options_menu = OptionsMenu(self)
         self.show_options = False
         self.started = False
-        self.animation_classroom_offset = 192
+        self.animation_classroom_offset = 200
         self.animation_control = 0
         self.start_animation_timer = Timer(wait_time=2 * TIME_SECOND)
         self.start_animation_timer.start()
@@ -144,7 +142,7 @@ class GameRender:
     # MÉTODOS DE DEFINIÇÃO INICIAL DO JOGO
 
     def define_classroom(self) -> tuple[Classroom, ClassroomRender]:
-        classroom = Classroom(game=self, dimension=(WINDOW_WIDTH, WINDOW_HEIGHT), x=0, y=self.animation_classroom_offset, rows=8, columns=11)
+        classroom = Classroom(game=self, dimension=(1000, 600), x=0, y=self.animation_classroom_offset, rows=8, columns=11)
         classroom_render = classroom.get_render(self.app.surface)
         return (classroom, classroom_render)
 
@@ -154,11 +152,12 @@ class GameRender:
             case GameLevels.EASY:
                 teacher = TeacherEasy(game=self)
             case GameLevels.MEDIUM:
-                teacher = TeacherMedium(game=self)
+                teacher = TeacherEasy(game=self)
             case GameLevels.HARD:
-                teacher = TeacherHard(game=self)
+                teacher = TeacherEasy(game=self)
         if teacher is None:
             raise ValueError("Invalid game level.")
+        teacher = TeacherEasy(game=self)
         teacher_render = teacher.get_render(self.app.surface)
         return (teacher, teacher_render)
 

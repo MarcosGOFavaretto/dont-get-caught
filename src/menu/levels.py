@@ -17,7 +17,7 @@ class MenuLevels:
     def render(self):
         self.menu.app.surface.blit(self.menu.background, (0, 0))
         Button(surface=self.menu.app.surface,
-            label='FÁCIL',
+            label='FACIL',
             label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
             rect=pygame.Rect(WINDOW_WIDTH // 2 - self.menu.buttons_width // 2, 260, self.menu.buttons_width, 50),
@@ -25,7 +25,7 @@ class MenuLevels:
             event_list=self.menu.app.event_list)
 
         Button(surface=self.menu.app.surface,
-            label='MÉDIO',
+            label='MEDIO',
             label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
             rect=pygame.Rect(WINDOW_WIDTH // 2 - self.menu.buttons_width // 2, 340, self.menu.buttons_width, 50),
@@ -33,7 +33,7 @@ class MenuLevels:
             event_list=self.menu.app.event_list)
 
         Button(surface=self.menu.app.surface,
-            label='DIFÍCIL',
+            label='DIFICIL',
             label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
             rect=pygame.Rect(WINDOW_WIDTH // 2 - self.menu.buttons_width // 2, 420, self.menu.buttons_width, 50),

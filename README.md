@@ -12,16 +12,21 @@ python main.py
 
 ## Build
 
+### Biblioteca para build
+```sh
+pip install pyinstaller
+```
+
 Caso queira gerar um executável para o projeto rode o comando.
 
 ### linux
 ```sh
-pyinstaller --onefile main.py
+pyinstaller --onefile main.py --name "Dont Get Caught"
 ```
 
 ### windows
 ```sh
-pyinstaller --onefile --windowed main.py
+pyinstaller --onefile --windowed main.py --name "Dont Get Caught"
 ```
 
 

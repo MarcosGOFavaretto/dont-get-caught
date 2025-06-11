@@ -66,7 +66,7 @@ class MenuRender:
             label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
             rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 420, self.buttons_width, 50),
-            on_click=lambda: pygame.quit(),
+            on_click=self.app.quit,
             event_list=self.app.event_list)
 
     def open_page(self, menu_page: MenuPage):

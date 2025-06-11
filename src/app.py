@@ -12,21 +12,21 @@ class App:
         self.overlay_render = None
         self.cola_frase_atual = None           
         self.cola_texto_digitado = ""
+        self.must_quit = False
 
     def render(self, event_list: list[Event]):
         self.event_list = event_list
         self.current_render.render()
         if self.overlay_render:
             self.overlay_render.render()
+        return self.must_quit
         
+    def quit(self):
+        self.must_quit = True
+
     def open_menu(self):
         self.current_render = MenuRender(self)
 
     def start_game(self, selected_level: GameLevels):
         self.current_render = GameRender(self, selected_level=selected_level)
-
-    # def close_cola_overlay(self, frase_atual, texto_digitado):
-    #     self.cola_frase_atual = frase_atual
-    #     self.cola_texto_digitado = texto_digitado
-    #     self.overlay_render = None
 

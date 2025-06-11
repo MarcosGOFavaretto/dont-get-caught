@@ -148,7 +148,7 @@ class TeacherRender:
 
 
     def render_foots_movement(self):
-        movement_amplitude = senoide(self.teacher.step_amplitude, 1/(self.footstep_interval * 2), -math.pi/2, 0, 0.1, self.action_timer.get_time_passed())
+        movement_amplitude = senoide(self.teacher.step_amplitude, 1/(self.footstep_interval * 2), -math.pi/2, 0, self.action_timer.get_time_passed(), square_shapping=0.1)
         left_foot_offset = movement_amplitude
         right_foot_offset = -left_foot_offset
 

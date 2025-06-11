@@ -20,7 +20,7 @@ class MenuRender:
 
         self.background_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/background-sound-menu.mp3')
         self.background_sound.play(loops=-1, fade_ms=2000)
-        self.background_sound.set_volume(0.2)
+        self.background_sound.set_volume(0.03)
         self.button_click_fx = pygame.mixer.Sound(f'{ASSETS_FOLDER}/menu-click-btn.mp3')
         self.button_back_fx = pygame.mixer.Sound(f'{ASSETS_FOLDER}/menu-back-btn.mp3')
         self.button_click_fx.set_volume(0.5)

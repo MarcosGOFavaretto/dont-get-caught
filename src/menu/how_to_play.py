@@ -1,5 +1,5 @@
 import pygame
-from ..fonts import menu_sm, menu_lg
+from ..fonts import menu_sm, menu_how_to_play_description, menu_lg
 from ..config import WINDOW_WIDTH, ASSETS_FOLDER, WINDOW_HEIGHT
 from ..components import Button, Text
 
@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from .render import MenuRender
 
 from ..enums import MenuPage
+
 
 class MenuHowToPlay:
     def __init__(self, menu: 'MenuRender') -> None:
@@ -23,10 +24,22 @@ class MenuHowToPlay:
             dict(command='Esc', description='Sair da cola'),
         ]
 
+        self.how_to_play_description = "O seu objetivo no jogo é colar na prova sem ser pego no flagra pelo professor. O professor anda atenciosamente pela sala durante a prova procurando alunos como VOCÊ para reprovar sem pensar duas vezes. Use [Ctrl + C] para abrir a cola, e caso perceba que o professor está se aproximando use [Esc] para esconder a cola rapidamente. Se você for visto com a cola aberta você perde. Para ganhar escreva o texto da cola na esquerda para a prova que está na direita. Obs: o texto escrito na prova precisa estar IDÊNTICO ao da cola para que o jogo seja ganho."
+
     def render(self):
         self.menu.app.surface.blit(self.background, (0, 0))
         controls_area = pygame.draw.rect(self.surface, pygame.Color(255, 255, 255, 200), pygame.Rect(self.margin_top, self.margin_x, WINDOW_WIDTH - 2 * self.margin_x, 460))
-        self.render_controls(controls_area)
+
+        
+        Text(surface=self.surface,
+            content=self.how_to_play_description,
+            color=pygame.Color(0, 0, 0),
+            position=(controls_area.left + 20, 40),
+            font=menu_how_to_play_description,
+            line_max_width=controls_area.width - 20,
+            line_spacing=10)
+
+
         self.menu.app.surface.blit(self.surface, (0, 0))
         Button(surface=self.menu.app.surface,
             label='VOLTAR', 

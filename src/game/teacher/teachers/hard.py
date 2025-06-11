@@ -3,12 +3,15 @@ import random
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..render import GameRender
+import math
 
-class TeacherSergio(Teacher):
+class TeacherHard(Teacher):
     def __init__(self, game: 'GameRender'):
-        super().__init__(game=game, name="Sérgio", initial_position=(int(game.classroom.grid_columns / 2), 0))
+        super().__init__(game=game, name="Hard", initial_position=(int(game.classroom.grid_columns / 2), 0))
         self.last_action = None
-        self.walk_speed = 1.5
+        self.walk_speed = 1.8
+        self.vision_angle = math.pi * 0.7
+        self.vision_radius = 220
 
     def get_next_action(self) :
         self.last_action = self.current_action

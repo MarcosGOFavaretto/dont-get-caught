@@ -9,7 +9,7 @@ class Student:
     def __init__(self, game: 'GameRender', position: ClassroomGridPoint):
         self.position = position
         self.game = game
-        self.hearing_teacher_steps_range = 500
+        self.hearing_teacher_steps_range = 800
 
     def get_render(self, surface: pygame.Surface):
         return StudentRender(self.game, self, surface)

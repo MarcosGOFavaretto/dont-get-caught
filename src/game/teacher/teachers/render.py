@@ -1,6 +1,4 @@
 from .teacher.teachers.easy import TeacherEasy
-from .teacher.teachers.medium import TeacherMedium
-from .teacher.teachers.hard import TeacherHard
 from .classroom.classroom import Classroom, ClassroomRender
 from .teacher.teacher import Teacher, TeacherRender
 from .student.student import Student, StudentRender
@@ -154,11 +152,12 @@ class GameRender:
             case GameLevels.EASY:
                 teacher = TeacherEasy(game=self)
             case GameLevels.MEDIUM:
-                teacher = TeacherMedium(game=self)
+                teacher = TeacherEasy(game=self)
             case GameLevels.HARD:
-                teacher = TeacherHard(game=self)
+                teacher = TeacherEasy(game=self)
         if teacher is None:
             raise ValueError("Invalid game level.")
+        teacher = TeacherEasy(game=self)
         teacher_render = teacher.get_render(self.app.surface)
         return (teacher, teacher_render)
 

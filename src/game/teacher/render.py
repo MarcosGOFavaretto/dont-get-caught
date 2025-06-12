@@ -1,7 +1,7 @@
 from .movement import MovementDirection, MovementActionType, MovementActionWalk, MovementActionWait
 import pygame
 import math
-from ...config import WINDOW_WIDTH, WINDOW_HEIGHT
+from ...config import ASSETS_FOLDER, WINDOW_WIDTH, WINDOW_HEIGHT
 from ...timer import Timer
 from ...utils import heuristic, map_value, senoide, circular
 from ...fonts import teacher_zzz
@@ -21,6 +21,7 @@ class TeacherRender:
         self.sleeping_timer = Timer()
         self.action_start_timer = 0
         self.game = game
+
 
     def render(self):
         if self.game.game_ends or not self.game.started:
@@ -120,19 +121,10 @@ class TeacherRender:
     def render_sprite(self):
         if not self.teacher.is_sleeping and self.game.started:
             self.render_vision()
-        # corpo
-        size_w = 60
-        size_h = size_w // 2
-        if self.teacher.direction in (MovementDirection.UP, MovementDirection.DOWN):
-            pygame.draw.ellipse(self.surface, 'green', (self.teacher.position.x - size_w // 2, self.teacher.position.y - size_h // 2, size_w, size_h), 20)
-        if self.teacher.direction in (MovementDirection.LEFT, MovementDirection.RIGHT):
-            pygame.draw.ellipse(self.surface, 'green', (self.teacher.position.x - size_h // 2, self.teacher.position.y - size_w // 2, size_h, size_w), 20)
-        # cabeça
-        pygame.draw.circle(self.surface, 'black', (self.teacher.position.x, self.teacher.position.y), 16)
+        self.surface.blit(self.teacher.sprite, (self.teacher.position.x - 32, self.teacher.position.y - 32))
         # se estiver dormindo
         if self.teacher.is_sleeping:
             self.render_sleeping_animation()
-            # pygame.draw.circle(self.surface, 'blue', (self.teacher.position.x, self.teacher.position.y), 5)
 
     def render_sleeping_animation(self):
         radius = 24

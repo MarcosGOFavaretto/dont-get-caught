@@ -32,6 +32,7 @@ class Teacher:
         self.foot_dist = 10
         self.foot_size = 7
         self.step_amplitude = 14
+        self.sprite = pygame.image.load(f'{ASSETS_FOLDER}/teacher.png')
 
     def set_default_position(self):
         self.position = copy.deepcopy(self.game.classroom.grid_points[self.initial_position[0]][self.initial_position[1]])
@@ -52,15 +53,25 @@ class Teacher:
                 walk_speed=self.walk_speed,
                 walk_path=self.game.classroom.find_path(self.position, next_action_final_point))
             self.current_action = next_action
-            return
-        
-        if random_action == MovementActionType.WAIT:
+        elif random_action == MovementActionType.WAIT:
             random_direction = random.choice(list(MovementDirection))
             next_action = MovementActionWait(point=self.position, direction_to_look=random_direction, wait_time=random.randint(self.wait_time_range[0], self.wait_time_range[1]))
             self.current_action = next_action
-            return
+        else:
+            raise ValueError("Invalid action type")
         
-        raise ValueError("Invalid action type")
+        rotation_degrees = 0
+        if self.current_action.direction == MovementDirection.UP:
+            rotation_degrees = 0
+        elif self.current_action.direction == MovementDirection.DOWN:
+            rotation_degrees = 180
+        elif self.current_action.direction == MovementDirection.LEFT:
+            rotation_degrees = -90
+        elif self.current_action.direction == MovementDirection.RIGHT:
+            rotation_degrees = 90
+
+        sprite = pygame.image.load(f'{ASSETS_FOLDER}/teacher.png')
+        self.sprite = pygame.transform.rotate(sprite, rotation_degrees)
 
     # Função para retornar os possíveis pontos de movimento do professor:
     #

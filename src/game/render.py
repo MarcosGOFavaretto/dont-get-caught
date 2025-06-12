@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 from ..components import ButtonIcon
 from ..enums import GameLevels
 from .cola import ColaRender
-
+import os
 class GameRender:
     def __init__(self, app: 'App', selected_level: GameLevels):
         self.app = app
@@ -174,7 +174,9 @@ class GameRender:
         for grid_column in self.classroom.grid_points:
             for grid_point in grid_column:
                 if self.classroom.is_student_desk(grid_point.column, grid_point.row):
-                    classroom_desk = ClassroomNpcDesk(grid_position=copy.deepcopy(self.classroom.grid_points[grid_point.column][grid_point.row]), has_student=False)
+                    random_npc_sprite_name = random.choice(os.listdir(f'{ASSETS_FOLDER}/npc_students'))
+                    npc_sprite = pygame.image.load(f'{ASSETS_FOLDER}/npc_students/{random_npc_sprite_name}')
+                    classroom_desk = ClassroomNpcDesk(grid_position=copy.deepcopy(self.classroom.grid_points[grid_point.column][grid_point.row]), sprite=npc_sprite, has_student=False)
                     self.classroom.grid_points[grid_point.column][grid_point.row].classroom_desk = classroom_desk
 
         npc_students_quant = int(self.classroom.get_total_desks() * self.npc_students_fill_rate)

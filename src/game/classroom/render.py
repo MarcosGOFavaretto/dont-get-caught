@@ -5,6 +5,8 @@ if TYPE_CHECKING:
     from .classroom import Classroom
     from ..render import GameRender
 from ...config import WINDOW_WIDTH, WINDOW_HEIGHT, ASSETS_FOLDER
+import os
+import random
 
 class ClassroomRender:
     def __init__(self, game: 'GameRender', classroom: 'Classroom', surface: pygame.Surface):
@@ -12,6 +14,7 @@ class ClassroomRender:
         self.classroom = classroom
         self.surface = surface
         self.floor_sprite = pygame.image.load(f'{ASSETS_FOLDER}/classroom-floor.png')
+        self.desk_without_student_sprite = pygame.image.load(f'{ASSETS_FOLDER}/desk-without-student.png')
         
     def render(self):
         self.render_floor()
@@ -47,13 +50,17 @@ class ClassroomRender:
         for point in self.classroom.get_grid_points_list():
             desk_is_player = (self.game.student.position.column, self.game.student.position.row) == (point.column, point.row)
             if point.classroom_desk is not None and not desk_is_player:
-                pygame.draw.rect(self.surface, 'brown', (point.x - point.classroom_desk.width / 2, point.y - point.classroom_desk.height / 2, point.classroom_desk.width, point.classroom_desk.height), 0)
                 if point.classroom_desk.has_student:
-                    pygame.draw.rect(self.surface, 'brown', (point.x - 20, point.y + 26, 40, 10), 0)
-                    pygame.draw.ellipse(self.surface, 'blue', (point.x - 20, point.y + 6, 40, 24), 20)
-                    pygame.draw.circle(self.surface, 'black', (point.x, point.y + 8), 14)
+                    self.surface.blit(point.classroom_desk.sprite, (point.x - 32, point.y - 32))
+                else:
+                    self.surface.blit(self.desk_without_student_sprite, (point.x - 32, point.y - 32))
+
     
     def render_floor(self):
         for x in range(0, WINDOW_WIDTH, 64):
             for y in range(0, WINDOW_HEIGHT + self.game.animation_classroom_offset, 64):
                 self.surface.blit(self.floor_sprite, (x, self.classroom.y + y - self.game.animation_classroom_offset))
+
+
+    def get_random_npc_student(self):
+        return random.choice(os.listdir(f'{ASSETS_FOLDER}/npc_students'))

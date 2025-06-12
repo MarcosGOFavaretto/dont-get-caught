@@ -27,10 +27,5 @@ class StudentRender:
     def render_player_indicator(self):
         animation_amplitude = senoide(10, 1/1000, 0, 0, self.indicator_animation_timer.get_time_passed()) + 40
         indicator_y = animation_amplitude
-        # indicator_size = 8:
         self.surface.blit(self.player_indicator_sprite, (self.student.position.x - 32, self.student.position.y - 32 - indicator_y))
-        # pygame.draw.polygon(self.surface, 'red', [
-        #     (self.student.position.x - indicator_size, self.student.position.y - indicator_y), 
-        #     (self.student.position.x, self.student.position.y - indicator_y + indicator_size), 
-        #     (self.student.position.x + indicator_size, self.student.position.y - indicator_y)])
         

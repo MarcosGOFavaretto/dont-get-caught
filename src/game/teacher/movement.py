@@ -1,13 +1,59 @@
+from re import L
+from tkinter import LEFT
 from ..classroom.classroom import ClassroomGridPoint, Classroom
 from enum import Enum
 import pygame
 import copy
+import math
 
 class MovementDirection(Enum):
     LEFT = 'LEFT'
     RIGHT = 'RIGHT'
     UP = 'UP'
     DOWN = 'DOWN'
+
+    def get_directions_rotation_map(self):
+        directions = None
+        if self == MovementDirection.LEFT:
+            directions = (0, 3, 2, 1)
+        elif self == MovementDirection.UP:
+            directions = (1, 0, 3, 2)
+        elif self == MovementDirection.RIGHT:
+            directions = (2, 1, 0, 3)
+        elif self == MovementDirection.DOWN:
+            directions = (3, 2, 1, 0)
+        else:
+            raise ValueError("Invalid direction")
+        return {
+            MovementDirection.LEFT: directions[0] * 90,
+            MovementDirection.UP: directions[1] * 90,
+            MovementDirection.RIGHT: directions[2] * 90,
+            MovementDirection.DOWN: directions[3] * 90
+        }
+
+    # def get_left_rotation(self):
+    #     if self == MovementDirection.LEFT:
+    #         return 0
+    #     elif self == MovementDirection.RIGHT:
+    #         return -180
+    #     elif self == MovementDirection.UP:
+    #         return -90
+    #     elif self == MovementDirection.DOWN:
+    #         return 90
+    #     else:
+    #         raise ValueError("Invalid direction")
+        
+    # def get_up_rotation(self):
+    #     if self == MovementDirection.LEFT:
+    #         return 90
+    #     elif self == MovementDirection.RIGHT:
+    #         return -90
+    #     elif self == MovementDirection.UP:
+    #         return 0
+    #     elif self == MovementDirection.DOWN:
+    #         return 90
+    #     else:
+    #         raise ValueError("Invalid direction")
 
 class MovementActionType(Enum):
     WALK = 'WALK'

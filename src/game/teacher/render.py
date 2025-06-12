@@ -21,6 +21,8 @@ class TeacherRender:
         self.sleeping_timer = Timer()
         self.action_start_timer = 0
         self.game = game
+        self.teacher_sprite = pygame.image.load(f'{ASSETS_FOLDER}/teacher.png')
+        self.teacher_foot_sprite = pygame.image.load(f'{ASSETS_FOLDER}/teacher-foot.png')
 
 
     def render(self):
@@ -30,6 +32,7 @@ class TeacherRender:
 
         if self.teacher.current_action is None or self.teacher_ends_current_action:
             self.next_action()
+            if self.teacher.current_action is not None: self.update_sprites_direction(self.teacher.current_action.direction)
             self.action_timer.restart()
 
         if self.teacher.current_action is None:
@@ -86,6 +89,7 @@ class TeacherRender:
         if is_next_point: 
             self.teacher.position = self.teacher.current_action.next_point
             self.teacher.current_action.advance_path()
+            self.update_sprites_direction(self.teacher.current_action.direction)
             if self.teacher.current_action.next_point is None:
                 self.teacher_ends_current_action = True
             return
@@ -121,10 +125,16 @@ class TeacherRender:
     def render_sprite(self):
         if not self.teacher.is_sleeping and self.game.started:
             self.render_vision()
-        self.surface.blit(self.teacher.sprite, (self.teacher.position.x - 32, self.teacher.position.y - 32))
+        self.surface.blit(self.teacher_sprite, (self.teacher.position.x - 32, self.teacher.position.y - 32))
         # se estiver dormindo
         if self.teacher.is_sleeping:
             self.render_sleeping_animation()
+
+    def update_sprites_direction(self, direction: MovementDirection):
+        directions_map = self.teacher.direction.get_directions_rotation_map()
+        rotation_degrees = directions_map[direction]
+        self.teacher_sprite = pygame.transform.rotate(self.teacher_sprite, rotation_degrees)
+        self.teacher_foot_sprite = pygame.transform.rotate(self.teacher_foot_sprite, rotation_degrees)
 
     def render_sleeping_animation(self):
         radius = 24
@@ -140,25 +150,21 @@ class TeacherRender:
 
 
     def render_foots_movement(self):
-        movement_amplitude = senoide(self.teacher.step_amplitude, 1/(self.footstep_interval * 2), -math.pi/2, 0, self.action_timer.get_time_passed(), square_shapping=0.1)
+        movement_amplitude = senoide(self.teacher.step_amplitude, 1/(self.footstep_interval * 2), -math.pi/2, 0, self.action_timer.get_time_passed(), square_shapping=0.08)
         left_foot_offset = movement_amplitude
         right_foot_offset = -left_foot_offset
-
         if self.teacher.direction == MovementDirection.DOWN:
-            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x - self.teacher.foot_dist, self.teacher.position.y+left_foot_offset), self.teacher.foot_size) # left foot
-            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x + self.teacher.foot_dist, self.teacher.position.y+right_foot_offset), self.teacher.foot_size) # right foot
-
+            self.surface.blit(self.teacher_foot_sprite, (self.teacher.position.x - self.teacher.foot_dist - 32 , self.teacher.position.y + left_foot_offset - 32)) # left foot
+            self.surface.blit(self.teacher_foot_sprite, (self.teacher.position.x + self.teacher.foot_dist - 32, self.teacher.position.y + right_foot_offset - 32)) # right foot
         if self.teacher.direction == MovementDirection.UP:
-            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x - self.teacher.foot_dist, self.teacher.position.y-left_foot_offset), self.teacher.foot_size) # left foot
-            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x + self.teacher.foot_dist, self.teacher.position.y-right_foot_offset), self.teacher.foot_size) # right foot
-            
+            self.surface.blit(self.teacher_foot_sprite, (self.teacher.position.x - self.teacher.foot_dist - 32 , self.teacher.position.y - left_foot_offset - 32)) # left foot
+            self.surface.blit(self.teacher_foot_sprite, (self.teacher.position.x + self.teacher.foot_dist - 32, self.teacher.position.y - right_foot_offset - 32)) # right foot
         if self.teacher.direction == MovementDirection.LEFT:
-            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x - left_foot_offset, self.teacher.position.y-self.teacher.foot_dist), self.teacher.foot_size) # left foot
-            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x - right_foot_offset, self.teacher.position.y+self.teacher.foot_dist), self.teacher.foot_size) # right foot
-        
+            self.surface.blit(self.teacher_foot_sprite, (self.teacher.position.x - left_foot_offset - 32 , self.teacher.position.y - self.teacher.foot_dist - 32)) # left foot
+            self.surface.blit(self.teacher_foot_sprite, (self.teacher.position.x - right_foot_offset - 32, self.teacher.position.y + self.teacher.foot_dist - 32)) # right foot
         if self.teacher.direction == MovementDirection.RIGHT:
-            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x + left_foot_offset, self.teacher.position.y-self.teacher.foot_dist), self.teacher.foot_size) # left foot
-            pygame.draw.circle(self.surface, 'brown', (self.teacher.position.x + right_foot_offset, self.teacher.position.y+self.teacher.foot_dist), self.teacher.foot_size) # right foot
+            self.surface.blit(self.teacher_foot_sprite, (self.teacher.position.x + left_foot_offset - 32 , self.teacher.position.y - self.teacher.foot_dist - 32)) # left foot
+            self.surface.blit(self.teacher_foot_sprite, (self.teacher.position.x + right_foot_offset - 32, self.teacher.position.y + self.teacher.foot_dist - 32)) # right foot
         
         
     def render_vision(self):

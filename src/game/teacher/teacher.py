@@ -63,13 +63,14 @@ class Teacher:
 
     # Função para retornar os possíveis pontos de movimento do professor:
     #
-    def get_movement_possibilities(self) -> list[ClassroomGridPoint]:
-        movement_possibilities = []
+    def get_movement_possibilities(self) :
+        movement_possibilities = list[ClassroomGridPoint]()
         for row in self.game.classroom.grid_points:
             for point in row:
                 if point.classroom_desk is None and point != self.position:
                     movement_possibilities.append(point)
-        return movement_possibilities
+        student_neighbors = self.game.student.get_neighbor_grid_points()
+        return movement_possibilities + student_neighbors
     
     # Função para retornar o intervalo de ângulo de visão do professor.
     #   - O intervalo de ângulo de visão é definido em relação à direção do professor.

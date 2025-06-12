@@ -34,6 +34,9 @@ class MenuRender:
         self.menu_levels = MenuLevels(self)
         self.menu_how_to_play = MenuHowToPlay(self)
 
+        self.buttons_initial_y = 300
+        self.buttons_spacing_y = 100
+
     def render(self):
         match self.active_page:
             case MenuPage.MAIN:
@@ -49,7 +52,7 @@ class MenuRender:
             label='JOGAR', 
             label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
-            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 260, self.buttons_width, 50),
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, self.buttons_initial_y, self.buttons_width, 50),
             on_click=lambda: self.open_page(MenuPage.GAME_LEVELS),
             event_list=self.app.event_list)
         
@@ -57,7 +60,7 @@ class MenuRender:
             label='COMO JOGAR', 
             label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
-            rect=pygame.Rect(WINDOW_WIDTH // 2 - (self.buttons_width + 100) // 2, 340, self.buttons_width + 100, 50),
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - (self.buttons_width + 100) // 2, self.buttons_initial_y + self.buttons_spacing_y, self.buttons_width + 100, 50),
             on_click=lambda: self.open_page(MenuPage.HOW_TO_PLAY),
             event_list=self.app.event_list)
         
@@ -65,7 +68,7 @@ class MenuRender:
             label='SAIR', 
             label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
-            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, 420, self.buttons_width, 50),
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, self.buttons_initial_y + self.buttons_spacing_y * 2, self.buttons_width, 50),
             on_click=self.app.quit,
             event_list=self.app.event_list)
 

@@ -14,6 +14,7 @@ pyinstaller "${MAIN_SCRIPT}" \
     --name run \
     --onefile \
     --windowed \
+    --hidden-import=tkinter \
     --icon="${GAME_ICON}" \
 
 
@@ -34,6 +35,3 @@ else
     echo "Check the \"dist\" folder for your executable."
     echo ""
 fi
-
-# Pause for user to see output (optional for Linux/macOS, more common on Windows)
-read -p "Press Enter to continue..."

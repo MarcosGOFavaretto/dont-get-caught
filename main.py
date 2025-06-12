@@ -1,8 +1,7 @@
-from ast import PyCF_ALLOW_TOP_LEVEL_AWAIT
-from pdb import run
 import pygame
 from src.config import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GAME_NAME, ASSETS_FOLDER
 from src.app import App
+import tkinter
 
 pygame.init()
 pygame.mixer.init()
@@ -16,9 +15,6 @@ clock = pygame.time.Clock()
 running = True
 
 app = App(main_surface)
-
-def quit_game():
-    running = False
 
 while running:
     event_list = pygame.event.get()

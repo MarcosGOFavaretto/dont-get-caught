@@ -9,7 +9,7 @@ from ..timer import Timer, time_to_string, TIME_SECOND
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH
 import pygame
 from ..config import ASSETS_FOLDER, EXAM_TIME
-from ..fonts import merriweather
+from ..fonts import merriweather, clock as clock_font
 from .game_over import GameOver
 from .you_win import YouWin
 from .options_menu import OptionsMenu
@@ -51,6 +51,9 @@ class GameRender:
 
         self.exam_sheet_render = ColaRender(self)
         self.player_is_cheatting = False
+
+        self.clock_sprite = pygame.image.load(f'{ASSETS_FOLDER}/clock.png')
+        self.clock_sprite = pygame.transform.scale(self.clock_sprite, (120, 120))
 
     # Método para renderizar as entidades do jogo.
     def render(self):
@@ -105,8 +108,10 @@ class GameRender:
     def render_clock(self):
         if not self.player_is_cheatting:
             time_str = time_to_string(EXAM_TIME - self.exam_timer.get_time_passed() + TIME_SECOND)
-            s = merriweather.render(time_str, True, 'black', 'white')
-            self.app.surface.blit(s, (10, 10))
+            s = clock_font.render(time_str, True, 'red')
+            
+            self.app.surface.blit(self.clock_sprite, (10, 10))
+            self.app.surface.blit(s, (24, 18))
         if self.game_ends:
             return
         if self.exam_timer.time_is_up():

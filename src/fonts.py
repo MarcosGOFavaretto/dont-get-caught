@@ -14,4 +14,4 @@ game_final_btn_label = pygame.font.Font(f"{ASSETS_FOLDER}/fonts/Merriweather.ttf
 
 teacher_zzz = pygame.font.Font(f"{ASSETS_FOLDER}/fonts/Merriweather.ttf", 12)
 
-clock = pygame.font.Font(f"{ASSETS_FOLDER}/fonts/digital-7-mono.ttf", 24)
+clock = pygame.font.Font(f"{ASSETS_FOLDER}/fonts/digital-7-mono.ttf", 32)

@@ -53,7 +53,7 @@ class GameRender:
         self.player_is_cheatting = False
 
         self.clock_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/clock.png')
-        self.clock_sprite = pygame.transform.scale(self.clock_sprite, (120, 120))
+        self.clock_sprite = pygame.transform.scale(self.clock_sprite, (140, 140))
 
     # Método para renderizar as entidades do jogo.
     def render(self):

@@ -28,7 +28,7 @@ class Teacher:
         self.vision_radius = 200
         self.vision_angle = math.pi * 0.5
         self.vision_direction: MovementDirection | None = None
-        self.footstep_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/footstep.mp3')
+        self.footstep_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/footstep.mp3')
         self.foot_dist = 10
         self.foot_size = 6
         self.step_amplitude = 10

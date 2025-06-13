@@ -14,15 +14,15 @@ from ..enums import MenuPage
 class MenuRender:
     def __init__(self, app: 'App'):
         self.app = app
-        self.background = pygame.image.load(f"{ASSETS_FOLDER}/menu-background.png")
+        self.background = pygame.image.load(f"{ASSETS_FOLDER}/images/menu-background.png")
         self.background = pygame.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
         self.buttons_width = 260
 
-        self.background_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/background-sound-menu.mp3')
+        self.background_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/background-sound-menu.mp3')
         self.background_sound.play(loops=-1, fade_ms=2000)
         self.background_sound.set_volume(0.03)
-        self.button_click_fx = pygame.mixer.Sound(f'{ASSETS_FOLDER}/menu-click-btn.mp3')
-        self.button_back_fx = pygame.mixer.Sound(f'{ASSETS_FOLDER}/menu-back-btn.mp3')
+        self.button_click_fx = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/menu-click-btn.mp3')
+        self.button_back_fx = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/menu-back-btn.mp3')
         self.button_click_fx.set_volume(0.5)
         self.button_back_fx.set_volume(0.5)
 

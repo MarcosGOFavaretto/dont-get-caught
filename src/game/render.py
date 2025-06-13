@@ -27,7 +27,7 @@ class GameRender:
         self.app = app
         self.selected_level = selected_level
         self.npc_students_fill_rate = 0.8
-        self.clock_tick_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/clock-tick.mp3')
+        self.clock_tick_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/clock-tick.mp3')
         self.clock_tick_sound.set_volume(0.3)
         self.exam_timer = Timer(wait_time=EXAM_TIME)
         self.game_final_screen = None
@@ -52,7 +52,7 @@ class GameRender:
         self.exam_sheet_render = ColaRender(self)
         self.player_is_cheatting = False
 
-        self.clock_sprite = pygame.image.load(f'{ASSETS_FOLDER}/clock.png')
+        self.clock_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/clock.png')
         self.clock_sprite = pygame.transform.scale(self.clock_sprite, (120, 120))
 
     # Método para renderizar as entidades do jogo.
@@ -179,8 +179,8 @@ class GameRender:
         for grid_column in self.classroom.grid_points:
             for grid_point in grid_column:
                 if self.classroom.is_student_desk(grid_point.column, grid_point.row):
-                    random_npc_sprite_name = random.choice(os.listdir(f'{ASSETS_FOLDER}/npc_students'))
-                    npc_sprite = pygame.image.load(f'{ASSETS_FOLDER}/npc_students/{random_npc_sprite_name}')
+                    random_npc_sprite_name = random.choice(os.listdir(f'{ASSETS_FOLDER}/images/npc_students'))
+                    npc_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/npc_students/{random_npc_sprite_name}')
                     classroom_desk = ClassroomNpcDesk(grid_position=copy.deepcopy(self.classroom.grid_points[grid_point.column][grid_point.row]), sprite=npc_sprite, has_student=False)
                     self.classroom.grid_points[grid_point.column][grid_point.row].classroom_desk = classroom_desk
 

@@ -13,8 +13,8 @@ class ClassroomRender:
         self.game = game
         self.classroom = classroom
         self.surface = surface
-        self.floor_sprite = pygame.image.load(f'{ASSETS_FOLDER}/classroom-floor.png')
-        self.desk_without_student_sprite = pygame.image.load(f'{ASSETS_FOLDER}/desk-without-student.png')
+        self.floor_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/classroom-floor.png')
+        self.desk_without_student_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/desk-without-student.png')
         
     def render(self):
         self.render_floor()

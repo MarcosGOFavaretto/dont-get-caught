@@ -16,10 +16,10 @@ class YouWin:
         self.darken_animation_timer = Timer(wait_time=0.5 * TIME_SECOND)
         self.darken_animation_timer.start()
         self.screen_opacity = 0
-        self.winning_hehe = pygame.mixer.Sound(f'{ASSETS_FOLDER}/winning-hehe.mp3')
+        self.winning_hehe = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/winning-hehe.mp3')
         self.winning_hehe.set_volume(0.1)
         self.winning_hehe.play(loops=-1, fade_ms=4 * TIME_SECOND)
-        self.winning_song = pygame.mixer.Sound(f'{ASSETS_FOLDER}/winning-song.mp3')
+        self.winning_song = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/winning-song.mp3')
         self.winning_song.set_volume(0.4)
         self.winning_song.play()
 

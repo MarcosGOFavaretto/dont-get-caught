@@ -15,8 +15,8 @@ class GameOver:
         self.darken_animation_timer = Timer(wait_time=0.5 * TIME_SECOND)
         self.darken_animation_timer.start()
         self.screen_opacity = 0
-        self.game_over_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/gameover-trumpet.mp3')
-        self.crying_sniffing_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/crying-sniffing.mp3')
+        self.game_over_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/gameover-trumpet.mp3')
+        self.crying_sniffing_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/crying-sniffing.mp3')
         self.game_over_sound.play()
         self.crying_sniffing_sound.set_volume(0.4)
         self.crying_sniffing_sound.play(loops=-1, fade_ms=1 * TIME_SECOND)

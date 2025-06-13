@@ -16,8 +16,8 @@ class StudentRender:
         self.surface = surface
         self.indicator_animation_timer = Timer(6 * TIME_SECOND)
         self.indicator_animation_timer.start()
-        self.student_player_sprite = pygame.image.load(f'{ASSETS_FOLDER}/student-player.png')
-        self.player_indicator_sprite = pygame.image.load(f'{ASSETS_FOLDER}/player-indicator.png')
+        self.student_player_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/student-player.png')
+        self.player_indicator_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/player-indicator.png')
 
     def render(self):
         self.surface.blit(self.student_player_sprite, (self.student.position.x - 32, self.student.position.y - 32))

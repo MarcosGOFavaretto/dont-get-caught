@@ -1,15 +1,26 @@
 import pygame
 from src.config import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GAME_NAME, ASSETS_FOLDER
 from src.app import App
-import tkinter
+import ctypes
+
+# --- Windows-specific DPI awareness fix ---
+try:
+    ctypes.windll.user32.SetProcessDPIAware()
+except AttributeError:
+    # This might fail on older Windows versions or non-Windows OS
+    pass
 
 pygame.init()
 pygame.mixer.init()
 
-logo = pygame.image.load(f'{ASSETS_FOLDER}/logo.png')
+logo = pygame.image.load(f'{ASSETS_FOLDER}/images/logo.png')
 pygame.display.set_icon(logo)
 
-main_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+info = pygame.display.Info()
+WINDOW_WIDTH = info.current_w
+WINDOW_WIDTH = info.current_h
+main_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
+
 pygame.display.set_caption(GAME_NAME)
 clock = pygame.time.Clock()
 running = True

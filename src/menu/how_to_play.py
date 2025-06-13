@@ -18,10 +18,10 @@ class MenuHowToPlay:
         self.margin_x = 10
         self.margin_top = 20
         self.surface = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)
-        self.blackboard_sprite = pygame.image.load(f"{ASSETS_FOLDER}/blackboard.png")
+        self.blackboard_sprite = pygame.image.load(f"{ASSETS_FOLDER}/images/blackboard.png")
         self.blackboard_sprite = pygame.transform.scale(self.blackboard_sprite, (WINDOW_WIDTH, 500))
 
-        self.background_sprite = pygame.image.load(f"{ASSETS_FOLDER}/how-to-play-background.png")
+        self.background_sprite = pygame.image.load(f"{ASSETS_FOLDER}/images/how-to-play-background.png")
         self.background_scale = 4 * 64
         self.background_sprite = pygame.transform.scale(self.background_sprite, (self.background_scale, self.background_scale))
 

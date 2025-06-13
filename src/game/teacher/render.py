@@ -21,8 +21,8 @@ class TeacherRender:
         self.sleeping_timer = Timer()
         self.action_start_timer = 0
         self.game = game
-        self.teacher_sprite = pygame.image.load(f'{ASSETS_FOLDER}/teacher.png')
-        self.teacher_foot_sprite = pygame.image.load(f'{ASSETS_FOLDER}/teacher-foot.png')
+        self.teacher_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/teacher.png')
+        self.teacher_foot_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/teacher-foot.png')
 
 
     def render(self):

@@ -3,7 +3,7 @@ import pygame
 import math
 from ...config import ASSETS_FOLDER, WINDOW_WIDTH, WINDOW_HEIGHT
 from ...timer import Timer
-from ...utils import heuristic, map_value, senoide, circular
+from ...utils import heuristic, senoide, circular, heuristic
 from ...fonts import teacher_zzz
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -17,6 +17,7 @@ class TeacherRender:
         self.teacher_ends_current_action = False
         self.footstep_interval = 800/self.teacher.walk_speed
         self.footstep_sound_timer = Timer(wait_time=self.footstep_interval)
+        self.footstep_volume_fn = lambda x, k: 1 / (1 + math.pow(math.e, k * (x - (5 / k))))
         self.action_timer = Timer()
         self.sleeping_timer = Timer()
         self.action_start_timer = 0
@@ -184,8 +185,7 @@ class TeacherRender:
 
     def play_footstep_sound(self):
         teacher_student_dist = heuristic(self.teacher.position.to_coordenate(), self.game.student.position.to_coordenate())
-        sound_volume = map_value(teacher_student_dist, 0, self.game.student.hearing_teacher_steps_range, 1, 0)
-
+        sound_volume = self.footstep_volume_fn(teacher_student_dist // 100, 1)
         if sound_volume < 0:
             sound_volume = 0
         elif sound_volume > 1:

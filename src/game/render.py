@@ -59,8 +59,6 @@ class GameRender:
 
     # Método para renderizar as entidades do jogo.
     def render(self):
-        self.app.surface.fill('oldlace')
-
         self.classroom_render.render()
         self.teacher_render.render()
         self.student_render.render()

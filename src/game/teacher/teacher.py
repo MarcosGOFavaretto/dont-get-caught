@@ -65,10 +65,10 @@ class Teacher:
     #
     def get_movement_possibilities(self) :
         movement_possibilities = list[ClassroomGridPoint]()
-        # for row in self.game.classroom.grid_points:
-        #     for point in row:
-        #         if point.classroom_desk is None and point != self.position:
-        #             movement_possibilities.append(point)
+        for row in self.game.classroom.grid_points:
+            for point in row:
+                if point.classroom_desk is None and point != self.position:
+                    movement_possibilities.append(point)
         student_neighbors = self.game.student.get_neighbor_grid_points()
         return movement_possibilities + student_neighbors
     

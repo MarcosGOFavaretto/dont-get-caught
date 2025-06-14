@@ -21,7 +21,7 @@ class StudentRender:
 
     def render(self):
         self.surface.blit(self.student_player_sprite, (self.student.position.x - 32, self.student.position.y - 32))
-        if not self.indicator_animation_timer.time_is_up():
+        if not self.indicator_animation_timer.time_is_up() and not self.game.game_ends:
             self.render_player_indicator()
         
     def render_player_indicator(self):

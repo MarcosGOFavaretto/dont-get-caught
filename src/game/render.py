@@ -9,8 +9,8 @@ from ..timer import Timer, time_to_string, TIME_SECOND
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH
 import pygame
 from ..config import ASSETS_FOLDER, EXAM_TIME
-from ..fonts import merriweather, clock as clock_font
-from .game_over import GameOver
+from ..fonts import clock as clock_font
+from .game_over.render import GameOverRender
 from .you_win import YouWin
 from .options_menu import OptionsMenu
 import random
@@ -22,6 +22,8 @@ from ..components import ButtonIcon
 from ..enums import GameLevels
 from .cola import ColaRender
 import os
+from ..enums import GameOverReason
+
 class GameRender:
     def __init__(self, app: 'App', selected_level: GameLevels):
         self.app = app
@@ -30,7 +32,7 @@ class GameRender:
         self.clock_tick_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/clock-tick.mp3')
         self.clock_tick_sound.set_volume(0.3)
         self.exam_timer = Timer(wait_time=EXAM_TIME)
-        self.game_final_screen = None
+        self.game_final_action = None
         self.game_ends = False
 
         self.game_options_icon = pygame.image.load(f'{ASSETS_FOLDER}/icons/settings-icon.png')
@@ -63,17 +65,17 @@ class GameRender:
         self.teacher_render.render()
         self.student_render.render()
 
-        if not self.started:
-            self.animate_game_start()
+        if self.game_ends and self.game_final_action is not None:
+            self.game_final_action.render()
 
         if self.player_is_cheatting:
             self.exam_sheet_render.render(on_exit=self.exit_exam_cheat)
 
-        if self.started:
+        if self.started and not self.game_ends:
             self.render_clock()
 
             if self.player_is_cheatting and self.teacher.is_looking_for_player():
-                self.game_over()
+                self.game_over(GameOverReason.CAUGHTED)
 
             if not self.player_is_cheatting:
                 for event in self.app.event_list:
@@ -83,9 +85,21 @@ class GameRender:
                 self.render_game_options_button()
                 if self.show_options:
                     self.render_game_options_menu()
+        else:
+            self.animate_game_start()
 
-        if self.game_ends and self.game_final_screen:
-            self.game_final_screen.render()
+
+    def game_over(self, game_over_reason: GameOverReason):
+        self.game_final_action = GameOverRender(game=self, reason=game_over_reason)
+        self.exam_timer.stop()
+        self.game_ends = True
+        self.player_is_cheatting = False
+
+    def you_win(self):
+        self.game_final_action = YouWin(game=self)
+        self.exam_timer.stop()
+        self.game_ends = True
+        self.player_is_cheatting = False
 
     def start_game(self):
         self.started = True
@@ -109,13 +123,12 @@ class GameRender:
         if not self.player_is_cheatting:
             time_str = time_to_string(EXAM_TIME - self.exam_timer.get_time_passed() + TIME_SECOND)
             s = clock_font.render(time_str, True, 'red')
-            
-            self.app.surface.blit(self.clock_sprite, (10, 10))
+            self.app.surface.blit(self.clock_sprite, (-6, -36))
             self.app.surface.blit(s, (24, 18))
         if self.game_ends:
             return
         if self.exam_timer.time_is_up():
-            self.game_over()
+            self.game_over(GameOverReason.TIME_OVER)
             return
         if self.exam_timer.tick():
             self.clock_tick_sound.play()
@@ -130,21 +143,8 @@ class GameRender:
             self.show_options = True
         ButtonIcon(self.app.surface, pygame.rect.Rect(WINDOW_WIDTH - 50, 10, 40, 40), self.game_options_icon, on_click=show_options, event_list=self.app.event_list)
 
-    def game_over(self):
-        self.game_final_screen = GameOver(game=self)
-        self.exam_timer.stop()
-        self.game_ends = True
-        self.player_is_cheatting = False
-
-    def you_win(self):
-        self.game_final_screen = YouWin(game=self)
-        self.exam_timer.stop()
-        self.game_ends = True
-        self.player_is_cheatting = False
-
     def exit_exam_cheat(self):
         self.player_is_cheatting = False
-
 
     # MÉTODOS DE DEFINIÇÃO INICIAL DO JOGO
 

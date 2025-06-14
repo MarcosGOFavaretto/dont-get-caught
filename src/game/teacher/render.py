@@ -127,7 +127,6 @@ class TeacherRender:
         if not self.teacher.is_sleeping and self.game.started:
             self.render_vision()
         self.surface.blit(self.teacher_sprite, (self.teacher.position.x - 32, self.teacher.position.y - 32))
-        # se estiver dormindo
         if self.teacher.is_sleeping:
             self.render_sleeping_animation()
 

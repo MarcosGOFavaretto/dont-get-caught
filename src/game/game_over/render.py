@@ -1,25 +1,29 @@
-from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
+from ...config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
 import pygame
-from ..components import Button, Text, RectPosition
-from .. import fonts
-from ..timer import Timer, TIME_SECOND
+from ...components import Button, Text, RectPosition
+from ... import fonts
+from ...timer import Timer, TIME_SECOND
 import random
-from ..animations import Rain
+from ...animations import Rain
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .render import GameRender
-class GameOver:
-    def __init__(self, game: 'GameRender'):
+    from ..render import GameRender
+from ...enums import GameOverReason
+from .time_over_cutscene import TimeOverCutscene
+
+class GameOverRender:
+    def __init__(self, game: 'GameRender', reason: GameOverReason):
         self.game = game
+        self.reason = reason
         self.surface = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)
         self.darken_animation_timer = Timer(wait_time=0.5 * TIME_SECOND)
-        self.darken_animation_timer.start()
         self.screen_opacity = 0
         self.game_over_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/gameover-trumpet.mp3')
         self.crying_sniffing_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/crying-sniffing.mp3')
-        self.game_over_sound.play()
         self.crying_sniffing_sound.set_volume(0.4)
-        self.crying_sniffing_sound.play(loops=-1, fade_ms=1 * TIME_SECOND)
+        self.cutscene_render = TimeOverCutscene(game=self.game)
+        self.cutscene_ends = False
+        self.overlay_started = False
 
         self.phrases = [
             "Nem colando conseguiu? Aí complicou, hein...",
@@ -39,6 +43,24 @@ class GameOver:
         self.rain_list = [Rain(height=WINDOW_HEIGHT, width=WINDOW_WIDTH) for _ in range(100)]
 
     def render(self):
+        if self.cutscene_ends:
+            self.render_overlay()
+            return
+        self.cutscene_render.render(on_ends=self.on_ends_cutscene)
+
+    def on_ends_cutscene(self):
+        self.cutscene_ends = True
+
+    def setup_overlay(self):
+        self.game_over_sound.play()
+        self.darken_animation_timer.start()
+        self.crying_sniffing_sound.play(loops=-1, fade_ms=1 * TIME_SECOND)
+        self.overlay_started = True
+
+    def render_overlay(self):
+        if not self.overlay_started:
+            self.setup_overlay()
+
         self.fade_in_animation(start=0, end=220, velocity=10)
 
         self.surface.fill((0, 0, 0, self.screen_opacity))

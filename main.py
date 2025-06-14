@@ -1,5 +1,5 @@
 import pygame
-from src.config import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GAME_NAME, ASSETS_FOLDER
+from src.config import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GAME_NAME, ASSETS_FOLDER, FULLSCREEN
 from src.app import App
 import ctypes
 
@@ -19,7 +19,7 @@ pygame.display.set_icon(logo)
 info = pygame.display.Info()
 WINDOW_WIDTH = info.current_w
 WINDOW_WIDTH = info.current_h
-main_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
+main_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN | pygame.SCALED if FULLSCREEN else 0)
 
 pygame.display.set_caption(GAME_NAME)
 clock = pygame.time.Clock()

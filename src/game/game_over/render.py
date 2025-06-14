@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from ..render import GameRender
 from ...enums import GameOverReason
 from .time_over_cutscene import TimeOverCutscene
+from .caughted_cutscene import CaughtedCutscene
 
 class GameOverRender:
     def __init__(self, game: 'GameRender', reason: GameOverReason):
@@ -21,7 +22,7 @@ class GameOverRender:
         self.game_over_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/gameover-trumpet.mp3')
         self.crying_sniffing_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/crying-sniffing.mp3')
         self.crying_sniffing_sound.set_volume(0.4)
-        self.cutscene_render = TimeOverCutscene(game=self.game)
+        self.cutscene_render = self._get_cutscene_render()
         self.cutscene_ends = False
         self.overlay_started = False
 
@@ -41,6 +42,13 @@ class GameOverRender:
         self.subtext = random.choice(self.phrases)
 
         self.rain_list = [Rain(height=WINDOW_HEIGHT, width=WINDOW_WIDTH) for _ in range(100)]
+
+    def _get_cutscene_render(self):
+        if self.reason == GameOverReason.TIME_OVER:
+            return TimeOverCutscene(game=self.game)
+        if self.reason == GameOverReason.CAUGHTED:
+            return CaughtedCutscene(game=self.game)
+        raise Exception('Invalid game over reason')
 
     def render(self):
         if self.cutscene_ends:

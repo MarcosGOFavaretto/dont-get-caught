@@ -11,8 +11,9 @@ if TYPE_CHECKING:
     from .teacher import Teacher
 
 class TeacherRender:
-    def __init__(self, game: 'GameRender', teacher: 'Teacher', surface: pygame.Surface):
-        self.surface = surface
+    def __init__(self, game: 'GameRender', teacher: 'Teacher'):
+        self.game = game
+        self.surface = game.app.surface
         self.teacher = teacher
         self.teacher_ends_current_action = False
         self.footstep_interval = 800/self.teacher.walk_speed
@@ -21,7 +22,6 @@ class TeacherRender:
         self.action_timer = Timer()
         self.sleeping_timer = Timer()
         self.action_start_timer = 0
-        self.game = game
         self.teacher_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/teacher.png')
         self.teacher_foot_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/teacher-foot.png')
 

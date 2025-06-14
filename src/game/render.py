@@ -65,6 +65,9 @@ class GameRender:
         self.teacher_render.render()
         self.student_render.render()
 
+        if not self.started:
+            self.animate_game_start()
+
         if self.game_ends and self.game_final_action is not None:
             self.game_final_action.render()
 
@@ -85,9 +88,6 @@ class GameRender:
                 self.render_game_options_button()
                 if self.show_options:
                     self.render_game_options_menu()
-        else:
-            self.animate_game_start()
-
 
     def game_over(self, game_over_reason: GameOverReason):
         self.game_final_action = GameOverRender(game=self, reason=game_over_reason)
@@ -150,7 +150,7 @@ class GameRender:
 
     def define_classroom(self) -> tuple[Classroom, ClassroomRender]:
         classroom = Classroom(game=self, dimension=(WINDOW_WIDTH, WINDOW_HEIGHT), x=0, y=self.animation_classroom_offset, rows=8, columns=11)
-        classroom_render = classroom.get_render(self.app.surface)
+        classroom_render = classroom.get_render()
         return (classroom, classroom_render)
 
     def define_teacher(self) -> tuple[Teacher, TeacherRender]:
@@ -164,7 +164,7 @@ class GameRender:
                 teacher = TeacherHard(game=self)
         if teacher is None:
             raise ValueError("Invalid game level.")
-        teacher_render = teacher.get_render(self.app.surface)
+        teacher_render = teacher.get_render()
         return (teacher, teacher_render)
 
     def define_student(self) -> tuple[Student, StudentRender]:

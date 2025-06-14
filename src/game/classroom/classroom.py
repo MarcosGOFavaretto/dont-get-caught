@@ -18,8 +18,8 @@ class Classroom:
         self.y = y
         self.grid_points = self._generate_grid_points()
 
-    def get_render(self, surface: Surface):
-        return ClassroomRender(self.game, classroom=self, surface=surface)
+    def get_render(self):
+        return ClassroomRender(self.game, classroom=self)
     
     def get_center_coordenate(self):
         center_x = int(self.x + self.width / 2)

@@ -9,10 +9,10 @@ import os
 import random
 
 class ClassroomRender:
-    def __init__(self, game: 'GameRender', classroom: 'Classroom', surface: pygame.Surface):
+    def __init__(self, game: 'GameRender', classroom: 'Classroom'):
         self.game = game
+        self.surface = game.app.surface
         self.classroom = classroom
-        self.surface = surface
         self.floor_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/classroom-floor.png')
         self.desk_without_student_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/desk-without-student.png')
         

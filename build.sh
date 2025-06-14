@@ -14,7 +14,6 @@ pyinstaller "${MAIN_SCRIPT}" \
     --name run \
     --onefile \
     --windowed \
-    --hidden-import=tkinter \
     --icon="${GAME_ICON}" \
 
 

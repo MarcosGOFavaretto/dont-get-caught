@@ -1,10 +1,7 @@
-from re import L
-from tkinter import LEFT
-from ..classroom.classroom import ClassroomGridPoint, Classroom
+from ..classroom.classroom import ClassroomGridPoint
 from enum import Enum
 import pygame
 import copy
-import math
 
 class MovementDirection(Enum):
     LEFT = 'LEFT'

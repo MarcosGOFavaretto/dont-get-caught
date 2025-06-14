@@ -2,6 +2,7 @@ import pygame
 from src.config import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GAME_NAME, ASSETS_FOLDER, FULLSCREEN
 from src.app import App
 import ctypes
+import sys
 
 # --- Windows-specific DPI awareness fix ---
 try:
@@ -15,6 +16,9 @@ pygame.mixer.init()
 
 logo = pygame.image.load(f'{ASSETS_FOLDER}/images/logo.png')
 pygame.display.set_icon(logo)
+
+if len(sys.argv) > 1 and sys.argv[1] == '--no-fullscreen':
+    FULLSCREEN = False 
 
 info = pygame.display.Info()
 WINDOW_WIDTH = info.current_w

@@ -184,7 +184,7 @@ class TeacherRender:
 
     def play_footstep_sound(self):
         teacher_student_dist = heuristic(self.teacher.position.to_coordenate(), self.game.student.position.to_coordenate())
-        sound_volume = self.footstep_volume_fn(teacher_student_dist // 100, 1)
+        sound_volume = self.footstep_volume_fn(teacher_student_dist // 100, 2)
         if sound_volume < 0:
             sound_volume = 0
         elif sound_volume > 1:

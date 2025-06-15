@@ -30,7 +30,7 @@ class GameRender:
         self.selected_level = selected_level
         self.npc_students_fill_rate = 0.8
         self.clock_tick_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/clock-tick.mp3')
-        self.clock_tick_sound.set_volume(0.3)
+        self.clock_tick_sound.set_volume(0.1)
         self.exam_timer = Timer(wait_time=EXAM_TIME)
         self.game_final_action = None
         self.game_ends = False

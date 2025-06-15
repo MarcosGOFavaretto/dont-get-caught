@@ -3,7 +3,7 @@ import pygame
 import math
 from ...config import ASSETS_FOLDER, WINDOW_WIDTH, WINDOW_HEIGHT
 from ...timer import Timer
-from ...utils import heuristic, senoide, circular, heuristic
+from ...utils import heuristic, senoide, circular
 from ...fonts import teacher_zzz
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -18,9 +18,11 @@ class TeacherRender:
         self.teacher_ends_current_action = False
         self.footstep_interval = 800/self.teacher.walk_speed
         self.footstep_sound_timer = Timer(wait_time=self.footstep_interval)
-        self.footstep_volume_fn = lambda x, k: 1 / (1 + math.pow(math.e, k * (x - (5 / k))))
+        self.footstep_volume_fn = lambda x, k: 1 / (1 + math.pow(math.e, k * (x - (3 / k))))
         self.action_timer = Timer()
         self.sleeping_timer = Timer()
+        self.sleeping_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/sleeping.mp3')
+        self.sleeping_sound.set_volume(0.4)
         self.action_start_timer = 0
         self.teacher_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/teacher.png')
         self.teacher_foot_sprite = pygame.image.load(f'{ASSETS_FOLDER}/images/teacher-foot.png')
@@ -116,9 +118,11 @@ class TeacherRender:
         if time_passed >= self.teacher.sleep_time_threshold and not self.teacher.is_sleeping:
             self.sleeping_timer.start()
             self.teacher.is_sleeping = True
+            self.sleeping_sound.play()
             self.teacher.current_action.wait_time += self.teacher.time_to_wake_up
         if time_passed >= self.teacher.current_action.wait_time:
             self.sleeping_timer.stop()
+            self.sleeping_sound.stop()
             self.wait_time_start = 0
             self.teacher.is_sleeping = False
             self.teacher_ends_current_action = True
@@ -184,7 +188,7 @@ class TeacherRender:
 
     def play_footstep_sound(self):
         teacher_student_dist = heuristic(self.teacher.position.to_coordenate(), self.game.student.position.to_coordenate())
-        sound_volume = self.footstep_volume_fn(teacher_student_dist // 100, 2)
+        sound_volume = self.footstep_volume_fn(teacher_student_dist // 100, 1.2)
         if sound_volume < 0:
             sound_volume = 0
         elif sound_volume > 1:

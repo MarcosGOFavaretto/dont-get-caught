@@ -1,6 +1,8 @@
 import pygame
 import random
 from typing import TYPE_CHECKING
+
+from ..config import WINDOW_HEIGHT, WINDOW_WIDTH
 from ..enums import GameLevels
 if TYPE_CHECKING:
     from .render import GameRender
@@ -12,15 +14,16 @@ class ColaRender:
         self.user_input = ""
         self.cola_text = self.get_random_phrase()
         self.composicao = ""
+        self.surface = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
 
     def render(self, on_exit=None):
-        self.game.app.surface.fill((255, 255, 255))
-        width, height = self.game.app.surface.get_size()
+        self.surface.fill((255, 255, 255))
+        width, height = self.surface.get_size()
 
         for event in self.game.app.event_list:
             self.handle_event(event, on_exit)
 
-        pygame.draw.line(self.game.app.surface, (0, 0, 0), (width // 2, 0), (width // 2, height))
+        pygame.draw.line(self.surface, (0, 0, 0), (width // 2, 0), (width // 2, height))
 
         self.render_multiline_text(self.cola_text, 20, 20, width // 2 - 40, (0, 0, 0))
         time = pygame.time.get_ticks()
@@ -34,6 +37,8 @@ class ColaRender:
 
         if self.user_input == self.cola_text:
             self.game.you_win()
+        
+        self.game.app.surface.blit(self.surface, (0, 0))
 
     def get_random_phrase(self):
         frases_por_dificuldade = {
@@ -119,4 +124,4 @@ class ColaRender:
 
         for i, line in enumerate(lines):
             rendered = self.font.render(line.strip(), True, color)
-            self.game.app.surface.blit(rendered, (x, y + i * 30))
+            self.surface.blit(rendered, (x, y + i * 30))

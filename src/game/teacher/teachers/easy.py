@@ -9,6 +9,7 @@ class TeacherEasy(Teacher):
         super().__init__(game=game, name="Easy", initial_position=(int(game.classroom.grid_columns / 2), 0))
         self.last_action = None
         self.walk_speed = 1.5
+        self.vision_radius = 160
 
     def get_next_action(self) :
         self.last_action = self.current_action

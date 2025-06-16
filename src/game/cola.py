@@ -11,6 +11,7 @@ class ColaRender:
     def __init__(self, game: 'GameRender'):
         self.game = game
         self.font = pygame.font.SysFont('', 28)
+        self.font_surface = self.font.render('', True, (0, 0, 0))
         self.user_input = ""
         self.cola_text = self.get_random_phrase()
         self.composicao = ""
@@ -26,19 +27,20 @@ class ColaRender:
         pygame.draw.line(self.surface, (0, 0, 0), (width // 2, 0), (width // 2, height))
 
         self.render_multiline_text(self.cola_text, 20, 20, width // 2 - 40, (0, 0, 0))
-        time = pygame.time.get_ticks()
-        cursor_visible = (time // 500) % 2 == 0 
-
-        display_input = self.user_input
-        if cursor_visible:
-            display_input += "|"
-
-        self.render_multiline_text(display_input, width // 2 + 20, 20, width // 2 - 40, (0, 0, 255))
+        self.render_multiline_text(self.user_input, width // 2 + 20, 20, width // 2 - 40, (0, 0, 255))
+        self.render_cursor()
 
         if self.user_input == self.cola_text:
             self.game.you_win()
         
         self.game.app.surface.blit(self.surface, (0, 0))
+
+    def render_cursor(self):
+        time = pygame.time.get_ticks()
+        cursor_visible = (time // 500) % 2 == 0 
+        line_height = self.font_surface.get_height()
+        if cursor_visible:
+            pygame.draw.line(self.surface, (0, 0, 255), (self.cursor_pos[0], self.cursor_pos[1]), (self.cursor_pos[0], self.cursor_pos[1] + line_height), 2)
 
     def get_random_phrase(self):
         frases_por_dificuldade = {
@@ -123,5 +125,6 @@ class ColaRender:
         lines.append(current_line)
 
         for i, line in enumerate(lines):
-            rendered = self.font.render(line.strip(), True, color)
+            rendered = self.font.render(line, True, color)
             self.surface.blit(rendered, (x, y + i * 30))
+            self.cursor_pos = (x + rendered.get_width() - 5, y + i * 30)

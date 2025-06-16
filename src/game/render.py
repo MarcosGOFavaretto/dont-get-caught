@@ -119,7 +119,7 @@ class GameRender:
 
     def render_clock(self):
         if not self.player_is_cheatting:
-            time_str = time_to_string(EXAM_TIME - self.exam_timer.get_time_passed() + TIME_SECOND)
+            time_str = time_to_string(int(self.exam_timer.get_remains_time() + TIME_SECOND))
             s = clock_font.render(time_str, True, 'red')
             self.app.surface.blit(self.clock_sprite, (-6, -36))
             self.app.surface.blit(s, (24, 18))

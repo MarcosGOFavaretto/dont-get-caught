@@ -35,6 +35,9 @@ class Timer:
         self.time_passed = pygame.time.get_ticks() - self.timer_start
         return self.time_passed
     
+    def get_remains_time(self):
+        return self.wait_time - self.get_time_passed()
+    
     def time_is_up(self):
         is_up = self.get_time_passed() >= self.wait_time
         if is_up:

@@ -2,7 +2,7 @@ from ...config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
 import pygame
 from ...components import Button, Text, RectPosition
 from ... import fonts
-from ...timer import Timer, TIME_SECOND
+from ...timer import Timer, TIME_SECOND, time_to_string
 import random
 from ...animations import Rain
 from typing import TYPE_CHECKING
@@ -25,6 +25,9 @@ class GameOverRender:
         self.cutscene_render = self._get_cutscene_render()
         self.cutscene_ends = False
         self.overlay_started = False
+
+        self.clock_icon = pygame.image.load(f'{ASSETS_FOLDER}/icons/clock.png')
+        self.clock_icon = pygame.transform.scale(self.clock_icon, (30, 30)) 
 
         self.phrases = [
             "Nem colando conseguiu? Aí complicou, hein...",
@@ -70,8 +73,9 @@ class GameOverRender:
             self.setup_overlay()
 
         self.fade_in_animation(start=0, end=220, velocity=10)
-
         self.surface.fill((0, 0, 0, self.screen_opacity))
+
+        self.render_header()
 
         for rain in self.rain_list:
             rain.update()
@@ -112,6 +116,12 @@ class GameOverRender:
                 event_list=self.game.app.event_list)
 
         self.game.app.surface.blit(self.surface, (0, 0))      
+
+    def render_header(self):
+        self.surface.blit(self.clock_icon, (10, 10))
+        remains_time = self.game.exam_timer.get_remains_time() + TIME_SECOND
+        remains_time_text = time_to_string(int(remains_time))
+        self.surface.blit(fonts.clock.render(remains_time_text, True, (255, 255, 255)), (50, 12))
 
     def go_to_menu(self):
         self.game.app.open_menu()

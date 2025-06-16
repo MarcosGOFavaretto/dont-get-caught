@@ -12,7 +12,7 @@ from ..teacher.movement import MovementDirection
 class CaughtedCutscene():
     def __init__(self, game: 'GameRender'):
         self.game = game
-        self.cutscene_time = Timer(wait_time=3 * TIME_SECOND)
+        self.cutscene_time = Timer(wait_time=2 * TIME_SECOND)
         self.render_started = False
         self.teacher_ahh_sound = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/teacher-ahh.mp3')
         self.teacher_exclamation_sprite_down = pygame.image.load(f'{ASSETS_FOLDER}/images/teacher-exclamation.png')

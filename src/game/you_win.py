@@ -2,7 +2,7 @@ from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
 import pygame
 from ..components import Button, Text, RectPosition
 from .. import fonts
-from ..timer import Timer, TIME_SECOND
+from ..timer import Timer, TIME_SECOND, time_to_string
 import random
 from ..animations import Confetti
 from typing import TYPE_CHECKING
@@ -22,6 +22,8 @@ class YouWin:
         self.winning_song = pygame.mixer.Sound(f'{ASSETS_FOLDER}/sounds/winning-song.mp3')
         self.winning_song.set_volume(0.4)
         self.winning_song.play()
+        self.clock_icon = pygame.image.load(f'{ASSETS_FOLDER}/icons/clock.png')
+        self.clock_icon = pygame.transform.scale(self.clock_icon, (30, 30)) 
 
         self.congratulations_phrases = [
             "Parabéns, você colou como um mestre!",
@@ -44,6 +46,8 @@ class YouWin:
         self.fade_in_animation(start=0, end=220, velocity=10)
 
         self.surface.fill((0, 0, 0, self.screen_opacity))
+
+        self.render_header()
 
         for confetti in self.confetti_list:
             confetti.update()
@@ -84,6 +88,12 @@ class YouWin:
                 event_list=self.game.app.event_list)
 
         self.game.app.surface.blit(self.surface, (0, 0))      
+
+    def render_header(self):
+        self.surface.blit(self.clock_icon, (10, 10))
+        remains_time = self.game.exam_timer.get_remains_time() + TIME_SECOND
+        remains_time_text = time_to_string(int(remains_time))
+        self.surface.blit(fonts.clock.render(remains_time_text, True, (255, 255, 255)), (50, 12))
 
     def go_to_menu(self):
         self.game.app.open_menu()

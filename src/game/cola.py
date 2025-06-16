@@ -1,19 +1,19 @@
 import pygame
 import random
 from typing import TYPE_CHECKING
-
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH
 from ..enums import GameLevels
 if TYPE_CHECKING:
     from .render import GameRender
+import re
 
 class ColaRender:
     def __init__(self, game: 'GameRender'):
         self.game = game
         self.font = pygame.font.SysFont('', 28)
-        self.font_surface = self.font.render('', True, (0, 0, 0))
-        self.user_input = ""
+        self.font_surface = self.font.render('', True, 'black')
         self.cola_text = self.get_random_phrase()
+        self.user_input = ""
         self.composicao = ""
         self.surface = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
 
@@ -24,16 +24,20 @@ class ColaRender:
         for event in self.game.app.event_list:
             self.handle_event(event, on_exit)
 
-        pygame.draw.line(self.surface, (0, 0, 0), (width // 2, 0), (width // 2, height))
+        pygame.draw.line(self.surface, 'black', (width // 2, 0), (width // 2, height))
 
-        self.render_multiline_text(self.cola_text, 20, 20, width // 2 - 40, (0, 0, 0))
-        self.render_multiline_text(self.user_input, width // 2 + 20, 20, width // 2 - 40, (0, 0, 255))
+        self.render_multiline_text(self.cola_text, 20, 20, width // 2 - 40, 'black')
+        user_input_text_color = 'red' if self.user_is_wrong() else 'blue'
+        self.render_multiline_text(self.user_input, width // 2 + 20, 20, width // 2 - 40, user_input_text_color)
         self.render_cursor()
 
         if self.user_input == self.cola_text:
             self.game.you_win()
         
         self.game.app.surface.blit(self.surface, (0, 0))
+
+    def user_is_wrong(self):
+        return self.user_input != self.cola_text[:len(self.user_input)]
 
     def render_cursor(self):
         time = pygame.time.get_ticks()
@@ -110,11 +114,10 @@ class ColaRender:
                 else:
                     self.user_input += letra
 
-    def render_multiline_text(self, text, x, y, max_width, color):
-        words = text.split(' ')
+    def render_multiline_text(self, text: str, x, y, max_width, color):
         lines = []
         current_line = ""
-
+        words = text.split(' ')
         for word in words:
             test_line = current_line + word + " "
             if self.font.size(test_line)[0] <= max_width:

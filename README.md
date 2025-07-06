@@ -29,9 +29,10 @@ pyinstaller --onefile main.py --name "Dont Get Caught"
 pyinstaller --onefile --windowed main.py --name "Dont Get Caught"
 ```
 
+# Imagens do jogo
 
-
-
-![image](https://github.com/user-attachments/assets/56f9b198-c508-4a3c-b6cb-68bfa7f0eb09)
-![image](https://github.com/user-attachments/assets/11cf65f3-01d8-4ebf-a023-9638c7838759)
-![pixil-frame-0 (1)](https://github.com/user-attachments/assets/04423fbb-5c26-43dd-b76b-f530a7584f50)
+![1750806634443](https://github.com/user-attachments/assets/160494bf-8254-4b99-a2e7-1e39d613e109)
+![1750806657897](https://github.com/user-attachments/assets/499c4cb9-f208-4bb3-9a9c-0af6891fba19)
+![1750806671141](https://github.com/user-attachments/assets/e98efa91-bfea-4d1c-a9c1-a9bbd19fb5a8)
+![1750806665283](https://github.com/user-attachments/assets/9f8276bf-65d0-463a-b05c-51af64b2c665)
+![1750806650455](https://github.com/user-attachments/assets/faa021af-e581-424a-88e4-8be82a7d11ba)

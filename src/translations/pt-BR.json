@@ -1,0 +1,16 @@
+{
+  "error.unmapped": "mensagem de erro não mapeada",
+  "error.not.found": "não encontrado",
+  "error.header.invalid": "cabeçalho inválido",
+  "error.request.body.invalid": "corpo da requisição inválido",
+  "error.request.path.params.invalid": "parâmetros do caminho da requisição são inválidos",
+  "error.user.email.exists": "e-mail do usuário já existe",
+  "error.user.email.invalid": "e-mail do usuário é inválido",
+  "error.user.email.not.exists": "nenhum usuário encontrado com esse e-mail",
+  "error.user.not.found": "usuário não encontrado",
+  "error.crypt.hash": "erro ao criptografar ou descriptografar dados",
+  "error.password.incorrect": "senha do usuário incorreta",
+  "error.auth.token.structure.incorrect": "estrutura do token de autorização está incorreta",
+  "error.auth.token.incorrect": "token de autorização incorreto ou expirado",
+  "error.auth.token.missing": "token de autorização ausente"
+}

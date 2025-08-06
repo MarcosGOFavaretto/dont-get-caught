@@ -13,8 +13,6 @@ from ..enums import MenuPage
 class MenuHowToPlay:
     def __init__(self, menu: 'MenuRender') -> None:
         self.menu = menu
-        # self.background = pygame.image.load(f"{ASSETS_FOLDER}/menu-background-nologo.jpg")
-        # self.background = pygame.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
         self.margin_x = 10
         self.margin_top = 20
         self.surface = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)

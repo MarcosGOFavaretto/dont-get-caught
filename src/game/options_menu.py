@@ -40,7 +40,7 @@ class OptionsMenu:
         self.game.app.surface.blit(self.surface, (0, 0))      
 
     def exit_game(self):
-        self.game.app.open_menu()
+        self.game.app.go_to_menu()
 
     def fade_in_animation(self, start: int, end: int, velocity: int = 1):
         if self.screen_opacity + velocity < end:

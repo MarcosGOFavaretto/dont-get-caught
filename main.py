@@ -26,13 +26,11 @@ WINDOW_WIDTH = info.current_w
 WINDOW_WIDTH = info.current_h
 main_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN | pygame.SCALED if FULLSCREEN else 0)
 
-ui_manager = pygame_gui.UIManager((WINDOW_WIDTH, WINDOW_HEIGHT), theme_path='./src/ui/theme.json')
-
 pygame.display.set_caption(GAME_NAME)
 clock = pygame.time.Clock()
 running = True
 
-app = App(main_surface, ui_manager)
+app = App(main_surface)
 
 while running:
     time_delta = clock.tick(FPS) / 1000.0

@@ -2,16 +2,16 @@ from pygame import Surface
 from pygame.event import Event
 from pygame_gui import UIManager
 
-from .auth.render import AuthRender
+from .auth.signup import SignupRender
+from .auth.login import LoginRender
 from .enums import GameLevels
 from .game.render import GameRender
 from .menu.render import MenuRender
 
 class App:
-    def __init__(self, surface: Surface, ui_manager: UIManager):
+    def __init__(self, surface: Surface):
         self.surface = surface
-        self.ui_manager = ui_manager
-        self.current_render = AuthRender(self)
+        self.current_render = LoginRender(self)
         self.fase_atual = +1
         self.overlay_render = None
         self.cola_frase_atual = None           
@@ -30,9 +30,14 @@ class App:
     def quit(self):
         self.must_quit = True
 
-    def open_menu(self):
+    def go_to_menu(self):
         self.current_render = MenuRender(self)
 
     def start_game(self, selected_level: GameLevels):
         self.current_render = GameRender(self, selected_level=selected_level)
 
+    def go_to_signup(self):
+        self.current_render = SignupRender(self)
+
+    def go_to_login(self):
+        self.current_render = LoginRender(self)

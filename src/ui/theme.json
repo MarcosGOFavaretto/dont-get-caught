@@ -16,5 +16,25 @@
     "colours": {
       "normal_text": "#FFFFFF"
     }
+  },
+
+  "#button_auth": {
+    "colours": {
+      "normal_bg": "rgba(100, 100, 100, 150)",
+      "hovered_bg": "rgba(100, 100, 100, 150)",
+      "active_bg": "rgba(100, 100, 100, 150)",
+
+      "normal_text": "#FFFFFF"
+    },
+    "misc": {
+      "border_width": 2,
+      "shadow_width": 2,
+
+      "normal_border": "#FFFFFF",
+      "hovered_border": "#FFFFFF",
+      "active_border": "#FFFFFF",
+      "selected_border": "#FFFFFF",
+      "disabled_border": "#FFFFFF"
+    }
   }
 }

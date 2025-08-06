@@ -96,7 +96,7 @@ class YouWin:
         self.surface.blit(fonts.clock.render(remains_time_text, True, (255, 255, 255)), (50, 12))
 
     def go_to_menu(self):
-        self.game.app.open_menu()
+        self.game.app.go_to_menu()
         self.winning_hehe.stop()
         self.winning_song.stop()
 

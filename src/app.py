@@ -1,20 +1,26 @@
 from pygame import Surface
 from pygame.event import Event
+from pygame_gui import UIManager
+
+from .auth.render import AuthRender
 from .enums import GameLevels
 from .game.render import GameRender
 from .menu.render import MenuRender
 
 class App:
-    def __init__(self, surface: Surface):
+    def __init__(self, surface: Surface, ui_manager: UIManager):
         self.surface = surface
-        self.current_render = MenuRender(self)
+        self.ui_manager = ui_manager
+        self.current_render = AuthRender(self)
         self.fase_atual = +1
         self.overlay_render = None
         self.cola_frase_atual = None           
         self.cola_texto_digitado = ""
         self.must_quit = False
+        self.time_delta = 0.0
 
-    def render(self, event_list: list[Event]):
+    def render(self, event_list: list[Event], time_delta: float):
+        self.time_delta = time_delta
         self.event_list = event_list
         self.current_render.render()
         if self.overlay_render:

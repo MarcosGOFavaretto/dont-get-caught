@@ -3,6 +3,7 @@ from src.config import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GAME_NAME, ASSETS_FOLDE
 from src.app import App
 import ctypes
 import sys
+import pygame_gui
 
 # --- Windows-specific DPI awareness fix ---
 try:
@@ -25,22 +26,24 @@ WINDOW_WIDTH = info.current_w
 WINDOW_WIDTH = info.current_h
 main_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN | pygame.SCALED if FULLSCREEN else 0)
 
+ui_manager = pygame_gui.UIManager((WINDOW_WIDTH, WINDOW_HEIGHT), theme_path='./src/ui/theme.json')
+
 pygame.display.set_caption(GAME_NAME)
 clock = pygame.time.Clock()
 running = True
 
-app = App(main_surface)
+app = App(main_surface, ui_manager)
 
 while running:
+    time_delta = clock.tick(FPS) / 1000.0
     event_list = pygame.event.get()
     for event in event_list:
         if event.type == pygame.QUIT:
             running = False
 
-    quit = app.render(event_list)
+    quit = app.render(event_list, time_delta)
     if quit:
         running = False
     pygame.display.flip()
-    clock.tick(FPS)
 
 pygame.quit()

@@ -1,0 +1,20 @@
+{
+  "#login_input": {
+    "colours": {
+      "dark_bg": "#FFFFFF",
+      "text_cursor": "#000000",
+      "normal_text": "#000000"
+    },
+    "misc": {
+      "border_width": "2",
+      "shadow_width": "3",
+      "padding": "10,10"
+    }
+  },
+
+  "#login_label": {
+    "colours": {
+      "normal_text": "#FFFFFF"
+    }
+  }
+}

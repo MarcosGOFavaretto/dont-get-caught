@@ -1,7 +1,7 @@
 import pygame
 from ..service import service_utils, user_service
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
-from ..ui.utils import show_error_toast, show_success_toast
+from ..ui.utils import show_error_toast
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..app import App
@@ -31,7 +31,7 @@ class LoginRender:
             return
         
         try:
-            response = user_service.user_login(email, password)
+            response = user_service.login(email, password)
             service_utils.store_access_token(response['token'])
             self.app.go_to_menu()
         except service_utils.ServiceError as se:

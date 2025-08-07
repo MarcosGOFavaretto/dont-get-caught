@@ -23,7 +23,8 @@ class ServiceError(Exception):
             translations = json.loads(f.read())
             return translations[self.error]
 
-def REQUEST(session: Session, method: str, path: str, json: dict | None = None):
+def REQUEST(session: Session, method: str, path: str, json: dict | None = None, use_access_token = False):
+    session.headers.update({'Authorization': f'Bearer {get_access_token()}'})
     response = session.request(method, f'{API_BASE_URL}{path}', json=json)
     response_json = response.json()
     if not response.ok:

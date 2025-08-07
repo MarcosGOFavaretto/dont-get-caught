@@ -13,8 +13,8 @@ class SignupRender:
         self.app = app
         self.ui_manager = pygame_gui.UIManager((WINDOW_WIDTH, WINDOW_HEIGHT), theme_path='./src/ui/theme.json')
         self.background = pygame.image.load(f"{ASSETS_FOLDER}/images/menu-background-nologo.jpg")
-        self.background = pygame.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
-        self.overlay_surface = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)
+        self.background = pygame.transform.scale(self.background, (WINDOW_WIDTH + 60, WINDOW_HEIGHT))
+        self.overlay_surface = pygame.Surface((WINDOW_WIDTH + 60, WINDOW_HEIGHT), pygame.SRCALPHA)
         self.toast_error_rect = pygame.Rect((WINDOW_WIDTH // 2 - 300 // 2, WINDOW_HEIGHT // 2 - 30 // 2), (300, 30))
         self.define_form_ui_components()
 
@@ -42,7 +42,7 @@ class SignupRender:
             return
         
         try:
-            response = user_service.user_create(username, email, password)
+            response = user_service.create(username, email, password)
             service_utils.store_access_token(response['token'])
             self.app.go_to_menu()
         except service_utils.ServiceError as se:

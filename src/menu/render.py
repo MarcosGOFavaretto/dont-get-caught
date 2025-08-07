@@ -1,4 +1,7 @@
 import pygame
+
+from ..ui.utils import show_error_toast
+
 from ..fonts import menu_lg
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
 from ..components import Button
@@ -10,6 +13,8 @@ if TYPE_CHECKING:
 from .levels import MenuLevels
 from .how_to_play import MenuHowToPlay
 from ..enums import MenuPage
+from ..service import user_service, service_utils
+import pygame_gui
 
 class MenuRender:
     def __init__(self, app: 'App'):

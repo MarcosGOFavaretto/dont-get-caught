@@ -13,3 +13,5 @@ ACCESS_TOKEN_FILE_PATH = "./access_token.txt"
 
 DEFAULT_LANGUAGE = "pt-BR"
 TRANSLATIONS_FILES_FOLDER = "./src/translations"
+
+THEME_UI_FILE = "'./src/ui/theme.json'"

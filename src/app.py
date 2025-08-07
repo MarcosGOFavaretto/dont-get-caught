@@ -13,11 +13,11 @@ from .game.render import GameRender
 from .menu.render import MenuRender
 from .service import user_service, service_utils
 import pygame_gui
-from .config import WINDOW_WIDTH, WINDOW_HEIGHT
+from .config import THEME_UI_FILE, WINDOW_WIDTH, WINDOW_HEIGHT
 class App:
     def __init__(self, surface: Surface):
         self.surface = surface
-        self.ui_manager = pygame_gui.UIManager((WINDOW_WIDTH, WINDOW_HEIGHT), theme_path='./src/ui/theme.json')
+        self.ui_manager = pygame_gui.UIManager((WINDOW_WIDTH, WINDOW_HEIGHT), theme_path=THEME_UI_FILE)
         self.current_render: Any = None
         self.fase_atual = +1
         self.overlay_render = None

@@ -1,6 +1,6 @@
 import pygame
 from ..ui.utils import show_error_toast
-from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
+from ..config import THEME_UI_FILE, WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..app import App
@@ -11,7 +11,7 @@ from ..service import service_utils, user_service
 class SignupRender:
     def __init__(self, app: 'App'):
         self.app = app
-        self.ui_manager = pygame_gui.UIManager((WINDOW_WIDTH, WINDOW_HEIGHT), theme_path='./src/ui/theme.json')
+        self.ui_manager = pygame_gui.UIManager((WINDOW_WIDTH, WINDOW_HEIGHT), theme_path=THEME_UI_FILE)
         self.background = pygame.image.load(f"{ASSETS_FOLDER}/images/menu-background-nologo.jpg")
         self.background = pygame.transform.scale(self.background, (WINDOW_WIDTH + 60, WINDOW_HEIGHT))
         self.overlay_surface = pygame.Surface((WINDOW_WIDTH + 60, WINDOW_HEIGHT), pygame.SRCALPHA)

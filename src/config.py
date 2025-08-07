@@ -6,7 +6,7 @@ WINDOW_HEIGHT = 640
 FPS = 60
 ASSETS_FOLDER = "./src/assets"
 EXAM_TIME = 2 * TIME_MINUTE
-FULLSCREEN = False
+FULLSCREEN = True
 
 API_BASE_URL = "http://localhost:8000"
 ACCESS_TOKEN_FILE_PATH = "./access_token.txt"

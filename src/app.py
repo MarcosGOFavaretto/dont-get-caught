@@ -18,7 +18,7 @@ class App:
     def __init__(self, surface: Surface):
         self.surface = surface
         self.ui_manager = pygame_gui.UIManager((WINDOW_WIDTH, WINDOW_HEIGHT), theme_path=THEME_UI_FILE)
-        self.current_render: Any = None
+        self.current_render: Any = LoginRender(self)
         self.fase_atual = +1
         self.overlay_render = None
         self.cola_frase_atual = None           

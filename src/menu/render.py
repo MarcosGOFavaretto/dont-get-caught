@@ -1,10 +1,9 @@
+from turtle import position
 import pygame
 
-from ..ui.utils import show_error_toast
-
-from ..fonts import menu_lg
+from ..fonts import menu_lg, menu_sm
 from ..config import WINDOW_HEIGHT, WINDOW_WIDTH, ASSETS_FOLDER
-from ..components import Button
+from ..components import Button, ButtonIcon, RectPosition, Text
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -39,13 +38,17 @@ class MenuRender:
         self.menu_levels = MenuLevels(self)
         self.menu_how_to_play = MenuHowToPlay(self)
 
-        self.buttons_initial_y = 300
-        self.buttons_spacing_y = 100
+        self.game_options_icon = pygame.image.load(f'{ASSETS_FOLDER}/icons/settings-icon.png')
+        self.game_options_icon = pygame.transform.scale(self.game_options_icon, (26, 26)) 
+
+        self.account_icon = pygame.image.load(f'{ASSETS_FOLDER}/icons/account.png')
+        self.account_icon = pygame.transform.scale(self.account_icon, (40, 40)) 
 
     def render(self):
         match self.active_page:
             case MenuPage.MAIN:
                 self.render_menu_options()
+                self.render_account()
             case MenuPage.GAME_LEVELS:
                 self.menu_levels.render()
             case MenuPage.HOW_TO_PLAY:
@@ -53,11 +56,13 @@ class MenuRender:
 
     def render_menu_options(self):
         self.app.surface.blit(self.background, (0, 0))
+        buttons_initial_y = 300
+        buttons_spacing_y = 100
         Button(surface=self.app.surface,
             label='JOGAR', 
             label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
-            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, self.buttons_initial_y, self.buttons_width, 50),
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, buttons_initial_y, self.buttons_width, 50),
             on_click=lambda: self.open_page(MenuPage.GAME_LEVELS),
             event_list=self.app.event_list)
         
@@ -65,7 +70,7 @@ class MenuRender:
             label='COMO JOGAR', 
             label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
-            rect=pygame.Rect(WINDOW_WIDTH // 2 - (self.buttons_width + 100) // 2, self.buttons_initial_y + self.buttons_spacing_y, self.buttons_width + 100, 50),
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - (self.buttons_width + 100) // 2, buttons_initial_y + buttons_spacing_y, self.buttons_width + 100, 50),
             on_click=lambda: self.open_page(MenuPage.HOW_TO_PLAY),
             event_list=self.app.event_list)
         
@@ -73,9 +78,17 @@ class MenuRender:
             label='SAIR', 
             label_font=menu_lg,
             background_color=pygame.Color(255, 255, 255),
-            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, self.buttons_initial_y + self.buttons_spacing_y * 2, self.buttons_width, 50),
+            rect=pygame.Rect(WINDOW_WIDTH // 2 - self.buttons_width // 2, buttons_initial_y + buttons_spacing_y * 2, self.buttons_width, 50),
             on_click=self.app.quit,
             event_list=self.app.event_list)
+
+    def render_account(self):
+        ButtonIcon(self.app.surface, pygame.rect.Rect(20, 10, 40, 40), self.account_icon, event_list=self.app.event_list)
+        Text(surface=self.app.surface,
+            content=self.app.profile.get('name', 'Usuário'),
+            color=pygame.Color(255, 255, 255),
+            position=(70, 20),
+            font=menu_sm)
 
     def open_page(self, menu_page: MenuPage):
         self.button_click_fx.play()
